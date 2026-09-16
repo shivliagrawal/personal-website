@@ -52,6 +52,7 @@
     --cat-project: #479C87;
     --cat-skills: #A97640;
     --cat-contact: #D96B43;
+    --cat-personal: #C4708C;
   }
 
   html[data-theme="light"] {
@@ -151,7 +152,7 @@
     scroll-margin-top: 96px;
   }
   .today-block:last-child { margin-bottom: 0; }
-  .today-time { text-align: right; padding-top: 6px; }
+  .today-time { text-align: right; padding-top: 6px; padding-right: 18px; }
   .today-dot {
     position: absolute;
     left: 91px;
@@ -165,7 +166,14 @@
     .today-rail::before { left: 52px; }
     .today-block { grid-template-columns: 52px 1fr; gap: 12px; }
     .today-dot { left: 47px; }
+    .today-time { padding-right: 10px; }
   }
+
+  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; }
+  .chart-bars > span { flex: 1; border-radius: 4px 4px 0 0; }
+  .case-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; }
+
+  .week-cat-grid { transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
 
   .steel-door {
     background-color: #4c4f53;
@@ -262,10 +270,6 @@
         Today
       </button>
 
-      <div class="hidden lg:flex items-center flex-1 max-w-xs ml-4">
-        <input type="text" placeholder="Search my work..." class="w-full rounded-full px-4 py-1.5 text-xs border" style="background: var(--surface); border-color: var(--hairline); color: var(--ink);" />
-      </div>
-
       <div class="flex-1"></div>
 
       <div class="hidden sm:block text-xs mr-1" id="date-label" style="color: var(--muted);">Week of Aug 10 – 16, 2026</div>
@@ -290,7 +294,7 @@
       <aside class="sidebar hidden md:flex md:flex-col md:sticky md:top-16 w-60 flex-none border-r p-4 gap-6 overflow-y-auto" style="max-height: calc(100vh - 64px);">
         <div>
           <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-bold tracking-[0.06em]">August 2026</p>
+            <p class="text-xs font-bold tracking-[0.06em]" id="mini-cal-heading">August 2026</p>
           </div>
           <div class="grid grid-cols-7 gap-1 text-center">
             <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">Mo</span>
@@ -363,7 +367,7 @@
               <div class="today-block">
                 <div class="today-time">
                   <p class="text-[11px] font-bold" style="color: var(--ink);">10:45 AM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">12:15 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">12:00 PM</p>
                 </div>
                 <span class="today-dot" style="background: var(--cat-experience);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
@@ -390,16 +394,77 @@
                 </div>
               </div>
 
-              <!-- 1:00 – SELECTED IMPACT -->
-              <div class="today-block" id="today-impact">
+              <!-- 12:15 – COLLEGE HIGHLIGHTS -->
+              <div class="today-block">
+                <div class="today-time">
+                  <p class="text-[11px] font-bold" style="color: var(--ink);">12:15 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">12:45 PM</p>
+                </div>
+                <span class="today-dot" style="background: var(--cat-about);"></span>
+                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-about);">College Highlights</p>
+                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">Purdue University, B.S. Computer Science</h2>
+                  <div class="grid sm:grid-cols-3 gap-5">
+                    <div>
+                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Dean's List</p>
+                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">2022 – 2023, for academic performance.</p>
+                    </div>
+                    <div>
+                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Teaching Assistant</p>
+                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">7 terms supervising OOP labs for 80+ students each term.</p>
+                    </div>
+                    <div>
+                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">President, UR Global</p>
+                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">Led cross-cultural events fostering global awareness on campus.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 1:00 – WORK HIGHLIGHTS -->
+              <div class="today-block">
                 <div class="today-time">
                   <p class="text-[11px] font-bold" style="color: var(--ink);">1:00 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">2:30 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">1:30 PM</p>
+                </div>
+                <span class="today-dot" style="background: var(--cat-experience);"></span>
+                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-experience);">Work Highlights</p>
+                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">A few moments from the day job</h2>
+                  <ul class="space-y-3">
+                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Fine-tuned a domain-specific LLM that cut QA prep time by 90% for smoke-test generation.</span></li>
+                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Rebuilt a company website, cutting page load time by 30%.</span></li>
+                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Modernized a site's design system, lifting click-through rates by 17%.</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- 1:45 – SELECTED IMPACT -->
+              <div class="today-block" id="today-impact">
+                <div class="today-time">
+                  <p class="text-[11px] font-bold" style="color: var(--ink);">1:45 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">3:00 PM</p>
                 </div>
                 <span class="today-dot" style="background: var(--cat-project);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
                   <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-project);">Selected Impact</p>
                   <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">AI-Powered Opportunity Scoring</h2>
+                  <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <img class="case-img" src="https://placehold.co/640x360?text=Opportunity+Scoring+Dashboard" alt="Illustrative dashboard preview for the opportunity-scoring tool" />
+                    <div>
+                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-2" style="color: var(--muted);">Scoring confidence, illustrative</p>
+                      <div class="chart-bars">
+                        <span style="height:35%; background: var(--cat-project);"></span>
+                        <span style="height:55%; background: var(--cat-project);"></span>
+                        <span style="height:48%; background: var(--cat-project);"></span>
+                        <span style="height:70%; background: var(--cat-project);"></span>
+                        <span style="height:64%; background: var(--cat-project);"></span>
+                        <span style="height:82%; background: var(--cat-project);"></span>
+                        <span style="height:90%; background: var(--cat-project);"></span>
+                      </div>
+                      <p class="text-[11px] mt-2" style="color: var(--muted);">Placeholder chart — swap for a real chart once validation metrics are approved for external use.</p>
+                    </div>
+                  </div>
                   <div class="grid sm:grid-cols-2 gap-5 mb-6">
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Problem</p>
@@ -425,8 +490,8 @@
               <!-- 3:00 – HOW I THINK -->
               <div class="today-block">
                 <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">3:00 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">4:00 PM</p>
+                  <p class="text-[11px] font-bold" style="color: var(--ink);">3:15 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">3:45 PM</p>
                 </div>
                 <span class="today-dot" style="background: var(--cat-skills);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
@@ -440,25 +505,24 @@
                 </div>
               </div>
 
-              <!-- 4:30 – CONTACT INVITE -->
+              <!-- 4:00 – CONTACT INVITE -->
               <div class="today-block" id="today-contact">
                 <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">4:30 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">5:00 PM</p>
+                  <p class="text-[11px] font-bold" style="color: var(--ink);">4:00 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">4:30 PM</p>
                 </div>
                 <span class="today-dot" style="background: var(--cat-contact);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
                   <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-contact);">Let's Build Something Useful</p>
                   <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Product conversation</h2>
-                  <div class="flex flex-wrap gap-x-8 gap-y-3 mb-6 text-sm">
-                    <p><span style="color: var(--muted);">Attendees</span> <span class="font-semibold" style="color: var(--ink);">Shivli Agrawal + You</span></p>
+                  <div class="flex flex-wrap gap-x-8 gap-y-3 mb-5 text-sm">
+                    <p><span style="color: var(--muted);">With</span> <span class="font-semibold" style="color: var(--ink);">Shivli Agrawal</span></p>
                     <p><span style="color: var(--muted);">Duration</span> <span class="font-semibold" style="color: var(--ink);">15 – 30 min</span></p>
                   </div>
-                  <p class="text-sm leading-[1.65] mb-6" style="color: var(--muted);">Open to Senior PM and AI PM conversations — I usually reply within a day.</p>
+                  <p class="text-sm leading-[1.65] mb-6" style="color: var(--muted);">Open to Senior PM and AI PM roles — send a note about what you're building and I'll usually reply within a day.</p>
                   <div class="flex flex-wrap gap-3">
                     <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="btn-pop inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold" style="background: var(--cat-contact); color: #fff;">Connect on LinkedIn</a>
                     <a href="mailto:shivliagrawal14@gmail.com" class="btn-pop inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Send Email</a>
-                    <a href="Resume-work.png" target="_blank" rel="noopener" class="btn-pop inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">View Resume</a>
                   </div>
                 </div>
               </div>
@@ -467,9 +531,10 @@
           </div>
         </div>
 
-        <div id="view-week" class="flex md:flex-row flex-col">
-          <div class="hidden md:flex flex-col flex-none w-12" id="hour-gutter"></div>
-          <div class="flex-1 flex md:flex-row flex-col gap-3 md:gap-0" id="days-row"></div>
+        <div id="view-week" class="hidden">
+          <p class="text-xs mb-4" style="color: var(--muted);">My operating rhythm, grouped by category instead of by day. Tap a card for details.</p>
+          <div class="flex flex-wrap gap-2 mb-6" id="week-cat-tabs"></div>
+          <div class="week-cat-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-4" id="week-cat-grid"></div>
         </div>
 
         <div id="view-month" class="hidden">
@@ -549,16 +614,34 @@
       leadership: { label: 'Leadership', color: 'var(--cat-leadership)', hex: '#B08A2E' },
       project:    { label: 'Projects',   color: 'var(--cat-project)',    hex: '#479C87' },
       skills:     { label: 'Skills',     color: 'var(--cat-skills)',     hex: '#A97640' },
+      personal:   { label: 'Personal',   color: 'var(--cat-personal)',   hex: '#C4708C' },
       contact:    { label: 'Contact',    color: 'var(--cat-contact)',    hex: '#D96B43' },
     };
 
+    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const DAY_NAMES = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-    const DAY_DATES = [10, 11, 12, 13, 14, 15, 16];
-    const TODAY_INDEX = 0;
+
+    // ---- Dynamic "today" — everything below is computed from the real current date ----
+    const NOW = new Date();
+    function mondayIndex(jsDay) { return (jsDay + 6) % 7; } // JS Sun=0..Sat=6 -> Mon=0..Sun=6
+    function startOfWeek(d) {
+      const c = new Date(d);
+      c.setDate(c.getDate() - mondayIndex(c.getDay()));
+      c.setHours(0, 0, 0, 0);
+      return c;
+    }
+    const WEEK_START = startOfWeek(NOW);
+    const WEEK_DATES_FULL = Array.from({ length: 7 }, (_, i) => { const d = new Date(WEEK_START); d.setDate(d.getDate() + i); return d; });
+    const DAY_DATES = WEEK_DATES_FULL.map(d => d.getDate());
+    const WEEK_END = WEEK_DATES_FULL[6];
+    const TODAY_INDEX = mondayIndex(NOW.getDay());
+    const CURRENT_MONTH = NOW.getMonth() + 1;
+    const CURRENT_YEAR = NOW.getFullYear();
+    function fmtDate(d) { return `${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`; }
 
     const EVENTS = [
       { id: 'now-cummins', day: 0, time: '9:00 AM – 5:00 PM', title: 'Now: AI Solution Engineer', subtitle: 'Cummins Inc., Power Systems Business Unit · Jan 2026 – Present · Shoreview, MN',
-        category: 'experience', current: true, type: 'bullets',
+        category: 'experience', year: 2026, current: true, type: 'bullets',
         bullets: [
           'Collaborate with cross-functional teams to translate business requirements into scalable analytics tools and dashboards.',
           'Implement AI/NLP workflows to analyze unstructured sales data and surface recurring problems.',
@@ -584,7 +667,7 @@
         category: 'about', year: 2022, type: 'bullets',
         bullets: ["Dean's List: 2022 – 2023.", 'Coursework spanning systems programming, OOP, and data structures & algorithms.'] },
       { id: 'opportunity-scoring', day: 1, time: '3:00 – 5:00 PM', title: 'AI-Powered Opportunity Scoring', subtitle: 'Cummins Inc. · AI-assisted sales intelligence · Feb – Jun 2026',
-        category: 'project', type: 'bullets', startMonth: 2, endMonth: 6,
+        category: 'project', type: 'bullets', startMonth: 2, endMonth: 6, image: 'https://placehold.co/640x360?text=Opportunity+Scoring+Dashboard',
         bullets: [
           'Investigated model behavior and data-quality issues in an AI-assisted opportunity-scoring capability for the sales workflow.',
           'Validated scoring outputs and model explanations across testing environments.',
@@ -604,7 +687,7 @@
           'Enhanced global awareness and cultural exchange across campus.',
         ] },
       { id: 'sales-integration', day: 2, time: '5:30 – 7:00 PM', title: 'Enterprise Sales Platform Integration', subtitle: 'Cummins Inc. · Cross-functional integration initiative · Jan – Aug 2026',
-        category: 'project', type: 'bullets', startMonth: 1, endMonth: 8,
+        category: 'project', type: 'bullets', startMonth: 1, endMonth: 8, image: 'https://placehold.co/640x360?text=Sales+Platform+Integration',
         bullets: [
           'Leading a cross-functional integration initiative connecting a sales workflow with enterprise data and digital systems.',
           'Coordinate middleware and data integrations, translating business needs into technical work and managing dependencies.',
@@ -625,7 +708,7 @@
           'Built live-update analytics dashboards that improved operational efficiency.',
         ] },
       { id: 'digital-discovery', day: 3, time: '4:00 – 5:30 PM', title: 'Digital Product Discovery Experience', subtitle: 'Cummins Inc. · Customer-facing product discovery · Apr – Sep 2026',
-        category: 'project', type: 'bullets', startMonth: 4, endMonth: 9,
+        category: 'project', type: 'bullets', startMonth: 4, endMonth: 9, image: 'https://placehold.co/640x360?text=Product+Discovery+Experience',
         bullets: [
           'Contributed to the design of a new customer-facing digital experience making technical product information easier to discover and navigate.',
           'Gathered business requirements and translated them into IT and UX requirements; coordinated with design, content, and engineering teams.',
@@ -646,7 +729,7 @@
           'Fine-tuned BioBERT with Hyperband and population-based training, lifting NER performance by 5%.',
         ], tags: ['BERT', 'BioBERT', 'NLP'] },
       { id: 'spec-automation', day: 4, time: '3:30 – 5:00 PM', title: 'Engineering Specification Automation', subtitle: 'Cummins Inc. · Automating engineering & product-configuration workflows · Jun 2026 – Present',
-        category: 'project', type: 'bullets', startMonth: 6, endMonth: 12,
+        category: 'project', type: 'bullets', startMonth: 6, endMonth: 12, image: 'https://placehold.co/640x360?text=Specification+Automation',
         bullets: [
           'Automating traditionally manual engineering and product-configuration workflows using AI prompting, structured data transformation, and business rules.',
           'Evaluate solution approaches, gather requirements, and define implementation stories with engineering and business stakeholders.',
@@ -660,20 +743,20 @@
         ] },
 
       { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Feb 2025',
-        category: 'project', type: 'bullets',
+        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=Nocturne+Marketplace',
         bullets: [
           'Built a dynamic e-commerce platform with category navigation, JWT auth, and real-time search filtering.',
           'Optimized API latency with Cloudflare Workers; enhanced UI with CSS Grid, Flexbox, and animation.',
           'Integrated PostgreSQL queries into reporting modules to validate data integrity.',
         ], tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Cloudflare'] },
       { id: 'sysmonitor', day: 5, time: '1:00 – 3:00 PM', title: 'Build: System Monitor', subtitle: 'C · GTK · Linux /proc · Nov 2024',
-        category: 'project', type: 'bullets',
+        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=System+Monitor',
         bullets: [
           'Built a GTK desktop app in C to monitor CPU, memory, and processes via the /proc filesystem.',
           'Implemented process-management controls, automated performance checks, and real-time visualization.',
         ], tags: ['C', 'GTK', 'Linux'] },
       { id: 'boilertutors', day: 5, time: '4:00 – 6:00 PM', title: 'Build: BoilerTutors', subtitle: 'React · Node.js · PostgreSQL · REST · Sept 2024',
-        category: 'project', type: 'bullets',
+        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=BoilerTutors',
         bullets: [
           'Built a full-stack resource-sharing platform with React.js and Node.js.',
           'Designed REST APIs and a PostgreSQL schema with indexing and query optimization for scale.',
@@ -681,19 +764,19 @@
         ], tags: ['React', 'Node.js', 'PostgreSQL'] },
 
       { id: 'cpq-analytics', day: 6, time: '10:00 AM – 12:00 PM', title: 'Build: Salesforce CPQ Win/Loss Analytics', subtitle: 'Databricks · PySpark · MLflow · Salesforce API · Aug 2025',
-        category: 'project', type: 'bullets',
+        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=CPQ+Win%2FLoss+Analytics',
         bullets: [
           'Built an end-to-end pipeline predicting opportunity outcomes using gradient boosting and LLM-based pattern mining.',
           'Added automated regression tests validating MLflow model outputs against production benchmarks.',
         ], tags: ['Databricks', 'PySpark', 'MLflow'] },
       { id: 'smoke-test', day: 6, time: '1:00 – 3:00 PM', title: 'Build: AI-Generated Smoke Test Suite', subtitle: 'Hugging Face · PyTorch · Transformers · Aug 2025',
-        category: 'project', type: 'bullets',
+        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=Smoke+Test+Suite',
         bullets: [
           'Fine-tuned a custom LLM on historical CPQ deployments to auto-generate smoke-test scenarios, boosting coverage by 30%.',
           'Packaged testing scripts into reusable modules integrated with CI/CD.',
         ], tags: ['Hugging Face', 'PyTorch', 'Transformers'] },
       { id: 'lms', day: 6, time: '3:30 – 5:00 PM', title: 'Build: Database LMS', subtitle: 'GUI · Concurrency · Apr 2022',
-        category: 'project', type: 'bullets',
+        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=Database+LMS',
         bullets: [
           'Designed a GUI-based Learning Management System with concurrency support for quizzes and auto-grading.',
           'Built real-time student–teacher interaction features.',
@@ -701,6 +784,28 @@
       { id: 'contact', day: 6, time: '5:30 – 6:30 PM', title: "Office Hours — Let's Connect", subtitle: 'Open invite',
         category: 'contact', type: 'contact',
         bullets: ['Best way to reach me: a LinkedIn DM or an email — I read both.'] },
+
+      { id: 'seventy-five-hard', day: 5, time: '6:00 – 6:45 AM', title: '75 Hard Challenge', subtitle: 'Apr 20 – Jul 4, 2026',
+        category: 'personal', year: 2026, type: 'bullets',
+        bullets: [
+          'Two 45-minute workouts a day (one outdoors), a strict diet, a gallon of water, and 10 pages of reading — every day for 75 days straight, no exceptions.',
+          'Built the kind of daily discipline that carries over into how I show up at work.',
+        ] },
+      { id: 'running-journey', day: 6, time: '7:00 AM', title: '5K Running Journey', subtitle: 'Mid-July 2026 – Present',
+        category: 'personal', year: 2026, type: 'bullets',
+        bullets: [
+          "Started running as a habit in mid-July and haven't stopped since — training toward my first 5K, one run at a time.",
+        ] },
+      { id: 'matcha-corner', day: 5, time: 'All year round', title: 'Matcha Corner', subtitle: '2026, ongoing',
+        category: 'personal', year: 2026, type: 'bullets', image: 'https://placehold.co/640x360?text=Matcha+Corner+%28photo+coming+soon%29',
+        bullets: [
+          'Building out a little matcha corner at home — testing new matcha blends, jams, and toppings, and slowly making it feel like mine.',
+        ] },
+      { id: 'hp-trip', day: 6, time: 'Jul 24 – 28, 2026', title: 'Wizarding World of Harry Potter, LA', subtitle: 'A long-time dream trip',
+        category: 'personal', year: 2026, type: 'bullets',
+        bullets: [
+          "Five days at the Wizarding World of Harry Potter in LA — I've been a Potterhead for as long as I can remember, so this was the trip.",
+        ] },
     ];
 
     function hexToRgba(hex, alpha) {
@@ -709,15 +814,17 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    // ---- Mini calendar ----
+    // ---- Mini calendar (current real month) ----
     const miniCal = document.getElementById('mini-cal');
-    const blanksBefore = 5; // Aug 1 2026 is a Saturday; Mon-start grid
-    const daysInMonth = 31;
-    const eventDays = new Set(DAY_DATES);
+    const miniMonthIndex0 = NOW.getMonth();
+    document.getElementById('mini-cal-heading').textContent = `${MONTH_NAMES[miniMonthIndex0]} ${CURRENT_YEAR}`;
+    const blanksBefore = mondayIndex(new Date(CURRENT_YEAR, miniMonthIndex0, 1).getDay());
+    const daysInCurrentMonth = new Date(CURRENT_YEAR, miniMonthIndex0 + 1, 0).getDate();
+    const eventDays = new Set(WEEK_DATES_FULL.filter(d => d.getMonth() === miniMonthIndex0 && d.getFullYear() === CURRENT_YEAR).map(d => d.getDate()));
     let miniHtml = '';
     for (let i = 0; i < blanksBefore; i++) miniHtml += `<div class="mini-cal-cell"></div>`;
-    for (let d = 1; d <= daysInMonth; d++) {
-      const isToday = d === 10;
+    for (let d = 1; d <= daysInCurrentMonth; d++) {
+      const isToday = d === NOW.getDate();
       const hasEvent = eventDays.has(d);
       miniHtml += `<div class="mini-cal-cell flex flex-col items-center justify-center rounded-md text-[10px] font-semibold" style="${isToday ? `background: var(--cat-contact); color:#fff;` : 'color: var(--ink);'}">
         <span>${d}</span>
@@ -739,31 +846,55 @@
         <span style="color: var(--ink);">${c.label}</span>
       </div>`).join('');
 
-    // ---- Hour gutter (decorative) ----
-    const HOURS = ['9 AM','10','11','12 PM','1','2','3','4','5','6','7','8','9'];
-    document.getElementById('hour-gutter').innerHTML = HOURS.map(h =>
-      `<div style="height:75px;" class="text-[10px] text-right pr-2 pt-1" style="color: var(--muted);">${h}</div>`
-    ).join('');
+    // ---- Week view: category-separated cards ----
+    const WEEK_CATEGORY_ORDER = ['about', 'experience', 'leadership', 'project', 'skills', 'personal', 'contact'];
+    let activeWeekCat = 'experience';
 
-    // ---- Day columns ----
-    const daysRow = document.getElementById('days-row');
-    let daysHtml = '';
-    for (let d = 0; d < 7; d++) {
-      const isToday = d === TODAY_INDEX;
-      const dayEvents = EVENTS.filter(e => e.day === d);
-      daysHtml += `
-      <div class="flex-1 min-w-0 md:min-w-[152px] md:border-r flex flex-col" style="border-color: var(--grid-line);">
-        <div class="flex items-center gap-2 px-2 py-2 sticky top-0 z-10" style="background: var(--bg);">
-          <span class="text-[11px] font-bold tracking-[0.06em]" style="color: var(--muted);">${DAY_NAMES[d]}</span>
-          <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-extrabold" style="${isToday ? `background: var(--cat-contact); color:#fff;` : 'color: var(--ink);'}">${DAY_DATES[d]}</span>
-          ${isToday ? `<span class="text-[10px] font-bold" style="color: var(--cat-contact);">TODAY</span>` : ''}
-        </div>
-        <div class="hour-ruled-bg flex flex-col gap-2 px-2 pb-6 md:min-h-[900px]">
-          ${dayEvents.map(e => renderChip(e)).join('')}
-        </div>
-      </div>`;
+    function renderWeekTabs() {
+      document.getElementById('week-cat-tabs').innerHTML = WEEK_CATEGORY_ORDER
+        .filter(key => EVENTS.some(e => e.category === key))
+        .map(key => {
+          const cat = CATEGORIES[key];
+          const active = key === activeWeekCat;
+          return `<button class="week-cat-tab pill px-4 py-2 rounded-full text-xs font-semibold border" data-cat="${key}"
+            style="border-color:${cat.color}; ${active ? `background:${cat.color}; color:#fff;` : `background:transparent; color:var(--ink);`}">${cat.label}</button>`;
+        }).join('');
     }
-    daysRow.innerHTML = daysHtml;
+
+    function renderWeekCard(e) {
+      const cat = CATEGORIES[e.category];
+      const isToday = e.day === TODAY_INDEX;
+      return `
+      <button class="chip event-chip text-left rounded-2xl p-5 border" data-id="${e.id}"
+        style="background:${hexToRgba(cat.hex, 0.12)}; border-color:${hexToRgba(cat.hex, 0.35)};">
+        <div class="flex items-center gap-1.5 mb-2">
+          <span class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color:${cat.color};">${DAY_NAMES[e.day]}</span>
+          ${isToday ? `<span class="text-[10px] font-bold" style="color: var(--cat-contact);">· TODAY</span>` : ''}
+          ${e.current ? `<span class="w-1.5 h-1.5 rounded-full dot-pulse flex-none ml-1" style="background: var(--cat-contact);"></span>` : ''}
+        </div>
+        <p class="text-base font-extrabold leading-snug mb-1" style="color: var(--ink);">${e.title}</p>
+        <p class="text-xs leading-[1.5]" style="color: var(--muted);">${e.subtitle}</p>
+      </button>`;
+    }
+
+    function renderWeekGrid() {
+      const grid = document.getElementById('week-cat-grid');
+      grid.style.opacity = '0';
+      grid.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        const items = EVENTS.filter(ev => ev.category === activeWeekCat);
+        grid.innerHTML = items.map(ev => renderWeekCard(ev)).join('');
+        requestAnimationFrame(() => { grid.style.opacity = '1'; grid.style.transform = 'translateY(0)'; });
+      }, 160);
+    }
+
+    document.addEventListener('click', (ev) => {
+      const tab = ev.target.closest('.week-cat-tab');
+      if (tab) { activeWeekCat = tab.dataset.cat; renderWeekTabs(); renderWeekGrid(); }
+    });
+
+    renderWeekTabs();
+    renderWeekGrid();
 
     function renderChip(e) {
       const cat = CATEGORIES[e.category];
@@ -779,7 +910,7 @@
     }
 
     // ---- Year view ----
-    const YEARS = [2022, 2023, 2024, 2025];
+    const YEARS = [2022, 2023, 2024, 2025, 2026];
     let yearViewBuilt = false;
     function renderYearView() {
       if (yearViewBuilt) return;
@@ -800,14 +931,12 @@
     }
 
     // ---- Month view (2026 Cummins project roadmap) ----
-    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const CURRENT_MONTH = 8;
     let monthViewBuilt = false;
     function renderMonthView() {
       if (monthViewBuilt) return;
       const header = document.getElementById('month-header');
       header.innerHTML = MONTH_NAMES.map((m, i) => {
-        const isCurrent = (i + 1) === CURRENT_MONTH;
+        const isCurrent = CURRENT_YEAR === 2026 && (i + 1) === CURRENT_MONTH;
         return `<div class="flex-1 text-center text-[11px] font-bold py-2 rounded-md" style="${isCurrent ? `background:${hexToRgba(CATEGORIES.contact.hex, 0.16)}; color:var(--cat-contact);` : 'color:var(--muted);'}">${m}</div>`;
       }).join('');
 
@@ -873,13 +1002,14 @@
             </a>
           </div>`;
       } else {
+        const imageHtml = e.image ? `<img class="case-img mb-5" src="${e.image}" alt="" />` : '';
         const bulletsHtml = e.bullets.map(b => `
           <li class="flex gap-2.5 text-sm leading-relaxed" style="color: var(--ink);">
             <span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background:${cat.color};"></span>
             <span>${b}</span>
           </li>`).join('');
         const tagsHtml = e.tags ? `<div class="flex flex-wrap gap-1.5 mt-5">${e.tags.map(t => `<span class="text-xs px-2.5 py-1 rounded-full border" style="border-color: var(--hairline); color: var(--muted);">${t}</span>`).join('')}</div>` : '';
-        modalBody.innerHTML = `<ul class="space-y-2.5">${bulletsHtml}</ul>${tagsHtml}`;
+        modalBody.innerHTML = `${imageHtml}<ul class="space-y-2.5">${bulletsHtml}</ul>${tagsHtml}`;
       }
 
       overlay.classList.remove('hidden');
@@ -919,10 +1049,10 @@
     const DEFAULT_VIEW = 'today';
     const VIEW_CONTAINERS = { today: 'view-today', week: 'view-week', month: 'view-month', year: 'view-year' };
     const DATE_LABELS = {
-      today: "Today · Aug 10, 2026",
-      week: 'Week of Aug 10 – 16, 2026',
-      month: '2026 Roadmap · Cummins Inc.',
-      year: '2022 – 2025 · Previous Experience',
+      today: `Today · ${fmtDate(NOW)}, ${CURRENT_YEAR}`,
+      week: `Week of ${fmtDate(WEEK_START)} – ${WEEK_END.getMonth() === WEEK_START.getMonth() ? WEEK_END.getDate() : fmtDate(WEEK_END)}, ${CURRENT_YEAR}`,
+      month: `${CURRENT_YEAR} Roadmap · Cummins Inc.`,
+      year: '2022 – 2026 · Career Journey',
     };
     const resetBtn = document.getElementById('reset-week-btn');
     const appShell = document.getElementById('app-shell');
