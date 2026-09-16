@@ -2,3 +2,6 @@ node_modules/
 .DS_Store
 temporary screenshots/
 .claude/settings.local.json
+.vercel
+descriptions.md
+notes.md
