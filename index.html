@@ -124,6 +124,8 @@
   }
   #modal-card {
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .mini-cal-cell { aspect-ratio: 1 / 1; }
@@ -173,7 +175,7 @@
   .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; }
   .chart-bars > span { flex: 1; height: 0; border-radius: 4px 4px 0 0; transition: height 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
   .chart-bars.is-in > span { height: var(--h); }
-  .case-img { width: 100%; max-height: 75vh; object-fit: contain; border-radius: 12px; display: block; background: var(--surface-2); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
+  .case-img { width: 100%; height: auto; display: block; border-radius: 12px; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
   .case-img:hover { transform: scale(1.01); }
   #modal-card.modal-wide { max-width: min(94vw, 1040px) !important; }
   #modal-card.modal-xwide { max-width: min(96vw, 1280px) !important; }
@@ -623,7 +625,7 @@
 
   <!-- ============ EVENT MODAL ============ -->
   <div id="modal-overlay" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
-    <div id="modal-card" class="w-full max-w-lg rounded-2xl overflow-hidden shadow-float" style="background: var(--surface); border: 1px solid var(--hairline);">
+    <div id="modal-card" class="w-full max-w-lg rounded-2xl shadow-float" style="background: var(--surface); border: 1px solid var(--hairline);">
       <div id="modal-strip" class="h-2"></div>
       <div class="p-6 md:p-7">
         <div class="flex items-start justify-between gap-4 mb-1">
@@ -708,7 +710,7 @@
           'CS 40800 · Software Testing', 'CS 34800 · Information Systems',
         ], links: [{ label: 'Coursework on GitHub', url: 'https://github.com/shivliagrawal/CourseWork' }] },
       { id: 'win-loss-intelligence', day: 1, time: '3:00 – 5:00 PM', title: 'Win/Loss Intelligence', subtitle: 'Cummins Inc. · IT Sales & Aftermarket · Jun – Aug 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, image: 'assets/winloss_infograph.jpg',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 6, endMonth: 8, image: 'assets/winloss_infograph.jpg',
         bullets: [
           'Turned unstructured Salesforce Win/Loss comments into a reusable analytics pipeline that surfaced why opportunities were lost, competitive themes, and repeat-loss account patterns.',
           'Designed an end-to-end Databricks/Spark pipeline to filter and deduplicate Salesforce opportunity comments, generate SBERT embeddings, cluster semantic themes, and use Claude Sonnet to extract structured loss reasons.',
@@ -731,7 +733,7 @@
           'Enhanced global awareness and cultural exchange across campus.',
         ] },
       { id: 'smoke-testing-suite', day: 2, time: '5:30 – 7:00 PM', title: 'AI-Driven Smoke Testing Suite', subtitle: 'Cummins Inc. · QA strategy + prompt engineering · Jun – Aug 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, image: 'assets/smoke_testing_infograph.jpg',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 6, endMonth: 8, image: 'assets/smoke_testing_infograph.jpg',
         bullets: [
           'Created a reusable QA playbook for generating high-value Salesforce CPQ smoke tests from JIRA stories and acceptance criteria, with human review before execution in staging.',
           'Designed a repeatable JIRA → AI generation → human review → qTest → staging workflow for release-specific smoke testing.',
@@ -755,7 +757,7 @@
           'Built live-update analytics dashboards that improved operational efficiency.',
         ] },
       { id: 'market-intelligence', day: 3, time: '4:00 – 6:00 PM', title: 'Market Intelligence Tool', subtitle: 'Cummins Power Systems · Market Intelligence · Jun – Aug 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, image: 'assets/market_int.jpg',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 6, endMonth: 8, image: 'assets/market_int.jpg',
         bullets: [
           'Built and evolved an AI-powered competitor intelligence capability that automates the path from public competitor product data to structured, searchable, and comparable product intelligence inside Cummins Power Suite.',
           'Partnered with Sales, Product, Engineering, and IT to translate competitive-intelligence needs into technical requirements, acceptance criteria, JIRA stories, and solution designs.',
@@ -844,23 +846,23 @@
         bullets: ['Best way to reach me: a LinkedIn DM or an email — I read both.'] },
 
       { id: 'seventy-five-hard', day: 5, time: '6:00 – 6:45 AM', title: '75 Hard Challenge', subtitle: 'Apr 20 – Jul 4, 2026',
-        category: 'personal', year: 2026, type: 'bullets',
+        category: 'personal', year: 2026, type: 'bullets', startMonth: 4, endMonth: 7,
         bullets: [
           'Two 45-minute workouts a day (one outdoors), a strict diet, a gallon of water, and 10 pages of reading — every day for 75 days straight, no exceptions.',
           'Built the kind of daily discipline that carries over into how I show up at work.',
         ] },
       { id: 'running-journey', day: 6, time: '7:00 AM', title: '5K Running Journey', subtitle: 'Mid-July 2026 – Present',
-        category: 'personal', year: 2026, type: 'bullets', image: 'assets/5k.jpg',
+        category: 'personal', year: 2026, type: 'bullets', startMonth: 7, endMonth: 9, image: 'assets/5k.jpg',
         bullets: [
           "Started running as a habit in mid-July and haven't stopped since — training toward my first 5K, one run at a time.",
         ] },
       { id: 'matcha-corner', day: 5, time: 'All year round', title: 'Matcha Corner', subtitle: '2026, ongoing',
-        category: 'personal', year: 2026, type: 'bullets', image: 'assets/matchacorner.jpg',
+        category: 'personal', year: 2026, type: 'bullets', startMonth: 1, endMonth: 12, image: 'assets/matchacorner.jpg',
         bullets: [
           'Building out a little matcha corner at home — testing new matcha blends, jams, and toppings, and slowly making it feel like mine.',
         ] },
       { id: 'hp-trip', day: 6, time: 'Jul 24 – 28, 2026', title: 'Wizarding World of Harry Potter, LA', subtitle: 'A long-time dream trip',
-        category: 'personal', year: 2026, type: 'bullets', image: 'assets/wizardingworld.jpg',
+        category: 'personal', year: 2026, type: 'bullets', startMonth: 7, endMonth: 7, image: 'assets/wizardingworld.jpg',
         bullets: [
           "Five days at the Wizarding World of Harry Potter in LA — I've been a Potterhead for as long as I can remember, so this was the trip.",
         ] },
