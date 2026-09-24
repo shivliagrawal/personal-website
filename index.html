@@ -49,7 +49,8 @@
     --cat-about: #5F84AC;
     --cat-experience: #8B6CAE;
     --cat-leadership: #B08A2E;
-    --cat-project: #479C87;
+    --cat-work: #479C87;
+    --cat-college: #4AACC7;
     --cat-skills: #A97640;
     --cat-contact: #D96B43;
     --cat-personal: #C4708C;
@@ -170,8 +171,12 @@
   }
 
   .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; }
-  .chart-bars > span { flex: 1; border-radius: 4px 4px 0 0; }
-  .case-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; }
+  .chart-bars > span { flex: 1; height: 0; border-radius: 4px 4px 0 0; transition: height 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .chart-bars.is-in > span { height: var(--h); }
+  .case-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; display: block; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
+  .case-img:hover { transform: scale(1.02); }
+  .reveal-img { opacity: 0; transform: translateY(14px); }
+  .reveal-img.is-in { opacity: 1; transform: translateY(0); }
 
   .week-cat-grid { transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
 
@@ -348,17 +353,25 @@
                 </div>
                 <span class="today-dot" style="background: var(--cat-contact);"></span>
                 <div class="rounded-2xl p-6 md:p-10 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <div class="flex items-center gap-2 mb-4">
-                    <span class="w-2 h-2 rounded-full dot-pulse flex-none" style="background: var(--cat-contact);"></span>
-                    <span class="text-[11px] font-extrabold uppercase tracking-[0.12em]" style="color: var(--cat-contact);">Now · Jan 2026 – Present</span>
-                  </div>
-                  <h1 class="text-3xl md:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] mb-3" style="color: var(--ink);">Shivli Agrawal</h1>
-                  <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solution Engineer, Cummins Inc. — bridging AI, product, and enterprise software.</p>
-                  <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7" style="color: var(--muted);">I turn ambiguous business problems into scalable technical solutions — gathering requirements, coordinating cross-functional teams, and shipping AI-powered tools that enterprise teams actually use.</p>
-                  <div class="flex flex-wrap gap-3">
-                    <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold" data-target="today-impact" style="background: var(--cat-contact); color: #fff;">View Selected Work</button>
-                    <a href="Resume-work.png" target="_blank" rel="noopener" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
-                    <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold border" data-target="today-contact" style="border-color: var(--hairline); color: var(--ink);">Let's Connect</button>
+                  <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:items-center">
+                    <div>
+                      <div class="flex items-center gap-2 mb-4">
+                        <span class="w-2 h-2 rounded-full dot-pulse flex-none" style="background: var(--cat-contact);"></span>
+                        <span class="text-[11px] font-extrabold uppercase tracking-[0.12em]" style="color: var(--cat-contact);">Now · Jan 2026 – Present</span>
+                      </div>
+                      <h1 class="text-3xl md:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] mb-3" style="color: var(--ink);">Shivli Agrawal</h1>
+                      <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solution Engineer, Cummins Inc. — I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
+                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7" style="color: var(--muted);">I ask "why" one more time than most people are comfortable with, and I love a good debate about the right way to solve a problem — then I go build it, usually as an AI or LLM pipeline deployed close enough to the business to prove whether the answer actually holds.</p>
+                      <div class="flex flex-wrap gap-3">
+                        <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold" data-target="today-impact" style="background: var(--cat-contact); color: #fff;">View Selected Work</button>
+                        <a href="Resume-work.png" target="_blank" rel="noopener" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
+                        <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold border" data-target="today-contact" style="border-color: var(--hairline); color: var(--ink);">Let's Connect</button>
+                      </div>
+                    </div>
+                    <div class="relative w-36 h-36 md:w-48 md:h-48 mx-auto md:mx-0 flex-none">
+                      <img src="assets/mainpic2.jpg" alt="Shivli at her Purdue graduation" class="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-float" style="border: 3px solid var(--surface);" />
+                      <img src="assets/mainpic1.jpg" alt="Shivli" class="absolute -bottom-5 -left-5 w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl shadow-float" style="border: 3px solid var(--surface);" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -445,45 +458,42 @@
                   <p class="text-[11px] font-bold" style="color: var(--ink);">1:45 PM</p>
                   <p class="text-[10px]" style="color: var(--muted);">3:00 PM</p>
                 </div>
-                <span class="today-dot" style="background: var(--cat-project);"></span>
+                <span class="today-dot" style="background: var(--cat-work);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-project);">Selected Impact</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">AI-Powered Opportunity Scoring</h2>
-                  <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <img class="case-img" src="https://placehold.co/640x360?text=Opportunity+Scoring+Dashboard" alt="Illustrative dashboard preview for the opportunity-scoring tool" />
+                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Impact</p>
+                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Win/Loss Intelligence Pipeline</h2>
+                  <div class="grid md:grid-cols-2 gap-6 mb-6 items-end">
                     <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-2" style="color: var(--muted);">Scoring confidence, illustrative</p>
-                      <div class="chart-bars">
-                        <span style="height:35%; background: var(--cat-project);"></span>
-                        <span style="height:55%; background: var(--cat-project);"></span>
-                        <span style="height:48%; background: var(--cat-project);"></span>
-                        <span style="height:70%; background: var(--cat-project);"></span>
-                        <span style="height:64%; background: var(--cat-project);"></span>
-                        <span style="height:82%; background: var(--cat-project);"></span>
-                        <span style="height:90%; background: var(--cat-project);"></span>
+                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-2" style="color: var(--muted);">Runtime improvement, illustrative</p>
+                      <div class="chart-bars reveal-chart">
+                        <span style="--h:78%; background: var(--cat-work);"></span>
+                        <span style="--h:52%; background: var(--cat-work);"></span>
+                        <span style="--h:34%; background: var(--cat-work);"></span>
+                        <span style="--h:20%; background: var(--cat-work);"></span>
+                        <span style="--h:10%; background: var(--cat-work);"></span>
                       </div>
-                      <p class="text-[11px] mt-2" style="color: var(--muted);">Placeholder chart — swap for a real chart once validation metrics are approved for external use.</p>
+                      <p class="text-[11px] mt-2" style="color: var(--muted);">Illustrative trend only — shape of the real optimization from ~18 hrs down to ~8 min, not exact per-run figures.</p>
                     </div>
                   </div>
                   <div class="grid sm:grid-cols-2 gap-5 mb-6">
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Problem</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Sales teams needed a faster way to prioritize CRM opportunities, but early scoring outputs weren't trusted without visibility into why a score changed.</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Salesforce held thousands of unstructured win/loss comments with no reliable way to see why deals were actually being lost.</p>
                     </div>
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">My Role</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Investigated model behavior, validated scoring outputs, and coordinated the path to production with business and technical stakeholders.</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Designed and built the full pipeline solo — from Databricks/Spark extraction through embedding, clustering, and LLM-based reason extraction.</p>
                     </div>
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Key Decision</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Prioritized explainability alongside accuracy, so sales users could see why an opportunity was scored the way it was — not just the score itself.</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Clustered similar comments before calling the LLM — cutting request volume from tens of thousands of calls to roughly 200.</p>
                     </div>
                     <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Outcome</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">[verified impact metric] — currently in stakeholder validation ahead of broader rollout.</p>
+                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--ink); font-weight:600;">Outcome</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">55,044 closed-lost deals analyzed in ~8 minutes at under $3 in model cost — down from an early version that took 18+ hours.</p>
                     </div>
                   </div>
-                  <button class="btn-pop event-chip rounded-full px-5 py-2.5 text-sm font-bold border" data-id="opportunity-scoring" style="border-color: var(--hairline); color: var(--ink);">Open case study →</button>
+                  <button class="btn-pop event-chip rounded-full px-5 py-2.5 text-sm font-bold border" data-id="win-loss-intelligence" style="border-color: var(--hairline); color: var(--ink);">Open case study →</button>
                 </div>
               </div>
 
@@ -563,27 +573,47 @@
       <div class="flex flex-wrap gap-x-10 gap-y-14 justify-center md:justify-start">
         <div class="postit" style="--postit-color:#E8C468; transform: rotate(-4deg);">
           <span class="postit-tape"></span>
-          <img src="https://placehold.co/300x300?text=Photo+1" alt="" />
+          <img src="assets/snaps1.jpg" alt="Snapshot" loading="lazy" />
         </div>
         <div class="postit" style="--postit-color:#D98A99; transform: rotate(3deg);">
           <span class="postit-pin"></span>
-          <img src="https://placehold.co/300x300?text=Photo+2" alt="" />
+          <img src="assets/snaps2.jpg" alt="Snapshot" loading="lazy" />
         </div>
         <div class="postit" style="--postit-color:#7FA8B8; transform: rotate(-2deg);">
           <span class="postit-tape"></span>
-          <img src="https://placehold.co/300x300?text=Photo+3" alt="" />
+          <img src="assets/snaps3.jpg" alt="Snapshot" loading="lazy" />
         </div>
         <div class="postit" style="--postit-color:#8FAE8B; transform: rotate(5deg);">
           <span class="postit-tape"></span>
-          <img src="https://placehold.co/300x300?text=Photo+4" alt="" />
+          <img src="assets/snaps4.jpg" alt="Snapshot" loading="lazy" />
         </div>
         <div class="postit" style="--postit-color:#A78BC4; transform: rotate(-3deg);">
           <span class="postit-pin"></span>
-          <img src="https://placehold.co/300x300?text=Photo+5" alt="" />
+          <img src="assets/snaps5.jpg" alt="Snapshot" loading="lazy" />
         </div>
         <div class="postit" style="--postit-color:#D99A6C; transform: rotate(2deg);">
           <span class="postit-tape"></span>
-          <img src="https://placehold.co/300x300?text=Photo+6" alt="" />
+          <img src="assets/snaps6.jpg" alt="Snapshot" loading="lazy" />
+        </div>
+        <div class="postit" style="--postit-color:#E8C468; transform: rotate(2deg);">
+          <span class="postit-pin"></span>
+          <img src="assets/snaps7.jpg" alt="Snapshot" loading="lazy" />
+        </div>
+        <div class="postit" style="--postit-color:#7FA8B8; transform: rotate(-3deg);">
+          <span class="postit-tape"></span>
+          <img src="assets/snaps8.jpg" alt="Snapshot" loading="lazy" />
+        </div>
+        <div class="postit" style="--postit-color:#D98A99; transform: rotate(4deg);">
+          <span class="postit-tape"></span>
+          <img src="assets/snaps9.jpg" alt="Snapshot" loading="lazy" />
+        </div>
+        <div class="postit" style="--postit-color:#8FAE8B; transform: rotate(-2deg);">
+          <span class="postit-pin"></span>
+          <img src="assets/snaps10.jpg" alt="Snapshot" loading="lazy" />
+        </div>
+        <div class="postit" style="--postit-color:#A78BC4; transform: rotate(3deg);">
+          <span class="postit-tape"></span>
+          <img src="assets/snaps11.jpg" alt="Snapshot" loading="lazy" />
         </div>
       </div>
     </div>
@@ -609,13 +639,14 @@
 
   <script>
     const CATEGORIES = {
-      about:      { label: 'About',      color: 'var(--cat-about)',      hex: '#5F84AC' },
-      experience: { label: 'Experience', color: 'var(--cat-experience)', hex: '#8B6CAE' },
-      leadership: { label: 'Leadership', color: 'var(--cat-leadership)', hex: '#B08A2E' },
-      project:    { label: 'Projects',   color: 'var(--cat-project)',    hex: '#479C87' },
-      skills:     { label: 'Skills',     color: 'var(--cat-skills)',     hex: '#A97640' },
-      personal:   { label: 'Personal',   color: 'var(--cat-personal)',   hex: '#C4708C' },
-      contact:    { label: 'Contact',    color: 'var(--cat-contact)',    hex: '#D96B43' },
+      about:          { label: 'About',          color: 'var(--cat-about)',      hex: '#5F84AC' },
+      experience:     { label: 'Experience',     color: 'var(--cat-experience)', hex: '#8B6CAE' },
+      leadership:     { label: 'Leadership',     color: 'var(--cat-leadership)', hex: '#B08A2E' },
+      'work-project': { label: 'Work Projects',  color: 'var(--cat-work)',       hex: '#479C87' },
+      'college-project': { label: 'College Projects', color: 'var(--cat-college)', hex: '#4AACC7' },
+      skills:         { label: 'Skills',         color: 'var(--cat-skills)',     hex: '#A97640' },
+      personal:       { label: 'Personal',       color: 'var(--cat-personal)',   hex: '#C4708C' },
+      contact:        { label: 'Contact',        color: 'var(--cat-contact)',    hex: '#D96B43' },
     };
 
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -663,16 +694,22 @@
           'Engineered an Outlook phishing-detection add-in (Office.js, Microsoft Graph API, Node.js) with 99% classification accuracy in pilots.',
           'Integrated automated tests into CI/CD pipelines on AWS-hosted environments.',
         ], tags: ['Databricks', 'PySpark', 'Hugging Face', 'AWS'] },
-      { id: 'education', day: 1, time: '1:00 – 1:45 PM', title: 'Purdue University — B.S. Computer Science', subtitle: 'Jan 2022 – Dec 2025 · West Lafayette, IN',
-        category: 'about', year: 2022, type: 'bullets',
-        bullets: ["Dean's List: 2022 – 2023.", 'Coursework spanning systems programming, OOP, and data structures & algorithms.'] },
-      { id: 'opportunity-scoring', day: 1, time: '3:00 – 5:00 PM', title: 'AI-Powered Opportunity Scoring', subtitle: 'Cummins Inc. · AI-assisted sales intelligence · Feb – Jun 2026',
-        category: 'project', type: 'bullets', startMonth: 2, endMonth: 6, image: 'https://placehold.co/640x360?text=Opportunity+Scoring+Dashboard',
+      { id: 'education', day: 1, time: '1:00 – 1:45 PM', title: 'College Coursework', subtitle: 'Purdue University, B.S. Computer Science · Jan 2022 – Dec 2025 · West Lafayette, IN',
+        category: 'about', year: 2022, type: 'bullets', image: 'assets/mainpic2.jpg',
         bullets: [
-          'Investigated model behavior and data-quality issues in an AI-assisted opportunity-scoring capability for the sales workflow.',
-          'Validated scoring outputs and model explanations across testing environments.',
-          'Coordinated deployment discussions and defined implementation requirements with business and technical stakeholders.',
-        ], tags: ['AI/ML', 'Salesforce', 'Model Explainability', 'Stakeholder Management'] },
+          "Dean's List: 2022 – 2023.",
+          'Coursework spanning systems programming, OOP, and data structures & algorithms.',
+          'Teaching Assistant for Object-Oriented Programming with Java across 7 terms.',
+        ], links: [{ label: 'Coursework on GitHub', url: 'https://github.com/shivliagrawal/CourseWork' }] },
+      { id: 'win-loss-intelligence', day: 1, time: '3:00 – 5:00 PM', title: 'Win/Loss Intelligence Pipeline', subtitle: 'Cummins Inc. · Sales analytics + NLP/LLM · Summer 2025',
+        category: 'work-project', year: 2025, type: 'bullets',
+        bullets: [
+          'Built an end-to-end pipeline that turns unstructured Salesforce win/loss comments into structured, reusable analytics — surfacing why opportunities were lost and where repeat-loss patterns showed up.',
+          'Designed a Databricks/Spark pipeline to filter and deduplicate opportunity comments, generate SBERT embeddings, cluster semantic themes, and use an LLM to extract structured loss reasons.',
+          'Cut AI request volume by clustering similar comments first — roughly 200 cluster-level calls instead of one call per note.',
+          'Prototyped a module to surface accounts with high quote volume and low conversion for targeted follow-up.',
+          '55,044 closed-lost deals analyzed in the final documented run, at roughly 8 minutes of runtime and under $3 in model cost — down from an early version that took 18+ hours.',
+        ], tags: ['Databricks', 'Spark', 'SBERT', 'LLM', 'SQL', 'Salesforce', 'NLP'] },
 
       { id: 'ta', day: 2, time: '9:00 – 10:30 AM', title: 'Undergraduate TA', subtitle: 'Purdue University, Object-Oriented Programming with Java · Aug 2022 – Dec 2025 (7 terms)',
         category: 'experience', year: 2022, type: 'bullets',
@@ -686,13 +723,14 @@
           'Led cross-cultural events and fostered a welcoming environment for international students.',
           'Enhanced global awareness and cultural exchange across campus.',
         ] },
-      { id: 'sales-integration', day: 2, time: '5:30 – 7:00 PM', title: 'Enterprise Sales Platform Integration', subtitle: 'Cummins Inc. · Cross-functional integration initiative · Jan – Aug 2026',
-        category: 'project', type: 'bullets', startMonth: 1, endMonth: 8, image: 'https://placehold.co/640x360?text=Sales+Platform+Integration',
+      { id: 'smoke-testing-suite', day: 2, time: '5:30 – 7:00 PM', title: 'AI-Driven Smoke Testing Suite', subtitle: 'Cummins Inc. · QA strategy + prompt engineering · Summer 2025',
+        category: 'work-project', year: 2025, type: 'bullets', image: 'assets/smoke_testing_infograph.jpg',
         bullets: [
-          'Leading a cross-functional integration initiative connecting a sales workflow with enterprise data and digital systems.',
-          'Coordinate middleware and data integrations, translating business needs into technical work and managing dependencies.',
-          'Own a technical initiative across multiple teams, supporting implementation and post-launch improvements.',
-        ], tags: ['Product Management', 'APIs & Integrations', 'Middleware', 'Enterprise Architecture'] },
+          'Designed a repeatable story → AI generation → human review → staging workflow for generating high-value smoke tests from user stories and acceptance criteria.',
+          'Developed prompt patterns using role framing, explicit output schemas, few-shot examples, and edge-case instructions to keep generated tests consistent and useful.',
+          'Added risk-based selection criteria — prioritizing high-priority stories, recent changes, and core functionality — so testers focus AI-assisted effort where it matters most.',
+          'Structured AI as an accelerator, not a replacement for QA judgment: every generated test is reviewed, corrected, and validated before entering the suite.',
+        ], tags: ['Salesforce CPQ', 'JIRA', 'Prompt Engineering', 'QA', 'ChatGPT'] },
 
       { id: 'nll-swe', day: 3, time: '10:00 AM – 12:00 PM', title: 'Software Development Intern', subtitle: 'No Limit Living LLC · June 2024 – Aug 2024 · Gary, IN',
         category: 'experience', year: 2024, type: 'bullets',
@@ -707,13 +745,15 @@
           'Designed a website supporting daily operations and integrated internal MLS tools via The Data Mine Corporate Partnership at Purdue.',
           'Built live-update analytics dashboards that improved operational efficiency.',
         ] },
-      { id: 'digital-discovery', day: 3, time: '4:00 – 5:30 PM', title: 'Digital Product Discovery Experience', subtitle: 'Cummins Inc. · Customer-facing product discovery · Apr – Sep 2026',
-        category: 'project', type: 'bullets', startMonth: 4, endMonth: 9, image: 'https://placehold.co/640x360?text=Product+Discovery+Experience',
+      { id: 'market-intelligence', day: 3, time: '4:00 – 6:00 PM', title: 'Market Intelligence Tool', subtitle: 'Cummins Power Systems · AI-powered competitive intelligence · Summer 2025',
+        category: 'work-project', year: 2025, type: 'bullets',
         bullets: [
-          'Contributed to the design of a new customer-facing digital experience making technical product information easier to discover and navigate.',
-          'Gathered business requirements and translated them into IT and UX requirements; coordinated with design, content, and engineering teams.',
-          'Evaluated build-vs-buy approaches and an internal proof of concept as the solution evolved.',
-        ], tags: ['Product Discovery', 'UX', 'Product Strategy', 'Stakeholder Interviews'] },
+          'Built and evolved an AI-powered capability that automates the path from public competitor product data to structured, searchable, comparable product intelligence.',
+          'Partnered with Sales, Product, Engineering, and IT to translate competitive-intelligence needs into technical requirements and solution designs.',
+          'Worked across web scraping/RPA, FastAPI, Azure Blob Storage, Azure OpenAI, PostgreSQL, and a data lake to turn unstructured PDFs, HTML, and tables into structured product data.',
+          'Built schema mapping, unit normalization, deduplication, confidence scoring, and source traceability into the pipeline so extracted data could be trusted.',
+          'Supported search, filtering, and side-by-side comparison views for the resulting product data.',
+        ], tags: ['Python', 'FastAPI', 'Azure OpenAI', 'RPA', 'PostgreSQL', 'RAG', 'Prompt Engineering'] },
 
       { id: 'qnucleon', day: 4, time: '9:30 – 11:00 AM', title: 'Front-end Development Intern', subtitle: 'Qnucleon PTY LTD · May 2023 – Aug 2023 · Remote',
         category: 'experience', year: 2023, type: 'bullets',
@@ -728,13 +768,25 @@
           'Used BERT to extract structured data from a Harvard Medical School Adverse Drug Events dataset.',
           'Fine-tuned BioBERT with Hyperband and population-based training, lifting NER performance by 5%.',
         ], tags: ['BERT', 'BioBERT', 'NLP'] },
-      { id: 'spec-automation', day: 4, time: '3:30 – 5:00 PM', title: 'Engineering Specification Automation', subtitle: 'Cummins Inc. · Automating engineering & product-configuration workflows · Jun 2026 – Present',
-        category: 'project', type: 'bullets', startMonth: 6, endMonth: 12, image: 'https://placehold.co/640x360?text=Specification+Automation',
+      { id: 'sales-enablement', day: 4, time: '3:30 – 5:30 PM', title: 'Sales Enablement — Business Analysis & Delivery', subtitle: 'Cummins Inc. · Business analysis & delivery · Jan – Dec 2026',
+        category: 'work-project', year: 2026, type: 'bullets', startMonth: 1, endMonth: 12, image: 'assets/sales_enablement_graph.png',
         bullets: [
-          'Automating traditionally manual engineering and product-configuration workflows using AI prompting, structured data transformation, and business rules.',
-          'Evaluate solution approaches, gather requirements, and define implementation stories with engineering and business stakeholders.',
-        ], tags: ['Generative AI', 'Automation', 'Technical Product Management'] },
-      { id: 'skills', day: 4, time: '5:30 – 6:00 PM', title: 'Skills Review', subtitle: 'A running inventory',
+          'Work as the business-analysis bridge between sales-enablement stakeholders and the development team — translating business needs into functional and technical requirements.',
+          'Built a repeatable requirement → story → development feedback → sprint execution workflow, and wrote the stories that carried it.',
+          'Created and refined stories across five parallel platform initiatives spanning product sizing, site-data integration, pricing calculation, a presentation-platform migration, and market intelligence.',
+          'Took on project-management responsibilities for one initiative — tracking open items, progress, and blockers to keep work moving.',
+          'Started identifying opportunities for AI-assisted workflows within the team, including simplifying competitor-data collection and updates.',
+        ], tags: ['Business Analysis', 'Requirements Engineering', 'JIRA', 'Agile/Scrum', 'Stakeholder Management'] },
+      { id: 'spec-data-automation', day: 4, time: '5:45 – 7:00 PM', title: 'Spec / Data Sheet Automation Platform', subtitle: 'Cummins Inc. · Document automation + data engineering · 2026',
+        category: 'work-project', year: 2026, type: 'bullets', image: 'assets/specsheet_infographic.jpg',
+        bullets: [
+          'Designed a reusable automation architecture for turning product and configuration data into standardized spec sheets, data sheets, and brochures.',
+          'Led discovery across the existing manual export → spreadsheet → design-tool → PDF process, identifying duplicated mapping logic and document-generation bottlenecks.',
+          'Defined a reusable mapping engine that stores field mappings and transformation rules in a central configuration layer instead of duplicating logic per output file.',
+          'Designed an AI-assisted document → structured data → text workflow with schema validation, confidence checks, and human review for unclear content.',
+          'Coordinated with product management, engineering, and document-design stakeholders to align the automation with both technical constraints and business requirements.',
+        ], tags: ['Python', 'pandas', 'Databricks', 'SQL', 'Excel Automation', 'ETL', 'Prompt Engineering', 'Solution Architecture'] },
+      { id: 'skills', day: 4, time: '7:15 – 7:45 PM', title: 'Skills Review', subtitle: 'A running inventory',
         category: 'skills', type: 'skills',
         skillGroups: [
           { label: 'Languages', items: ['Java', 'C', 'C++', 'Python', 'R', 'JavaScript', 'TypeScript', 'SQL'] },
@@ -743,40 +795,29 @@
         ] },
 
       { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Feb 2025',
-        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=Nocturne+Marketplace',
+        category: 'college-project', type: 'bullets',
         bullets: [
           'Built a dynamic e-commerce platform with category navigation, JWT auth, and real-time search filtering.',
           'Optimized API latency with Cloudflare Workers; enhanced UI with CSS Grid, Flexbox, and animation.',
           'Integrated PostgreSQL queries into reporting modules to validate data integrity.',
-        ], tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Cloudflare'] },
+        ], tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Cloudflare'],
+        links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/Nocturne' }] },
       { id: 'sysmonitor', day: 5, time: '1:00 – 3:00 PM', title: 'Build: System Monitor', subtitle: 'C · GTK · Linux /proc · Nov 2024',
-        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=System+Monitor',
+        category: 'college-project', type: 'bullets',
         bullets: [
           'Built a GTK desktop app in C to monitor CPU, memory, and processes via the /proc filesystem.',
           'Implemented process-management controls, automated performance checks, and real-time visualization.',
         ], tags: ['C', 'GTK', 'Linux'] },
       { id: 'boilertutors', day: 5, time: '4:00 – 6:00 PM', title: 'Build: BoilerTutors', subtitle: 'React · Node.js · PostgreSQL · REST · Sept 2024',
-        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=BoilerTutors',
+        category: 'college-project', type: 'bullets',
         bullets: [
           'Built a full-stack resource-sharing platform with React.js and Node.js.',
           'Designed REST APIs and a PostgreSQL schema with indexing and query optimization for scale.',
           'Wrote backend unit tests validating scheduling and resource-matching algorithms.',
-        ], tags: ['React', 'Node.js', 'PostgreSQL'] },
-
-      { id: 'cpq-analytics', day: 6, time: '10:00 AM – 12:00 PM', title: 'Build: Salesforce CPQ Win/Loss Analytics', subtitle: 'Databricks · PySpark · MLflow · Salesforce API · Aug 2025',
-        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=CPQ+Win%2FLoss+Analytics',
-        bullets: [
-          'Built an end-to-end pipeline predicting opportunity outcomes using gradient boosting and LLM-based pattern mining.',
-          'Added automated regression tests validating MLflow model outputs against production benchmarks.',
-        ], tags: ['Databricks', 'PySpark', 'MLflow'] },
-      { id: 'smoke-test', day: 6, time: '1:00 – 3:00 PM', title: 'Build: AI-Generated Smoke Test Suite', subtitle: 'Hugging Face · PyTorch · Transformers · Aug 2025',
-        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=Smoke+Test+Suite',
-        bullets: [
-          'Fine-tuned a custom LLM on historical CPQ deployments to auto-generate smoke-test scenarios, boosting coverage by 30%.',
-          'Packaged testing scripts into reusable modules integrated with CI/CD.',
-        ], tags: ['Hugging Face', 'PyTorch', 'Transformers'] },
+        ], tags: ['React', 'Node.js', 'PostgreSQL'],
+        links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/BoilerTutorsShivli' }] },
       { id: 'lms', day: 6, time: '3:30 – 5:00 PM', title: 'Build: Database LMS', subtitle: 'GUI · Concurrency · Apr 2022',
-        category: 'project', type: 'bullets', image: 'https://placehold.co/640x360?text=Database+LMS',
+        category: 'college-project', type: 'bullets',
         bullets: [
           'Designed a GUI-based Learning Management System with concurrency support for quizzes and auto-grading.',
           'Built real-time student–teacher interaction features.',
@@ -792,17 +833,17 @@
           'Built the kind of daily discipline that carries over into how I show up at work.',
         ] },
       { id: 'running-journey', day: 6, time: '7:00 AM', title: '5K Running Journey', subtitle: 'Mid-July 2026 – Present',
-        category: 'personal', year: 2026, type: 'bullets',
+        category: 'personal', year: 2026, type: 'bullets', image: 'assets/5k.jpg',
         bullets: [
           "Started running as a habit in mid-July and haven't stopped since — training toward my first 5K, one run at a time.",
         ] },
       { id: 'matcha-corner', day: 5, time: 'All year round', title: 'Matcha Corner', subtitle: '2026, ongoing',
-        category: 'personal', year: 2026, type: 'bullets', image: 'https://placehold.co/640x360?text=Matcha+Corner+%28photo+coming+soon%29',
+        category: 'personal', year: 2026, type: 'bullets', image: 'assets/matchacorner.jpg',
         bullets: [
           'Building out a little matcha corner at home — testing new matcha blends, jams, and toppings, and slowly making it feel like mine.',
         ] },
       { id: 'hp-trip', day: 6, time: 'Jul 24 – 28, 2026', title: 'Wizarding World of Harry Potter, LA', subtitle: 'A long-time dream trip',
-        category: 'personal', year: 2026, type: 'bullets',
+        category: 'personal', year: 2026, type: 'bullets', image: 'assets/wizardingworld.jpg',
         bullets: [
           "Five days at the Wizarding World of Harry Potter in LA — I've been a Potterhead for as long as I can remember, so this was the trip.",
         ] },
@@ -847,7 +888,7 @@
       </div>`).join('');
 
     // ---- Week view: category-separated cards ----
-    const WEEK_CATEGORY_ORDER = ['about', 'experience', 'leadership', 'project', 'skills', 'personal', 'contact'];
+    const WEEK_CATEGORY_ORDER = ['about', 'experience', 'leadership', 'work-project', 'college-project', 'skills', 'personal', 'contact'];
     let activeWeekCat = 'experience';
 
     function renderWeekTabs() {
@@ -1002,14 +1043,18 @@
             </a>
           </div>`;
       } else {
-        const imageHtml = e.image ? `<img class="case-img mb-5" src="${e.image}" alt="" />` : '';
+        const imageHtml = e.image ? `<img class="case-img reveal-img mb-5" src="${e.image}" alt="" loading="lazy" />` : '';
         const bulletsHtml = e.bullets.map(b => `
           <li class="flex gap-2.5 text-sm leading-relaxed" style="color: var(--ink);">
             <span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background:${cat.color};"></span>
             <span>${b}</span>
           </li>`).join('');
         const tagsHtml = e.tags ? `<div class="flex flex-wrap gap-1.5 mt-5">${e.tags.map(t => `<span class="text-xs px-2.5 py-1 rounded-full border" style="border-color: var(--hairline); color: var(--muted);">${t}</span>`).join('')}</div>` : '';
-        modalBody.innerHTML = `${imageHtml}<ul class="space-y-2.5">${bulletsHtml}</ul>${tagsHtml}`;
+        const linksHtml = e.links ? `<div class="flex flex-wrap gap-2.5 mt-5">${e.links.map(l => `
+          <a href="${l.url}" target="_blank" rel="noopener" class="btn-pop inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold border" style="border-color: var(--hairline); color: var(--ink);">
+            ${l.label} <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>`).join('')}</div>` : '';
+        modalBody.innerHTML = `${imageHtml}<ul class="space-y-2.5">${bulletsHtml}</ul>${tagsHtml}${linksHtml}`;
       }
 
       overlay.classList.remove('hidden');
@@ -1019,6 +1064,9 @@
         modalCard.style.opacity = '1';
         modalCard.style.transform = 'scale(1)';
       });
+      setTimeout(() => {
+        modalBody.querySelectorAll('.reveal-img').forEach(img => img.classList.add('is-in'));
+      }, 80);
       document.body.style.overflow = 'hidden';
     }
 
@@ -1119,6 +1167,17 @@
       else if (key === 'm') switchView('month');
       else if (key === 'y') switchView('year');
     });
+
+    // ---- Chart/image reveal on scroll ----
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.reveal-chart, .reveal-img').forEach((el) => revealObserver.observe(el));
 
     // ---- Theme toggle ----
     const root = document.documentElement;
