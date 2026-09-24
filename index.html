@@ -173,8 +173,10 @@
   .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; }
   .chart-bars > span { flex: 1; height: 0; border-radius: 4px 4px 0 0; transition: height 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
   .chart-bars.is-in > span { height: var(--h); }
-  .case-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; display: block; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
-  .case-img:hover { transform: scale(1.02); }
+  .case-img { width: 100%; max-height: 75vh; object-fit: contain; border-radius: 12px; display: block; background: var(--surface-2); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
+  .case-img:hover { transform: scale(1.01); }
+  #modal-card.modal-wide { max-width: min(94vw, 1040px) !important; }
+  #modal-card.modal-xwide { max-width: min(96vw, 1280px) !important; }
   .reveal-img { opacity: 0; transform: translateY(14px); }
   .reveal-img.is-in { opacity: 1; transform: translateY(0); }
 
@@ -361,7 +363,7 @@
                       </div>
                       <h1 class="text-3xl md:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] mb-3" style="color: var(--ink);">Shivli Agrawal</h1>
                       <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solution Engineer, Cummins Inc. — I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
-                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7" style="color: var(--muted);">I ask "why" one more time than most people are comfortable with, and I love a good debate about the right way to solve a problem — then I go build it, usually as an AI or LLM pipeline deployed close enough to the business to prove whether the answer actually holds.</p>
+                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7" style="color: var(--muted);">I like asking "why" until the real problem surfaces, and I genuinely enjoy debating the right way to solve it. Then I build it — usually an AI or LLM pipeline — and I stay close to the business side long enough to find out whether it actually works. I'm currently looking at Forward Deployed Engineer, Technical PM, and Technical Solutions roles where that combination is the job.</p>
                       <div class="flex flex-wrap gap-3">
                         <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold" data-target="today-impact" style="background: var(--cat-contact); color: #fff;">View Selected Work</button>
                         <a href="Resume-work.png" target="_blank" rel="noopener" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
@@ -461,7 +463,7 @@
                 <span class="today-dot" style="background: var(--cat-work);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
                   <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Impact</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Win/Loss Intelligence Pipeline</h2>
+                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Win/Loss Intelligence</h2>
                   <div class="grid md:grid-cols-2 gap-6 mb-6 items-end">
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-2" style="color: var(--muted);">Runtime improvement, illustrative</p>
@@ -671,22 +673,22 @@
     function fmtDate(d) { return `${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`; }
 
     const EVENTS = [
-      { id: 'now-cummins', day: 0, time: '9:00 AM – 5:00 PM', title: 'Now: AI Solution Engineer', subtitle: 'Cummins Inc., Power Systems Business Unit · Jan 2026 – Present · Shoreview, MN',
+      { id: 'now-cummins', day: 0, time: '9:00 AM – 5:00 PM', title: 'Now: AI Solution Engineer', subtitle: 'Cummins Inc., Power Systems Business Unit · Jan 2026 – Present · Minneapolis, MN',
         category: 'experience', year: 2026, current: true, type: 'bullets',
         bullets: [
           'Collaborate with cross-functional teams to translate business requirements into scalable analytics tools and dashboards.',
           'Implement AI/NLP workflows to analyze unstructured sales data and surface recurring problems.',
           'Produce technical documentation and user stories for enterprise data tools.',
         ], tags: ['AI/NLP', 'Analytics', 'Cross-functional'] },
-      { id: 'about', day: 0, time: '5:30 – 6:00 PM', title: 'About Me', subtitle: 'Shivli Agrawal · West Lafayette, IN',
+      { id: 'about', day: 0, time: '5:30 – 6:00 PM', title: 'About Me', subtitle: 'Shivli Agrawal · Minneapolis, MN',
         category: 'about', type: 'bullets',
         bullets: [
-          'Computer Science student at Purdue University, graduating December 2025.',
-          'AI Solution Engineer at Cummins Inc., building analytics tools and AI/NLP workflows for the Power Systems Business Unit.',
-          'I like turning messy, unstructured problems into shipped, working software — then teaching 80+ students how to do the same.',
+          'AI Solution Engineer at Cummins Inc. in Minneapolis, building AI/LLM pipelines and analytics tools for the Power Systems Business Unit — my current role and biggest highlight so far.',
+          'Computer Science graduate of Purdue University (B.S., Dec 2025).',
+          'Looking for my next move as a Forward Deployed Engineer, Technical PM, or Technical Solutions Engineer — roles where building the AI pipeline and understanding the business problem are the same job.',
         ] },
 
-      { id: 'cummins-intern', day: 1, time: '9:00 – 11:00 AM', title: 'Tech Applications Intern', subtitle: 'Cummins Inc., Power Systems Business Unit · June 2025 – Aug 2025 · Shoreview, MN',
+      { id: 'cummins-intern', day: 1, time: '9:00 – 11:00 AM', title: 'Tech Applications Intern', subtitle: 'Cummins Inc., Power Systems Business Unit · June 2025 – Aug 2025 · Minneapolis, MN',
         category: 'experience', year: 2025, type: 'bullets',
         bullets: [
           'Developed automated test frameworks in Databricks (PySpark, MLflow) to validate ETL pipelines on Salesforce CPQ data across 5,000+ opportunities.',
@@ -698,18 +700,23 @@
         category: 'about', year: 2022, type: 'bullets', image: 'assets/mainpic2.jpg',
         bullets: [
           "Dean's List: 2022 – 2023.",
-          'Coursework spanning systems programming, OOP, and data structures & algorithms.',
-          'Teaching Assistant for Object-Oriented Programming with Java across 7 terms.',
+          'Teaching Assistant for Object-Oriented Programming with Java across 7 terms — supervised lab sessions for 80+ students each term.',
+        ], tags: [
+          'CS 18000 · Problem Solving & OOP', 'CS 18200 · Foundations of CS', 'CS 24000 · Programming in C',
+          'CS 25000 · Computer Architecture', 'CS 25100 · Data Structures & Algorithms', 'CS 25200 · Systems Programming',
+          'CS 30700 · Software Engineering', 'CS 35400 · Operating Systems', 'CS 38100 · Algorithms',
+          'CS 40800 · Software Testing', 'CS 34800 · Information Systems',
         ], links: [{ label: 'Coursework on GitHub', url: 'https://github.com/shivliagrawal/CourseWork' }] },
-      { id: 'win-loss-intelligence', day: 1, time: '3:00 – 5:00 PM', title: 'Win/Loss Intelligence Pipeline', subtitle: 'Cummins Inc. · Sales analytics + NLP/LLM · Summer 2025',
-        category: 'work-project', year: 2025, type: 'bullets',
+      { id: 'win-loss-intelligence', day: 1, time: '3:00 – 5:00 PM', title: 'Win/Loss Intelligence', subtitle: 'Cummins Inc. · IT Sales & Aftermarket · Jun – Aug 2026',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, image: 'assets/winloss_infograph.jpg',
         bullets: [
-          'Built an end-to-end pipeline that turns unstructured Salesforce win/loss comments into structured, reusable analytics — surfacing why opportunities were lost and where repeat-loss patterns showed up.',
-          'Designed a Databricks/Spark pipeline to filter and deduplicate opportunity comments, generate SBERT embeddings, cluster semantic themes, and use an LLM to extract structured loss reasons.',
-          'Cut AI request volume by clustering similar comments first — roughly 200 cluster-level calls instead of one call per note.',
-          'Prototyped a module to surface accounts with high quote volume and low conversion for targeted follow-up.',
-          '55,044 closed-lost deals analyzed in the final documented run, at roughly 8 minutes of runtime and under $3 in model cost — down from an early version that took 18+ hours.',
-        ], tags: ['Databricks', 'Spark', 'SBERT', 'LLM', 'SQL', 'Salesforce', 'NLP'] },
+          'Turned unstructured Salesforce Win/Loss comments into a reusable analytics pipeline that surfaced why opportunities were lost, competitive themes, and repeat-loss account patterns.',
+          'Designed an end-to-end Databricks/Spark pipeline to filter and deduplicate Salesforce opportunity comments, generate SBERT embeddings, cluster semantic themes, and use Claude Sonnet to extract structured loss reasons.',
+          'Reduced AI request volume by clustering similar comments first, using roughly 200 cluster-level calls instead of sending every note individually.',
+          'Built analysis around loss reasons, competitor signals, comment quality, and repeat-loss accounts — Caterpillar was the top competitor showing up in loss data.',
+          'Prototyped a serial-loss account module to surface customers with high quote volume and low conversion.',
+          '55,044 closed-lost deals analyzed in the final documented run, at roughly 8 minutes of runtime and under $3 in model-token cost — down from an earlier version that took 18+ hours to run.',
+        ], tags: ['Databricks', 'Spark', 'SBERT', 'Claude Sonnet', 'SQL', 'Salesforce', 'NLP', 'LLM'] },
 
       { id: 'ta', day: 2, time: '9:00 – 10:30 AM', title: 'Undergraduate TA', subtitle: 'Purdue University, Object-Oriented Programming with Java · Aug 2022 – Dec 2025 (7 terms)',
         category: 'experience', year: 2022, type: 'bullets',
@@ -723,14 +730,16 @@
           'Led cross-cultural events and fostered a welcoming environment for international students.',
           'Enhanced global awareness and cultural exchange across campus.',
         ] },
-      { id: 'smoke-testing-suite', day: 2, time: '5:30 – 7:00 PM', title: 'AI-Driven Smoke Testing Suite', subtitle: 'Cummins Inc. · QA strategy + prompt engineering · Summer 2025',
-        category: 'work-project', year: 2025, type: 'bullets', image: 'assets/smoke_testing_infograph.jpg',
+      { id: 'smoke-testing-suite', day: 2, time: '5:30 – 7:00 PM', title: 'AI-Driven Smoke Testing Suite', subtitle: 'Cummins Inc. · QA strategy + prompt engineering · Jun – Aug 2026',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, image: 'assets/smoke_testing_infograph.jpg',
         bullets: [
-          'Designed a repeatable story → AI generation → human review → staging workflow for generating high-value smoke tests from user stories and acceptance criteria.',
-          'Developed prompt patterns using role framing, explicit output schemas, few-shot examples, and edge-case instructions to keep generated tests consistent and useful.',
-          'Added risk-based selection criteria — prioritizing high-priority stories, recent changes, and core functionality — so testers focus AI-assisted effort where it matters most.',
-          'Structured AI as an accelerator, not a replacement for QA judgment: every generated test is reviewed, corrected, and validated before entering the suite.',
-        ], tags: ['Salesforce CPQ', 'JIRA', 'Prompt Engineering', 'QA', 'ChatGPT'] },
+          'Created a reusable QA playbook for generating high-value Salesforce CPQ smoke tests from JIRA stories and acceptance criteria, with human review before execution in staging.',
+          'Designed a repeatable JIRA → AI generation → human review → qTest → staging workflow for release-specific smoke testing.',
+          'Developed prompt patterns using role framing, explicit schemas, few-shot examples, edge-case instructions, and strict output formatting.',
+          'Applied the approach to documented CPQ scenarios covering Conga quote templates, COR document generation, and multi-currency pricing.',
+          'Added risk-based selection criteria around P1 stories, recent changes, component tags, past incidents, core functionality, and integrations.',
+          'Produced a reusable training playbook that future testers can use to create and curate release-specific smoke suites — structuring AI as an accelerator, not a replacement, for QA judgment.',
+        ], tags: ['Salesforce CPQ', 'JIRA', 'qTest', 'ChatGPT', 'Conga', 'Prompt Engineering', 'QA'] },
 
       { id: 'nll-swe', day: 3, time: '10:00 AM – 12:00 PM', title: 'Software Development Intern', subtitle: 'No Limit Living LLC · June 2024 – Aug 2024 · Gary, IN',
         category: 'experience', year: 2024, type: 'bullets',
@@ -745,15 +754,17 @@
           'Designed a website supporting daily operations and integrated internal MLS tools via The Data Mine Corporate Partnership at Purdue.',
           'Built live-update analytics dashboards that improved operational efficiency.',
         ] },
-      { id: 'market-intelligence', day: 3, time: '4:00 – 6:00 PM', title: 'Market Intelligence Tool', subtitle: 'Cummins Power Systems · AI-powered competitive intelligence · Summer 2025',
-        category: 'work-project', year: 2025, type: 'bullets',
+      { id: 'market-intelligence', day: 3, time: '4:00 – 6:00 PM', title: 'Market Intelligence Tool', subtitle: 'Cummins Power Systems · Market Intelligence · Jun – Aug 2026',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, image: 'assets/market_int.jpg',
         bullets: [
-          'Built and evolved an AI-powered capability that automates the path from public competitor product data to structured, searchable, comparable product intelligence.',
-          'Partnered with Sales, Product, Engineering, and IT to translate competitive-intelligence needs into technical requirements and solution designs.',
-          'Worked across web scraping/RPA, FastAPI, Azure Blob Storage, Azure OpenAI, PostgreSQL, and a data lake to turn unstructured PDFs, HTML, and tables into structured product data.',
-          'Built schema mapping, unit normalization, deduplication, confidence scoring, and source traceability into the pipeline so extracted data could be trusted.',
-          'Supported search, filtering, and side-by-side comparison views for the resulting product data.',
-        ], tags: ['Python', 'FastAPI', 'Azure OpenAI', 'RPA', 'PostgreSQL', 'RAG', 'Prompt Engineering'] },
+          'Built and evolved an AI-powered competitor intelligence capability that automates the path from public competitor product data to structured, searchable, and comparable product intelligence inside Cummins Power Suite.',
+          'Partnered with Sales, Product, Engineering, and IT to translate competitive-intelligence needs into technical requirements, acceptance criteria, JIRA stories, and solution designs.',
+          'Designed the end-to-end flow: competitor-source discovery → automated collection → document ingestion → AI extraction → standardization/validation → centralized storage → Power Suite comparison.',
+          'Worked across Python web scraping, Power Automate Desktop / RPA, FastAPI, Azure Blob Storage, Azure OpenAI / Azure AI Foundry, PostgreSQL, Data Lake, and Power Suite / Angular.',
+          'Built schema mapping, unit normalization, deduplication, required-field validation, confidence scoring, and source traceability into the pipeline.',
+          'Supported Product Finder workflows including search, filters, product cards, detail pages, side-by-side comparison, and community notes.',
+          'Phase 1 focused on Caterpillar, with expansion planned toward Kohler, MTU, Generac, and FG Wilson.',
+        ], tags: ['Python', 'FastAPI', 'Azure OpenAI', 'AI Foundry', 'RPA', 'PostgreSQL', 'RAG/Vector Search', 'Prompt Engineering', 'System Architecture'] },
 
       { id: 'qnucleon', day: 4, time: '9:30 – 11:00 AM', title: 'Front-end Development Intern', subtitle: 'Qnucleon PTY LTD · May 2023 – Aug 2023 · Remote',
         category: 'experience', year: 2023, type: 'bullets',
@@ -768,24 +779,28 @@
           'Used BERT to extract structured data from a Harvard Medical School Adverse Drug Events dataset.',
           'Fine-tuned BioBERT with Hyperband and population-based training, lifting NER performance by 5%.',
         ], tags: ['BERT', 'BioBERT', 'NLP'] },
-      { id: 'sales-enablement', day: 4, time: '3:30 – 5:30 PM', title: 'Sales Enablement — Business Analysis & Delivery', subtitle: 'Cummins Inc. · Business analysis & delivery · Jan – Dec 2026',
-        category: 'work-project', year: 2026, type: 'bullets', startMonth: 1, endMonth: 12, image: 'assets/sales_enablement_graph.png',
+      { id: 'sales-enablement', day: 4, time: '3:30 – 5:30 PM', title: 'Sales Enablement PowerCell Support', subtitle: 'Cummins Inc. · Sales Enablement PowerCell · Jan – Dec 2026',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 1, endMonth: 12, image: 'assets/sales_enablement_infographic.jpg',
         bullets: [
-          'Work as the business-analysis bridge between sales-enablement stakeholders and the development team — translating business needs into functional and technical requirements.',
-          'Built a repeatable requirement → story → development feedback → sprint execution workflow, and wrote the stories that carried it.',
-          'Created and refined stories across five parallel platform initiatives spanning product sizing, site-data integration, pricing calculation, a presentation-platform migration, and market intelligence.',
-          'Took on project-management responsibilities for one initiative — tracking open items, progress, and blockers to keep work moving.',
-          'Started identifying opportunities for AI-assisted workflows within the team, including simplifying competitor-data collection and updates.',
-        ], tags: ['Business Analysis', 'Requirements Engineering', 'JIRA', 'Agile/Scrum', 'Stakeholder Management'] },
-      { id: 'spec-data-automation', day: 4, time: '5:45 – 7:00 PM', title: 'Spec / Data Sheet Automation Platform', subtitle: 'Cummins Inc. · Document automation + data engineering · 2026',
-        category: 'work-project', year: 2026, type: 'bullets', image: 'assets/specsheet_infographic.jpg',
+          'Work as the business-analysis bridge between Sales Enablement stakeholders and the development organization — understanding what the business needs and translating it into clear, actionable Jira stories for the GDC team.',
+          'Built a repeatable business requirement → technical requirement → Jira story → development feedback → sprint execution workflow.',
+          'Created and refined Jira stories across 5 named PowerCell initiatives: GenSize, SSR 2.0 / Webdata, GenCalc, Tiled / Seismic Transition, and Market Intelligence.',
+          'Took on project-management responsibilities within the Tiled / Seismic Transition, tracking open items, progress, and blockers to keep work moving.',
+          'Explored process improvements such as TOSCA testing and the potential for a PowerSuite → Data Lake → Databricks analytics path.',
+          'Began identifying opportunities for AI-assisted PowerCell workflows, including simplifying competitor-data collection and updates.',
+          '4 annual goal areas, 5 named PowerCell initiatives, and 6 core responsibilities: requirements discovery, requirements translation, cross-functional alignment, project execution, project management, and process improvement.',
+        ], tags: ['Business Analysis', 'Requirements Engineering', 'JIRA', 'Agile/Scrum', 'Stakeholder Management', 'PowerCell', 'PowerSuite', 'Databricks', 'TOSCA'] },
+      { id: 'spec-data-automation', day: 4, time: '5:45 – 7:00 PM', title: 'Spec / Data Sheet Automation Platform', subtitle: 'Cummins Inc. · Document automation + data engineering · Jan – Jul 2026',
+        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 1, endMonth: 7, image: 'assets/specsheet_infographic.jpg',
         bullets: [
-          'Designed a reusable automation architecture for turning product and configuration data into standardized spec sheets, data sheets, and brochures.',
-          'Led discovery across the existing manual export → spreadsheet → design-tool → PDF process, identifying duplicated mapping logic and document-generation bottlenecks.',
-          'Defined a reusable mapping engine that stores field mappings and transformation rules in a central configuration layer instead of duplicating logic per output file.',
-          'Designed an AI-assisted document → structured data → text workflow with schema validation, confidence checks, and human review for unclear content.',
-          'Coordinated with product management, engineering, and document-design stakeholders to align the automation with both technical constraints and business requirements.',
-        ], tags: ['Python', 'pandas', 'Databricks', 'SQL', 'Excel Automation', 'ETL', 'Prompt Engineering', 'Solution Architecture'] },
+          'Designed a reusable automation architecture for converting product and configuration data from WebDATA, CRD files, and Excel workbooks into standardized Excel, TXT, CSV, spec sheet, data sheet, and brochure outputs.',
+          'Led discovery across the existing WebDATA → Excel → CSV → Adobe InDesign → PDF process, identifying manual handoffs, duplicated mapping logic, and document-generation bottlenecks.',
+          'Defined a reusable Excel-to-Excel mapping engine that stores mappings and transformation rules in a centralized configuration layer rather than embedding the same logic in every output workbook.',
+          'Designed an AI-assisted CRD → structured JSON → TXT workflow using document parsing, prompt-based extraction, schema validation, deterministic formatting, confidence checks, and human review.',
+          'Mapped product attributes and Parameter IDs from WebDATA to downstream document fields.',
+          'Evaluated integration points across WebDATA, Databricks, CPQ, Logik BP blueprint logic, Excel templates, and Adobe InDesign.',
+          'Coordinated with product management, engineering, WebDATA specialists, sales, and document-design stakeholders.',
+        ], tags: ['Python', 'pandas', 'openpyxl', 'Databricks', 'SQL', 'WebDATA', 'Excel Automation', 'ETL', 'Prompt Engineering', 'LLM', 'JSON Schema', 'Adobe InDesign', 'Solution Architecture'] },
       { id: 'skills', day: 4, time: '7:15 – 7:45 PM', title: 'Skills Review', subtitle: 'A running inventory',
         category: 'skills', type: 'skills',
         skillGroups: [
@@ -794,13 +809,15 @@
           { label: 'Platforms & Practices', items: ['Machine Learning', 'NLP', 'LLMs', 'Test Automation', 'DevOps', 'Cloudflare Workers', 'AWS', 'Azure', 'REST', 'GraphQL', 'HPC'] },
         ] },
 
-      { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Feb 2025',
-        category: 'college-project', type: 'bullets',
+      { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Jan 2025',
+        category: 'college-project', type: 'bullets', image: 'assets/nocturne_screenshot.jpg',
         bullets: [
-          'Built a dynamic e-commerce platform with category navigation, JWT auth, and real-time search filtering.',
-          'Optimized API latency with Cloudflare Workers; enhanced UI with CSS Grid, Flexbox, and animation.',
+          'A next-generation e-commerce aggregator inspired by platforms like Amazon and Apple, offering real-time search, category-based navigation, and a seamless shopping experience.',
+          'Instead of direct purchases, users are redirected to official brand websites, ensuring authentic transactions.',
+          'Built the frontend with React.js and Tailwind CSS, backend with Node.js and Express.js, and MongoDB for data.',
+          'Implemented WebSockets for live search suggestions and external API integrations for brand-store redirection.',
           'Integrated PostgreSQL queries into reporting modules to validate data integrity.',
-        ], tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Cloudflare'],
+        ], tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Tailwind CSS', 'WebSockets', 'Cloudflare'],
         links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/Nocturne' }] },
       { id: 'sysmonitor', day: 5, time: '1:00 – 3:00 PM', title: 'Build: System Monitor', subtitle: 'C · GTK · Linux /proc · Nov 2024',
         category: 'college-project', type: 'bullets',
@@ -1020,6 +1037,8 @@
       modalCat.style.color = cat.color;
       modalTitle.textContent = e.title;
       modalSubtitle.textContent = e.subtitle;
+      modalCard.classList.toggle('modal-xwide', !!e.wide);
+      modalCard.classList.toggle('modal-wide', !!e.image && !e.wide);
 
       if (e.type === 'skills') {
         modalBody.innerHTML = e.skillGroups.map(g => `
