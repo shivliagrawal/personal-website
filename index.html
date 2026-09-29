@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Shivli Agrawal — Calendar</title>
-<meta name="description" content="Shivli Agrawal's portfolio, laid out as a week on her calendar — AI Solution Engineer, Purdue CS." />
+<title>Shivli Agrawal · Calendar</title>
+<meta name="description" content="Shivli Agrawal's portfolio, laid out as a week on her calendar. AI Solution Engineer, Purdue CS." />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D96B43'/%3E%3C/svg%3E" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -175,8 +175,26 @@
   .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; }
   .chart-bars > span { flex: 1; height: 0; border-radius: 4px 4px 0 0; transition: height 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
   .chart-bars.is-in > span { height: var(--h); }
-  .case-img { width: 100%; height: auto; display: block; border-radius: 12px; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
+  .hbar-track { background: var(--surface-2); border-radius: 999px; height: 8px; overflow: hidden; }
+  .hbar-fill { height: 100%; width: 0; border-radius: 999px; transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal-chart.is-in .hbar-fill { width: var(--w); }
+  .case-img { width: 100%; height: auto; display: block; border-radius: 12px; cursor: zoom-in; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
   .case-img:hover { transform: scale(1.01); }
+  .postit img { cursor: zoom-in; }
+
+  #lightbox-overlay {
+    transition: opacity 0.25s ease;
+  }
+  #lightbox-overlay img {
+    max-width: 94vw;
+    max-height: 92vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    cursor: zoom-out;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
   #modal-card.modal-wide { max-width: min(94vw, 1040px) !important; }
   #modal-card.modal-xwide { max-width: min(96vw, 1280px) !important; }
   .reveal-img { opacity: 0; transform: translateY(14px); }
@@ -364,8 +382,9 @@
                         <span class="text-[11px] font-extrabold uppercase tracking-[0.12em]" style="color: var(--cat-contact);">Now · Jan 2026 – Present</span>
                       </div>
                       <h1 class="text-3xl md:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] mb-3" style="color: var(--ink);">Shivli Agrawal</h1>
-                      <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solution Engineer, Cummins Inc. — I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
-                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7" style="color: var(--muted);">I like asking "why" until the real problem surfaces, and I genuinely enjoy debating the right way to solve it. Then I build it — usually an AI or LLM pipeline — and I stay close to the business side long enough to find out whether it actually works. I'm currently looking at Forward Deployed Engineer, Technical PM, and Technical Solutions roles where that combination is the job.</p>
+                      <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solution Engineer, Cummins Inc. I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
+                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-4" style="color: var(--muted);">I like asking "why" until the real problem surfaces, and I genuinely enjoy debating the right way to solve it. Then I build it, usually an AI or LLM pipeline, and I stay close to the business side long enough to find out whether it actually works.</p>
+                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7 font-semibold rounded-lg px-3 py-2 inline-block" style="color: var(--cat-contact); background: rgba(217, 107, 67, 0.12);">Currently looking at Forward Deployed Engineer, Technical PM, and Technical Solutions roles, where that combination is the job.</p>
                       <div class="flex flex-wrap gap-3">
                         <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold" data-target="today-impact" style="background: var(--cat-contact); color: #fff;">View Selected Work</button>
                         <a href="Resume-work.png" target="_blank" rel="noopener" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
@@ -466,17 +485,29 @@
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
                   <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Impact</p>
                   <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Win/Loss Intelligence</h2>
-                  <div class="grid md:grid-cols-2 gap-6 mb-6 items-end">
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-2" style="color: var(--muted);">Runtime improvement, illustrative</p>
-                      <div class="chart-bars reveal-chart">
-                        <span style="--h:78%; background: var(--cat-work);"></span>
-                        <span style="--h:52%; background: var(--cat-work);"></span>
-                        <span style="--h:34%; background: var(--cat-work);"></span>
-                        <span style="--h:20%; background: var(--cat-work);"></span>
-                        <span style="--h:10%; background: var(--cat-work);"></span>
+                  <div class="mb-6">
+                    <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-3" style="color: var(--muted);">Top Loss Reasons (from the documented analysis)</p>
+                    <div class="space-y-3 reveal-chart max-w-md">
+                      <div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Price / Budget</span><span class="font-bold">17%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:17%; background: var(--cat-work);"></div></div>
                       </div>
-                      <p class="text-[11px] mt-2" style="color: var(--muted);">Illustrative trend only — shape of the real optimization from ~18 hrs down to ~8 min, not exact per-run figures.</p>
+                      <div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Competitor</span><span class="font-bold">12%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:12%; background: var(--cat-work);"></div></div>
+                      </div>
+                      <div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Lead Time</span><span class="font-bold">8%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:8%; background: var(--cat-work);"></div></div>
+                      </div>
+                      <div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Specification</span><span class="font-bold">6%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:6%; background: var(--cat-work);"></div></div>
+                      </div>
+                      <div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Other</span><span class="font-bold">5%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:5%; background: var(--cat-work);"></div></div>
+                      </div>
                     </div>
                   </div>
                   <div class="grid sm:grid-cols-2 gap-5 mb-6">
@@ -486,15 +517,15 @@
                     </div>
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">My Role</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Designed and built the full pipeline solo — from Databricks/Spark extraction through embedding, clustering, and LLM-based reason extraction.</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Designed and built the full pipeline solo, from Databricks/Spark extraction through embedding, clustering, and LLM-based reason extraction.</p>
                     </div>
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Key Decision</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Clustered similar comments before calling the LLM — cutting request volume from tens of thousands of calls to roughly 200.</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Clustered similar comments before calling the LLM, cutting request volume from tens of thousands of calls to roughly 200.</p>
                     </div>
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--ink); font-weight:600;">Outcome</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">55,044 closed-lost deals analyzed in ~8 minutes at under $3 in model cost — down from an early version that took 18+ hours.</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">55,044 closed-lost deals analyzed in ~8 minutes at under $3 in model cost, down from an early version that took 18+ hours.</p>
                     </div>
                   </div>
                   <button class="btn-pop event-chip rounded-full px-5 py-2.5 text-sm font-bold border" data-id="win-loss-intelligence" style="border-color: var(--hairline); color: var(--ink);">Open case study →</button>
@@ -514,7 +545,7 @@
                   <div class="grid md:grid-cols-3 gap-5 md:gap-6">
                     <p class="text-sm leading-[1.65] pl-4 border-l-2" style="color: var(--ink); border-color: var(--cat-skills);">Explainability matters as much as accuracy.</p>
                     <p class="text-sm leading-[1.65] pl-4 border-l-2" style="color: var(--ink); border-color: var(--cat-skills);">Own the problem end-to-end, not just your slice of it.</p>
-                    <p class="text-sm leading-[1.65] pl-4 border-l-2" style="color: var(--ink); border-color: var(--cat-skills);">Automate the busywork — keep the judgment human.</p>
+                    <p class="text-sm leading-[1.65] pl-4 border-l-2" style="color: var(--ink); border-color: var(--cat-skills);">Automate the busywork. Keep the judgment human.</p>
                   </div>
                 </div>
               </div>
@@ -533,7 +564,7 @@
                     <p><span style="color: var(--muted);">With</span> <span class="font-semibold" style="color: var(--ink);">Shivli Agrawal</span></p>
                     <p><span style="color: var(--muted);">Duration</span> <span class="font-semibold" style="color: var(--ink);">15 – 30 min</span></p>
                   </div>
-                  <p class="text-sm leading-[1.65] mb-6" style="color: var(--muted);">Open to Senior PM and AI PM roles — send a note about what you're building and I'll usually reply within a day.</p>
+                  <p class="text-sm leading-[1.65] mb-6" style="color: var(--muted);">Open to Senior PM and AI PM roles. Send a note about what you're building and I'll usually reply within a day.</p>
                   <div class="flex flex-wrap gap-3">
                     <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="btn-pop inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold" style="background: var(--cat-contact); color: #fff;">Connect on LinkedIn</a>
                     <a href="mailto:shivliagrawal14@gmail.com" class="btn-pop inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Send Email</a>
@@ -607,18 +638,6 @@
           <span class="postit-tape"></span>
           <img src="assets/snaps8.jpg" alt="Snapshot" loading="lazy" />
         </div>
-        <div class="postit" style="--postit-color:#D98A99; transform: rotate(4deg);">
-          <span class="postit-tape"></span>
-          <img src="assets/snaps9.jpg" alt="Snapshot" loading="lazy" />
-        </div>
-        <div class="postit" style="--postit-color:#8FAE8B; transform: rotate(-2deg);">
-          <span class="postit-pin"></span>
-          <img src="assets/snaps10.jpg" alt="Snapshot" loading="lazy" />
-        </div>
-        <div class="postit" style="--postit-color:#A78BC4; transform: rotate(3deg);">
-          <span class="postit-tape"></span>
-          <img src="assets/snaps11.jpg" alt="Snapshot" loading="lazy" />
-        </div>
       </div>
     </div>
   </section>
@@ -641,6 +660,11 @@
     </div>
   </div>
 
+  <!-- ============ IMAGE LIGHTBOX ============ -->
+  <div id="lightbox-overlay" class="fixed inset-0 z-[200] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.86);">
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+
   <script>
     const CATEGORIES = {
       about:          { label: 'About',          color: 'var(--cat-about)',      hex: '#5F84AC' },
@@ -656,7 +680,7 @@
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const DAY_NAMES = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
-    // ---- Dynamic "today" — everything below is computed from the real current date ----
+    // ---- Dynamic "today": everything below is computed from the real current date ----
     const NOW = new Date();
     function mondayIndex(jsDay) { return (jsDay + 6) % 7; } // JS Sun=0..Sat=6 -> Mon=0..Sun=6
     function startOfWeek(d) {
@@ -685,9 +709,9 @@
       { id: 'about', day: 0, time: '5:30 – 6:00 PM', title: 'About Me', subtitle: 'Shivli Agrawal · Minneapolis, MN',
         category: 'about', type: 'bullets',
         bullets: [
-          'AI Solution Engineer at Cummins Inc. in Minneapolis, building AI/LLM pipelines and analytics tools for the Power Systems Business Unit — my current role and biggest highlight so far.',
+          'AI Solution Engineer at Cummins Inc. in Minneapolis, building AI/LLM pipelines and analytics tools for the Power Systems Business Unit. My current role, and my biggest highlight so far.',
           'Computer Science graduate of Purdue University (B.S., Dec 2025).',
-          'Looking for my next move as a Forward Deployed Engineer, Technical PM, or Technical Solutions Engineer — roles where building the AI pipeline and understanding the business problem are the same job.',
+          'Looking for my next move as a Forward Deployed Engineer, Technical PM, or Technical Solutions Engineer: roles where building the AI pipeline and understanding the business problem are the same job.',
         ] },
 
       { id: 'cummins-intern', day: 1, time: '9:00 – 11:00 AM', title: 'Tech Applications Intern', subtitle: 'Cummins Inc., Power Systems Business Unit · June 2025 – Aug 2025 · Minneapolis, MN',
@@ -702,7 +726,7 @@
         category: 'about', year: 2022, type: 'bullets', image: 'assets/mainpic2.jpg',
         bullets: [
           "Dean's List: 2022 – 2023.",
-          'Teaching Assistant for Object-Oriented Programming with Java across 7 terms — supervised lab sessions for 80+ students each term.',
+          'Teaching Assistant for Object-Oriented Programming with Java across 7 terms, supervising lab sessions for 80+ students each term.',
         ], tags: [
           'CS 18000 · Problem Solving & OOP', 'CS 18200 · Foundations of CS', 'CS 24000 · Programming in C',
           'CS 25000 · Computer Architecture', 'CS 25100 · Data Structures & Algorithms', 'CS 25200 · Systems Programming',
@@ -715,16 +739,18 @@
           'Turned unstructured Salesforce Win/Loss comments into a reusable analytics pipeline that surfaced why opportunities were lost, competitive themes, and repeat-loss account patterns.',
           'Designed an end-to-end Databricks/Spark pipeline to filter and deduplicate Salesforce opportunity comments, generate SBERT embeddings, cluster semantic themes, and use Claude Sonnet to extract structured loss reasons.',
           'Reduced AI request volume by clustering similar comments first, using roughly 200 cluster-level calls instead of sending every note individually.',
-          'Built analysis around loss reasons, competitor signals, comment quality, and repeat-loss accounts — Caterpillar was the top competitor showing up in loss data.',
+          'Built analysis around loss reasons, competitor signals, comment quality, and repeat-loss accounts. Caterpillar was the top competitor showing up in loss data.',
           'Prototyped a serial-loss account module to surface customers with high quote volume and low conversion.',
-          '55,044 closed-lost deals analyzed in the final documented run, at roughly 8 minutes of runtime and under $3 in model-token cost — down from an earlier version that took 18+ hours to run.',
+          '55,044 closed-lost deals analyzed in the final documented run, at roughly 8 minutes of runtime and under $3 in model-token cost, down from an earlier version that took 18+ hours to run.',
         ], tags: ['Databricks', 'Spark', 'SBERT', 'Claude Sonnet', 'SQL', 'Salesforce', 'NLP', 'LLM'] },
 
-      { id: 'ta', day: 2, time: '9:00 – 10:30 AM', title: 'Undergraduate TA', subtitle: 'Purdue University, Object-Oriented Programming with Java · Aug 2022 – Dec 2025 (7 terms)',
-        category: 'experience', year: 2022, type: 'bullets',
+      { id: 'ta', day: 2, time: '9:00 – 10:30 AM', title: 'Teaching Experience', subtitle: 'Undergraduate TA, Object-Oriented Programming with Java, Purdue University · Fall 2022 – Fall 2025',
+        category: 'experience', year: 2022, type: 'bullets', image: 'assets/teaching_experience.jpg',
         bullets: [
-          'Supervised lab sessions for 80+ students each term, improving proficiency in Java and OOP.',
-          'Debugged assignments, gave detailed feedback, and maintained accurate performance records over 3+ years.',
+          'Supervised lab sessions for 80+ students per term across 7 terms, improving proficiency in Java and object-oriented programming concepts.',
+          'Debugged student assignments, gave detailed feedback, and maintained accurate performance records over 3+ years.',
+          'Onboarded and active for CS 18000 across Fall 2022, Spring 2023, Fall 2023, Spring 2024, Summer 2024, Fall 2024, Spring 2025, and Fall 2025.',
+          'Helped students build confidence with classes, inheritance, polymorphism, and core data structures, often the first real programming class they had taken.',
         ] },
       { id: 'urglobal', day: 2, time: '4:00 – 5:00 PM', title: 'President, UR Global', subtitle: 'UR Global, Purdue University · Aug 2023 – Dec 2025',
         category: 'leadership', year: 2023, type: 'bullets',
@@ -740,7 +766,7 @@
           'Developed prompt patterns using role framing, explicit schemas, few-shot examples, edge-case instructions, and strict output formatting.',
           'Applied the approach to documented CPQ scenarios covering Conga quote templates, COR document generation, and multi-currency pricing.',
           'Added risk-based selection criteria around P1 stories, recent changes, component tags, past incidents, core functionality, and integrations.',
-          'Produced a reusable training playbook that future testers can use to create and curate release-specific smoke suites — structuring AI as an accelerator, not a replacement, for QA judgment.',
+          'Produced a reusable training playbook that future testers can use to create and curate release-specific smoke suites, structuring AI as an accelerator, not a replacement, for QA judgment.',
         ], tags: ['Salesforce CPQ', 'JIRA', 'qTest', 'ChatGPT', 'Conga', 'Prompt Engineering', 'QA'] },
 
       { id: 'nll-swe', day: 3, time: '10:00 AM – 12:00 PM', title: 'Software Development Intern', subtitle: 'No Limit Living LLC · June 2024 – Aug 2024 · Gary, IN',
@@ -784,7 +810,7 @@
       { id: 'sales-enablement', day: 4, time: '3:30 – 5:30 PM', title: 'Sales Enablement PowerCell Support', subtitle: 'Cummins Inc. · Sales Enablement PowerCell · Jan – Dec 2026',
         category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 1, endMonth: 12, image: 'assets/sales_enablement_infographic.jpg',
         bullets: [
-          'Work as the business-analysis bridge between Sales Enablement stakeholders and the development organization — understanding what the business needs and translating it into clear, actionable Jira stories for the GDC team.',
+          'Work as the business-analysis bridge between Sales Enablement stakeholders and the development organization: understanding what the business needs and translating it into clear, actionable Jira stories for the GDC team.',
           'Built a repeatable business requirement → technical requirement → Jira story → development feedback → sprint execution workflow.',
           'Created and refined Jira stories across 5 named PowerCell initiatives: GenSize, SSR 2.0 / Webdata, GenCalc, Tiled / Seismic Transition, and Market Intelligence.',
           'Took on project-management responsibilities within the Tiled / Seismic Transition, tracking open items, progress, and blockers to keep work moving.',
@@ -841,30 +867,30 @@
           'Designed a GUI-based Learning Management System with concurrency support for quizzes and auto-grading.',
           'Built real-time student–teacher interaction features.',
         ], tags: ['Database Systems', 'Concurrency'] },
-      { id: 'contact', day: 6, time: '5:30 – 6:30 PM', title: "Office Hours — Let's Connect", subtitle: 'Open invite',
+      { id: 'contact', day: 6, time: '5:30 – 6:30 PM', title: "Office Hours: Let's Connect", subtitle: 'Open invite',
         category: 'contact', type: 'contact',
-        bullets: ['Best way to reach me: a LinkedIn DM or an email — I read both.'] },
+        bullets: ['Best way to reach me: a LinkedIn DM or an email. I read both.'] },
 
       { id: 'seventy-five-hard', day: 5, time: '6:00 – 6:45 AM', title: '75 Hard Challenge', subtitle: 'Apr 20 – Jul 4, 2026',
         category: 'personal', year: 2026, type: 'bullets', startMonth: 4, endMonth: 7,
         bullets: [
-          'Two 45-minute workouts a day (one outdoors), a strict diet, a gallon of water, and 10 pages of reading — every day for 75 days straight, no exceptions.',
+          'Two 45-minute workouts a day (one outdoors), a strict diet, a gallon of water, and 10 pages of reading, every day for 75 days straight, no exceptions.',
           'Built the kind of daily discipline that carries over into how I show up at work.',
         ] },
       { id: 'running-journey', day: 6, time: '7:00 AM', title: '5K Running Journey', subtitle: 'Mid-July 2026 – Present',
         category: 'personal', year: 2026, type: 'bullets', startMonth: 7, endMonth: 9, image: 'assets/5k.jpg',
         bullets: [
-          "Started running as a habit in mid-July and haven't stopped since — training toward my first 5K, one run at a time.",
+          "Started running as a habit in mid-July and haven't stopped since, training toward my first 5K, one run at a time.",
         ] },
       { id: 'matcha-corner', day: 5, time: 'All year round', title: 'Matcha Corner', subtitle: '2026, ongoing',
         category: 'personal', year: 2026, type: 'bullets', startMonth: 1, endMonth: 12, image: 'assets/matchacorner.jpg',
         bullets: [
-          'Building out a little matcha corner at home — testing new matcha blends, jams, and toppings, and slowly making it feel like mine.',
+          'Building out a little matcha corner at home, testing new matcha blends, jams, and toppings, and slowly making it feel like mine.',
         ] },
       { id: 'hp-trip', day: 6, time: 'Jul 24 – 28, 2026', title: 'Wizarding World of Harry Potter, LA', subtitle: 'A long-time dream trip',
         category: 'personal', year: 2026, type: 'bullets', startMonth: 7, endMonth: 7, image: 'assets/wizardingworld.jpg',
         bullets: [
-          "Five days at the Wizarding World of Harry Potter in LA — I've been a Potterhead for as long as I can remember, so this was the trip.",
+          "Five days at the Wizarding World of Harry Potter in LA. I've been a Potterhead for as long as I can remember, so this was the trip.",
         ] },
     ];
 
@@ -893,18 +919,26 @@
     }
     miniCal.innerHTML = miniHtml;
 
-    // ---- Legend ----
-    const legendHtml = Object.values(CATEGORIES).map(c => `
-      <div class="flex items-center gap-2.5 text-xs">
+    // ---- Legend (clickable: jumps to Week view, filtered to that category) ----
+    const legendHtml = Object.entries(CATEGORIES).map(([key, c]) => `
+      <button class="legend-jump btn-pop flex items-center gap-2.5 text-xs w-full text-left rounded-md px-1 py-0.5" data-cat="${key}">
         <span class="w-2.5 h-2.5 rounded-[3px] flex-none" style="background:${c.color};"></span>
         <span style="color: var(--ink);">${c.label}</span>
-      </div>`).join('');
+      </button>`).join('');
     document.getElementById('legend').innerHTML = legendHtml;
-    document.getElementById('legend-mobile').innerHTML = Object.values(CATEGORIES).map(c => `
-      <div class="flex items-center gap-1.5 text-[11px] flex-none rounded-full px-2.5 py-1 border" style="border-color: var(--hairline);">
+    document.getElementById('legend-mobile').innerHTML = Object.entries(CATEGORIES).map(([key, c]) => `
+      <button class="legend-jump btn-pop flex items-center gap-1.5 text-[11px] flex-none rounded-full px-2.5 py-1 border" data-cat="${key}" style="border-color: var(--hairline);">
         <span class="w-2 h-2 rounded-full flex-none" style="background:${c.color};"></span>
         <span style="color: var(--ink);">${c.label}</span>
-      </div>`).join('');
+      </button>`).join('');
+    document.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('.legend-jump');
+      if (!btn) return;
+      activeWeekCat = btn.dataset.cat;
+      switchView('week');
+      renderWeekTabs();
+      renderWeekGrid();
+    });
 
     // ---- Week view: category-separated cards ----
     const WEEK_CATEGORY_ORDER = ['about', 'experience', 'leadership', 'work-project', 'college-project', 'skills', 'personal', 'contact'];
@@ -1188,6 +1222,32 @@
       else if (key === 'm') switchView('month');
       else if (key === 'y') switchView('year');
     });
+
+    // ---- Image lightbox (tap/click to zoom) ----
+    const lightbox = document.getElementById('lightbox-overlay');
+    const lightboxImg = document.getElementById('lightbox-img');
+    document.addEventListener('click', (ev) => {
+      const img = ev.target.closest('.case-img, .postit img');
+      if (!img) return;
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt || '';
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      requestAnimationFrame(() => { lightbox.style.opacity = '1'; });
+      document.body.style.overflow = 'hidden';
+    });
+    function closeLightbox() {
+      lightbox.style.opacity = '0';
+      setTimeout(() => {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        lightboxImg.src = '';
+        if (overlay.classList.contains('hidden')) document.body.style.overflow = '';
+      }, 200);
+    }
+    lightbox.style.opacity = '0';
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
 
     // ---- Chart/image reveal on scroll ----
     const revealObserver = new IntersectionObserver((entries) => {
