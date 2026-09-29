@@ -178,16 +178,16 @@
   .hbar-track { background: var(--surface-2); border-radius: 999px; height: 8px; overflow: hidden; }
   .hbar-fill { height: 100%; width: 0; border-radius: 999px; transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
   .reveal-chart.is-in .hbar-fill { width: var(--w); }
-  .case-img { width: 100%; height: auto; display: block; border-radius: 12px; cursor: zoom-in; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
-  .case-img:hover { transform: scale(1.01); }
+  .case-img { width: 100%; max-width: 360px; height: auto; display: block; margin: 0 auto; border-radius: 12px; cursor: zoom-in; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
+  .case-img:hover { transform: scale(1.03); }
   .postit img { cursor: zoom-in; }
 
   #lightbox-overlay {
     transition: opacity 0.25s ease;
   }
   #lightbox-overlay img {
-    max-width: 94vw;
-    max-height: 92vh;
+    max-width: 78vw;
+    max-height: 78vh;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -195,8 +195,9 @@
     cursor: zoom-out;
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  #modal-card.modal-wide { max-width: min(94vw, 1040px) !important; }
-  #modal-card.modal-xwide { max-width: min(96vw, 1280px) !important; }
+  @media (max-width: 640px) {
+    #lightbox-overlay img { max-width: 90vw; max-height: 80vh; }
+  }
   .reveal-img { opacity: 0; transform: translateY(14px); }
   .reveal-img.is-in { opacity: 1; transform: translateY(0); }
 
@@ -307,6 +308,9 @@
       <a href="mailto:shivliagrawal14@gmail.com" aria-label="Email" class="btn-pop hidden sm:flex w-8 h-8 rounded-full items-center justify-center border" style="border-color: var(--hairline);">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
       </a>
+      <button id="snapshots-btn" aria-label="Jump to snapshots" title="Snapshots" class="btn-pop hidden sm:flex w-8 h-8 rounded-full items-center justify-center border" style="border-color: var(--hairline);">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.3"/></svg>
+      </button>
 
       <button id="theme-toggle" aria-label="Toggle color theme" class="btn-pop w-8 h-8 rounded-full flex items-center justify-center border" style="border-color: var(--hairline);">
         <svg class="icon-sun w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
@@ -454,10 +458,11 @@
                       <p class="text-xs leading-[1.6]" style="color: var(--muted);">Led cross-cultural events fostering global awareness on campus.</p>
                     </div>
                   </div>
+                  <button class="btn-pop event-chip mt-6 rounded-full px-5 py-2.5 text-sm font-bold border" data-id="education" style="border-color: var(--hairline); color: var(--ink);">View College Coursework →</button>
                 </div>
               </div>
 
-              <!-- 1:00 – WORK HIGHLIGHTS -->
+              <!-- 1:00 – CAREER HIGHLIGHTS -->
               <div class="today-block">
                 <div class="today-time">
                   <p class="text-[11px] font-bold" style="color: var(--ink);">1:00 PM</p>
@@ -465,25 +470,57 @@
                 </div>
                 <span class="today-dot" style="background: var(--cat-experience);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-experience);">Work Highlights</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">A few moments from the day job</h2>
+                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-experience);">Career Highlights</p>
+                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">A few moments across my roles</h2>
                   <ul class="space-y-3">
-                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Fine-tuned a domain-specific LLM that cut QA prep time by 90% for smoke-test generation.</span></li>
-                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Rebuilt a company website, cutting page load time by 30%.</span></li>
-                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Modernized a site's design system, lifting click-through rates by 17%.</span></li>
+                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Fine-tuned a domain-specific LLM that cut QA prep time by 90% for smoke-test generation, as a Tech Applications Intern at Cummins Inc.</span></li>
+                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Rebuilt a company website, cutting page load time by 30%, as a Software Development Intern at No Limit Living LLC.</span></li>
+                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Modernized a site's design system, lifting click-through rates by 17%, as a Front-end Development Intern at Qnucleon.</span></li>
                   </ul>
                 </div>
               </div>
 
-              <!-- 1:45 – SELECTED IMPACT -->
+              <!-- 1:45 – SELECTED WORK: MARKET INTELLIGENCE -->
               <div class="today-block" id="today-impact">
                 <div class="today-time">
                   <p class="text-[11px] font-bold" style="color: var(--ink);">1:45 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">3:00 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">2:30 PM</p>
                 </div>
                 <span class="today-dot" style="background: var(--cat-work);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Impact</p>
+                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Work</p>
+                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Market Intelligence Tool</h2>
+                  <div class="grid sm:grid-cols-2 gap-5 mb-6">
+                    <div>
+                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Problem</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Sales and product teams needed structured competitor intelligence, but comparing products meant hours of manual research scattered across public sources.</p>
+                    </div>
+                    <div>
+                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">My Role</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Partnered with Sales, Product, Engineering, and IT to design the end-to-end pipeline, from data collection through AI extraction to a side-by-side comparison view.</p>
+                    </div>
+                    <div>
+                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Key Decision</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Built confidence scoring and source traceability into every extracted data point, so sales teams could trust the numbers before using them.</p>
+                    </div>
+                    <div>
+                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--ink);">Outcome</p>
+                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Phase 1 shipped for Caterpillar, cutting manual competitor research from days to minutes, with Kohler, MTU, Generac, and FG Wilson planned next.</p>
+                    </div>
+                  </div>
+                  <button class="btn-pop event-chip rounded-full px-5 py-2.5 text-sm font-bold border" data-id="market-intelligence" style="border-color: var(--hairline); color: var(--ink);">Open case study →</button>
+                </div>
+              </div>
+
+              <!-- 2:45 – SELECTED WORK: WIN/LOSS -->
+              <div class="today-block">
+                <div class="today-time">
+                  <p class="text-[11px] font-bold" style="color: var(--ink);">2:45 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">3:30 PM</p>
+                </div>
+                <span class="today-dot" style="background: var(--cat-work);"></span>
+                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Work</p>
                   <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Win/Loss Intelligence</h2>
                   <div class="mb-6">
                     <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-3" style="color: var(--muted);">Top Loss Reasons (from the documented analysis)</p>
@@ -535,8 +572,8 @@
               <!-- 3:00 – HOW I THINK -->
               <div class="today-block">
                 <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">3:15 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">3:45 PM</p>
+                  <p class="text-[11px] font-bold" style="color: var(--ink);">3:45 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">4:15 PM</p>
                 </div>
                 <span class="today-dot" style="background: var(--cat-skills);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
@@ -553,8 +590,8 @@
               <!-- 4:00 – CONTACT INVITE -->
               <div class="today-block" id="today-contact">
                 <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">4:00 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">4:30 PM</p>
+                  <p class="text-[11px] font-bold" style="color: var(--ink);">4:30 PM</p>
+                  <p class="text-[10px]" style="color: var(--muted);">5:00 PM</p>
                 </div>
                 <span class="today-dot" style="background: var(--cat-contact);"></span>
                 <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
@@ -600,12 +637,12 @@
   </div>
 
   <!-- ============ GALLERY ============ -->
-  <section class="steel-door relative py-20 px-6 md:px-12">
+  <section id="gallery-section" class="steel-door relative py-20 px-6 md:px-12">
     <div class="relative max-w-6xl mx-auto">
       <p class="text-xs tracking-[0.18em] uppercase mb-2" style="color: rgba(255,255,255,0.6);">Off the Clock</p>
       <h2 class="text-2xl md:text-3xl font-extrabold tracking-[-0.01em] mb-12" style="color: #F5F4F1;">Snapshots</h2>
 
-      <div class="flex flex-wrap gap-x-10 gap-y-14 justify-center md:justify-start">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 md:gap-x-10 gap-y-14 justify-items-center">
         <div class="postit" style="--postit-color:#E8C468; transform: rotate(-4deg);">
           <span class="postit-tape"></span>
           <img src="assets/snaps1.jpg" alt="Snapshot" loading="lazy" />
@@ -723,7 +760,7 @@
           'Integrated automated tests into CI/CD pipelines on AWS-hosted environments.',
         ], tags: ['Databricks', 'PySpark', 'Hugging Face', 'AWS'] },
       { id: 'education', day: 1, time: '1:00 – 1:45 PM', title: 'College Coursework', subtitle: 'Purdue University, B.S. Computer Science · Jan 2022 – Dec 2025 · West Lafayette, IN',
-        category: 'about', year: 2022, type: 'bullets', image: 'assets/mainpic2.jpg',
+        category: 'about', year: 2022, type: 'bullets',
         bullets: [
           "Dean's List: 2022 – 2023.",
           'Teaching Assistant for Object-Oriented Programming with Java across 7 terms, supervising lab sessions for 80+ students each term.',
@@ -835,6 +872,8 @@
           { label: 'Languages', items: ['Java', 'C', 'C++', 'Python', 'R', 'JavaScript', 'TypeScript', 'SQL'] },
           { label: 'Frameworks & Tools', items: ['React.js', 'Node.js', 'Express.js', 'PyTorch', 'Hugging Face', 'Databricks', 'MongoDB', 'MySQL', 'PostgreSQL', 'MLflow', 'Figma', 'Pandas', 'React Native'] },
           { label: 'Platforms & Practices', items: ['Machine Learning', 'NLP', 'LLMs', 'Test Automation', 'DevOps', 'Cloudflare Workers', 'AWS', 'Azure', 'REST', 'GraphQL', 'HPC'] },
+          { label: 'Forward Deployed Engineering', items: ['Client-Facing Solution Delivery', 'RAG & Vector Search', 'LLM Agent Frameworks (LangChain)', 'Prompt Engineering', 'API Integration', 'Solution Architecture', 'Rapid Prototyping', 'FastAPI', 'Docker', 'System Design'] },
+          { label: 'Technical Product Management', items: ['Product Discovery', 'Requirements Engineering', 'Roadmapping', 'Stakeholder Management', 'JIRA', 'Agile/Scrum', 'A/B Testing', 'Business Analysis', 'AI Product Strategy', 'Technical Specification Writing'] },
         ] },
 
       { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Jan 2025',
@@ -1073,8 +1112,6 @@
       modalCat.style.color = cat.color;
       modalTitle.textContent = e.title;
       modalSubtitle.textContent = e.subtitle;
-      modalCard.classList.toggle('modal-xwide', !!e.wide);
-      modalCard.classList.toggle('modal-wide', !!e.image && !e.wide);
 
       if (e.type === 'skills') {
         modalBody.innerHTML = e.skillGroups.map(g => `
@@ -1263,6 +1300,10 @@
     // ---- Theme toggle ----
     const root = document.documentElement;
     if (localStorage.getItem('theme') === 'light') root.setAttribute('data-theme', 'light');
+    document.getElementById('snapshots-btn').addEventListener('click', () => {
+      document.getElementById('gallery-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isLight = root.getAttribute('data-theme') === 'light';
       if (isLight) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'dark'); }
