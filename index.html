@@ -76,10 +76,10 @@
     min-height: 100%;
   }
   @media (min-width: 768px) {
-    body { zoom: 1.05; }
+    header, .sidebar { zoom: 1.05; }
   }
   @media (min-width: 1600px) {
-    body { zoom: 1.13; }
+    header, .sidebar { zoom: 1.13; }
   }
 
   a:focus-visible, button:focus-visible, input:focus-visible {
@@ -433,7 +433,7 @@
                       <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7 font-semibold rounded-lg px-3 py-2 inline-block" style="color: var(--cat-contact); background: rgba(217, 107, 67, 0.12);">Currently looking at Forward Deployed Engineer, Technical PM, and Technical Solutions roles, where that combination is the job.</p>
                       <div class="flex flex-wrap gap-3">
                         <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold" data-target="today-impact" style="background: var(--cat-contact); color: #fff;">View Selected Work</button>
-                        <a href="assets/resume.jpg" id="resume-btn" target="_blank" rel="noopener" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
+                        <a href="assets/Shivli_Agrawal_Resume.pdf" download="Shivli_Agrawal_Resume.pdf" id="resume-btn" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
                         <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold border" data-target="today-contact" style="border-color: var(--hairline); color: var(--ink);">Let's Connect</button>
                       </div>
                     </div>
@@ -1340,16 +1340,11 @@
       if (nextBtn) stepCarousel(nextBtn.closest('.case-carousel'), 1);
     });
 
-    // ---- Resume button: display image + download PDF on one click ----
+    // ---- Resume button: download PDF (native href) + open image preview on one click ----
     const resumeBtn = document.getElementById('resume-btn');
     if (resumeBtn) {
       resumeBtn.addEventListener('click', () => {
-        const a = document.createElement('a');
-        a.href = 'assets/Shivli_Agrawal_Resume.pdf';
-        a.download = 'Shivli_Agrawal_Resume.pdf';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        window.open('assets/resume.jpg', '_blank', 'noopener');
       });
     }
 
