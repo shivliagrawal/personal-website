@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Shivli Agrawal · Calendar</title>
-<meta name="description" content="Shivli Agrawal's portfolio, laid out as a week on her calendar. AI Solution Engineer, Purdue CS." />
+<meta name="description" content="Shivli Agrawal's portfolio, laid out as a week on her calendar. AI Solutions Engineer, Purdue CS." />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D96B43'/%3E%3C/svg%3E" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -76,10 +76,10 @@
     min-height: 100%;
   }
   @media (min-width: 768px) {
-    body { zoom: 1.1; }
+    body { zoom: 1.05; }
   }
   @media (min-width: 1600px) {
-    body { zoom: 1.18; }
+    body { zoom: 1.13; }
   }
 
   a:focus-visible, button:focus-visible, input:focus-visible {
@@ -187,6 +187,32 @@
   .case-img { width: 100%; max-width: 360px; height: auto; display: block; margin: 0 auto; border-radius: 12px; cursor: zoom-in; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
   .case-img:hover { transform: scale(1.03); }
   .postit img { cursor: zoom-in; }
+
+  .case-carousel { position: relative; max-width: 360px; margin: 0 auto; }
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .carousel-arrow:hover { background: rgba(0,0,0,0.75); transform: translateY(-50%) scale(1.08); }
+  .carousel-arrow:active { transform: translateY(-50%) scale(0.92); }
+  .carousel-arrow svg { width: 16px; height: 16px; }
+  .carousel-prev { left: 8px; }
+  .carousel-next { right: 8px; }
+  .carousel-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; }
+  .carousel-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.45); transition: background-color 0.2s ease, transform 0.2s ease; }
+  .carousel-dot.active { background: #fff; transform: scale(1.25); }
 
   #lightbox-overlay {
     transition: opacity 0.25s ease;
@@ -399,15 +425,15 @@
                     <div>
                       <div class="flex items-center gap-2 mb-4">
                         <span class="w-2 h-2 rounded-full dot-pulse flex-none" style="background: var(--cat-contact);"></span>
-                        <span class="text-[11px] font-extrabold uppercase tracking-[0.12em]" style="color: var(--cat-contact);">Now · Jan 2026 – Present</span>
+                        <span class="text-[11px] font-extrabold uppercase tracking-[0.12em]" style="color: var(--cat-contact);">Now · Dec 2025 – Present</span>
                       </div>
                       <h1 class="text-3xl md:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] mb-3" style="color: var(--ink);">Shivli Agrawal</h1>
-                      <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solution Engineer, Cummins Inc. I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
+                      <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solutions Engineer, Cummins Inc. I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
                       <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-4" style="color: var(--muted);">I like asking "why" until the real problem surfaces, and I genuinely enjoy debating the right way to solve it. Then I build it, usually an AI or LLM pipeline, and I stay close to the business side long enough to find out whether it actually works.</p>
                       <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7 font-semibold rounded-lg px-3 py-2 inline-block" style="color: var(--cat-contact); background: rgba(217, 107, 67, 0.12);">Currently looking at Forward Deployed Engineer, Technical PM, and Technical Solutions roles, where that combination is the job.</p>
                       <div class="flex flex-wrap gap-3">
                         <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold" data-target="today-impact" style="background: var(--cat-contact); color: #fff;">View Selected Work</button>
-                        <a href="Resume-work.png" target="_blank" rel="noopener" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
+                        <a href="assets/resume.jpg" id="resume-btn" target="_blank" rel="noopener" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
                         <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold border" data-target="today-contact" style="border-color: var(--hairline); color: var(--ink);">Let's Connect</button>
                       </div>
                     </div>
@@ -760,8 +786,8 @@
     function fmtDate(d) { return `${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`; }
 
     const EVENTS = [
-      { id: 'now-cummins', day: 0, time: '9:00 AM – 5:00 PM', title: 'Now: AI Solution Engineer', subtitle: 'Cummins Inc., Power Systems Business Unit · Jan 2026 – Present · Minneapolis, MN',
-        category: 'experience', year: 2026, current: true, type: 'bullets',
+      { id: 'now-cummins', day: 0, time: '9:00 AM – 5:00 PM', title: 'Now: AI Solutions Engineer', subtitle: 'Cummins Inc., Power Systems Business Unit · Dec 2025 – Present · Minneapolis, MN',
+        category: 'experience', year: 2025, current: true, type: 'bullets',
         bullets: [
           'Collaborate with cross-functional teams to translate business requirements into scalable analytics tools and dashboards.',
           'Implement AI/NLP workflows to analyze unstructured sales data and surface recurring problems.',
@@ -770,7 +796,7 @@
       { id: 'about', day: 0, time: '5:30 – 6:00 PM', title: 'About Me', subtitle: 'Shivli Agrawal · Minneapolis, MN',
         category: 'about', type: 'bullets',
         bullets: [
-          'AI Solution Engineer at Cummins Inc. in Minneapolis, building AI/LLM pipelines and analytics tools for the Power Systems Business Unit. My current role, and my biggest highlight so far.',
+          'AI Solutions Engineer at Cummins Inc. in Minneapolis, building AI/LLM pipelines and analytics tools for the Power Systems Business Unit. My current role, and my biggest highlight so far.',
           'Computer Science graduate of Purdue University (B.S., Dec 2025).',
           'Looking for my next move as a Forward Deployed Engineer, Technical PM, or Technical Solutions Engineer: roles where building the AI pipeline and understanding the business problem are the same job.',
         ] },
@@ -901,7 +927,7 @@
         ] },
 
       { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Jan 2025',
-        category: 'college-project', type: 'bullets', image: 'assets/nocturne1.jpg',
+        category: 'college-project', type: 'bullets', images: ['assets/nocturne1.jpg', 'assets/nocturne2.jpg', 'assets/nocturne3.jpg'],
         bullets: [
           'A next-generation e-commerce aggregator inspired by platforms like Amazon and Apple, offering real-time search, category-based navigation, and a seamless shopping experience.',
           'Instead of direct purchases, users are redirected to official brand websites, ensuring authentic transactions.',
@@ -917,7 +943,7 @@
           'Implemented process-management controls, automated performance checks, and real-time visualization.',
         ], tags: ['C', 'GTK', 'Linux'] },
       { id: 'boilertutors', day: 5, time: '4:00 – 6:00 PM', title: 'Build: BoilerTutors', subtitle: 'React · Node.js · PostgreSQL · REST · Sept 2024',
-        category: 'college-project', type: 'bullets', image: 'assets/boilertutors1.jpg',
+        category: 'college-project', type: 'bullets', images: ['assets/boilertutors1.jpg', 'assets/boilertutors2.jpg', 'assets/boilertutors3.jpg', 'assets/boilertutors4.jpg'],
         bullets: [
           'Built a full-stack resource-sharing platform with React.js and Node.js.',
           'Designed REST APIs and a PostgreSQL schema with indexing and query optimization for scale.',
@@ -925,7 +951,7 @@
         ], tags: ['React', 'Node.js', 'PostgreSQL'],
         links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/BoilerTutorsShivli' }] },
       { id: 'lms', day: 6, time: '3:30 – 5:00 PM', title: 'Build: Database LMS', subtitle: 'GUI · Concurrency · Apr 2022',
-        category: 'college-project', type: 'bullets', image: 'assets/databaselms1.jpg',
+        category: 'college-project', type: 'bullets', images: ['assets/databaselms1.jpg', 'assets/databaselms2.jpg', 'assets/databaselms3.jpg'],
         bullets: [
           'Designed a GUI-based Learning Management System with concurrency support for quizzes and auto-grading.',
           'Built real-time student–teacher interaction features.',
@@ -1159,7 +1185,20 @@
             </a>
           </div>`;
       } else {
-        const imageHtml = e.image ? `<img class="case-img reveal-img mb-5" src="${e.image}" alt="" loading="lazy" />` : '';
+        const imgList = e.images || (e.image ? [e.image] : []);
+        const imageHtml = imgList.length ? `
+          <div class="case-carousel mb-5" data-images='${JSON.stringify(imgList)}' data-idx="0">
+            <img class="case-img reveal-img" src="${imgList[0]}" alt="" loading="lazy" />
+            ${imgList.length > 1 ? `
+              <button class="carousel-arrow carousel-prev" aria-label="Previous image" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+              </button>
+              <button class="carousel-arrow carousel-next" aria-label="Next image" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+              <div class="carousel-dots">${imgList.map((_, i) => `<span class="carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
+            ` : ''}
+          </div>` : '';
         const bulletsHtml = e.bullets.map(b => `
           <li class="flex gap-2.5 text-sm leading-relaxed" style="color: var(--ink);">
             <span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background:${cat.color};"></span>
@@ -1283,6 +1322,36 @@
       else if (key === 'm') switchView('month');
       else if (key === 'y') switchView('year');
     });
+
+    // ---- Project image carousel (left/right arrows) ----
+    function stepCarousel(container, dir) {
+      const images = JSON.parse(container.dataset.images);
+      let idx = parseInt(container.dataset.idx, 10);
+      idx = (idx + dir + images.length) % images.length;
+      container.dataset.idx = idx;
+      const img = container.querySelector('.case-img');
+      img.src = images[idx];
+      container.querySelectorAll('.carousel-dot').forEach((dot, i) => dot.classList.toggle('active', i === idx));
+    }
+    document.addEventListener('click', (ev) => {
+      const prevBtn = ev.target.closest('.carousel-prev');
+      const nextBtn = ev.target.closest('.carousel-next');
+      if (prevBtn) stepCarousel(prevBtn.closest('.case-carousel'), -1);
+      if (nextBtn) stepCarousel(nextBtn.closest('.case-carousel'), 1);
+    });
+
+    // ---- Resume button: display image + download PDF on one click ----
+    const resumeBtn = document.getElementById('resume-btn');
+    if (resumeBtn) {
+      resumeBtn.addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = 'assets/Shivli_Agrawal_Resume.pdf';
+        a.download = 'Shivli_Agrawal_Resume.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      });
+    }
 
     // ---- Image lightbox (tap/click to zoom) ----
     const lightbox = document.getElementById('lightbox-overlay');
