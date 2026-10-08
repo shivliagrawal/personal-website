@@ -9,7 +9,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -74,6 +74,12 @@
     font-family: 'Hanken Grotesk', ui-sans-serif, sans-serif;
     margin: 0;
     min-height: 100%;
+  }
+  @media (min-width: 768px) {
+    body { zoom: 1.1; }
+  }
+  @media (min-width: 1600px) {
+    body { zoom: 1.18; }
   }
 
   a:focus-visible, button:focus-visible, input:focus-visible {
@@ -229,7 +235,7 @@
     position: relative;
     width: 190px;
     background: var(--postit-color);
-    padding: 12px 12px 34px 12px;
+    padding: 12px 12px 14px 12px;
     box-shadow: 0 12px 26px rgba(0,0,0,0.38), 0 3px 8px rgba(0,0,0,0.28);
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
   }
@@ -265,6 +271,16 @@
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #e8574a, #9c2b20 70%);
     box-shadow: 0 3px 5px rgba(0,0,0,0.4);
+  }
+  .postit-caption {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    text-align: center;
+    color: #2a2a2a;
+    margin-top: 6px;
+    transform: rotate(-1deg);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -523,27 +539,27 @@
                   <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Work</p>
                   <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Win/Loss Intelligence</h2>
                   <div class="mb-6">
-                    <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-3" style="color: var(--muted);">Top Loss Reasons (from the documented analysis)</p>
+                    <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-3" style="color: var(--muted);">Top Loss Reasons (actual numbers are different)</p>
                     <div class="space-y-3 reveal-chart max-w-md">
                       <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Price / Budget</span><span class="font-bold">17%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:17%; background: var(--cat-work);"></div></div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Price / Budget</span><span class="font-bold">31%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:31%; background: var(--cat-work);"></div></div>
                       </div>
                       <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Competitor</span><span class="font-bold">12%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:12%; background: var(--cat-work);"></div></div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Competitor</span><span class="font-bold">19%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:19%; background: var(--cat-work);"></div></div>
                       </div>
                       <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Lead Time</span><span class="font-bold">8%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:8%; background: var(--cat-work);"></div></div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Lead Time</span><span class="font-bold">14%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:14%; background: var(--cat-work);"></div></div>
                       </div>
                       <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Specification</span><span class="font-bold">6%</span></div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Specification</span><span class="font-bold">9%</span></div>
+                        <div class="hbar-track"><div class="hbar-fill" style="--w:9%; background: var(--cat-work);"></div></div>
+                      </div>
+                      <div>
+                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Other</span><span class="font-bold">6%</span></div>
                         <div class="hbar-track"><div class="hbar-fill" style="--w:6%; background: var(--cat-work);"></div></div>
-                      </div>
-                      <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Other</span><span class="font-bold">5%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:5%; background: var(--cat-work);"></div></div>
                       </div>
                     </div>
                   </div>
@@ -646,34 +662,42 @@
         <div class="postit" style="--postit-color:#E8C468; transform: rotate(-4deg);">
           <span class="postit-tape"></span>
           <img src="assets/snaps1.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">Purdue class of 2025</p>
         </div>
         <div class="postit" style="--postit-color:#D98A99; transform: rotate(3deg);">
           <span class="postit-pin"></span>
           <img src="assets/snaps2.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">intern @ cummins</p>
         </div>
         <div class="postit" style="--postit-color:#7FA8B8; transform: rotate(-2deg);">
           <span class="postit-tape"></span>
           <img src="assets/snaps3.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">multithreaded work system</p>
         </div>
         <div class="postit" style="--postit-color:#8FAE8B; transform: rotate(5deg);">
           <span class="postit-tape"></span>
           <img src="assets/snaps4.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">cowork besties</p>
         </div>
         <div class="postit" style="--postit-color:#A78BC4; transform: rotate(-3deg);">
           <span class="postit-pin"></span>
           <img src="assets/snaps5.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">President duties at URG</p>
         </div>
         <div class="postit" style="--postit-color:#D99A6C; transform: rotate(2deg);">
           <span class="postit-tape"></span>
           <img src="assets/snaps6.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">𝚫𝚱𝚫 sisterhood</p>
         </div>
         <div class="postit" style="--postit-color:#E8C468; transform: rotate(2deg);">
           <span class="postit-pin"></span>
           <img src="assets/snaps7.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">The AI crew</p>
         </div>
         <div class="postit" style="--postit-color:#7FA8B8; transform: rotate(-3deg);">
           <span class="postit-tape"></span>
           <img src="assets/snaps8.jpg" alt="Snapshot" loading="lazy" />
+          <p class="postit-caption">the funding pitch</p>
         </div>
       </div>
     </div>
@@ -877,7 +901,7 @@
         ] },
 
       { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Jan 2025',
-        category: 'college-project', type: 'bullets', image: 'assets/nocturne_screenshot.jpg',
+        category: 'college-project', type: 'bullets', image: 'assets/nocturne1.jpg',
         bullets: [
           'A next-generation e-commerce aggregator inspired by platforms like Amazon and Apple, offering real-time search, category-based navigation, and a seamless shopping experience.',
           'Instead of direct purchases, users are redirected to official brand websites, ensuring authentic transactions.',
@@ -887,13 +911,13 @@
         ], tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Tailwind CSS', 'WebSockets', 'Cloudflare'],
         links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/Nocturne' }] },
       { id: 'sysmonitor', day: 5, time: '1:00 – 3:00 PM', title: 'Build: System Monitor', subtitle: 'C · GTK · Linux /proc · Nov 2024',
-        category: 'college-project', type: 'bullets',
+        category: 'college-project', type: 'bullets', image: 'assets/sysmonitor1.jpg',
         bullets: [
           'Built a GTK desktop app in C to monitor CPU, memory, and processes via the /proc filesystem.',
           'Implemented process-management controls, automated performance checks, and real-time visualization.',
         ], tags: ['C', 'GTK', 'Linux'] },
       { id: 'boilertutors', day: 5, time: '4:00 – 6:00 PM', title: 'Build: BoilerTutors', subtitle: 'React · Node.js · PostgreSQL · REST · Sept 2024',
-        category: 'college-project', type: 'bullets',
+        category: 'college-project', type: 'bullets', image: 'assets/boilertutors1.jpg',
         bullets: [
           'Built a full-stack resource-sharing platform with React.js and Node.js.',
           'Designed REST APIs and a PostgreSQL schema with indexing and query optimization for scale.',
@@ -901,7 +925,7 @@
         ], tags: ['React', 'Node.js', 'PostgreSQL'],
         links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/BoilerTutorsShivli' }] },
       { id: 'lms', day: 6, time: '3:30 – 5:00 PM', title: 'Build: Database LMS', subtitle: 'GUI · Concurrency · Apr 2022',
-        category: 'college-project', type: 'bullets',
+        category: 'college-project', type: 'bullets', image: 'assets/databaselms1.jpg',
         bullets: [
           'Designed a GUI-based Learning Management System with concurrency support for quizzes and auto-grading.',
           'Built real-time student–teacher interaction features.',
