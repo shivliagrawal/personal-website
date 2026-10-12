@@ -2,19 +2,35 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Shivli Agrawal · Calendar</title>
 <meta name="description" content="Shivli Agrawal's portfolio, laid out as a week on her calendar. AI Solutions Engineer, Purdue CS." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D96B43'/%3E%3C/svg%3E" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" id="meta-theme" content="#F2F2F7" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23FF9F0A'/%3E%3C/svg%3E" />
+
+<script>
+  // ---- Theme init (runs before paint): saved choice wins, otherwise follow the system ----
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('theme'); } catch (e) {}
+    var t = (saved === 'light' || saved === 'dark') ? saved
+      : (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('meta-theme').setAttribute('content', t === 'dark' ? '#000000' : '#F2F2F7');
+  })();
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+<!-- Caveat is only for the handwritten polaroid captions; all UI text uses the Apple system font. -->
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
+      screens: { sm: '600px', md: '768px', lg: '1024px', xl: '1280px', '2xl': '1440px' },
       extend: {
         colors: {
           bg: 'var(--bg)',
@@ -25,11 +41,7 @@
           hairline: 'var(--hairline)',
         },
         fontFamily: {
-          sans: ['"Hanken Grotesk"', 'ui-sans-serif', 'sans-serif'],
-        },
-        boxShadow: {
-          soft: '0 1px 2px rgba(0,0,0,0.30), 0 8px 24px rgba(0,0,0,0.28)',
-          float: '0 4px 10px rgba(0,0,0,0.35), 0 24px 56px rgba(0,0,0,0.40)',
+          sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', 'system-ui', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
         },
       },
     },
@@ -37,216 +49,462 @@
 </script>
 
 <style>
+  /* ==== TOKENS ==== Apple semantic colors (light default, dark via data-theme) */
   :root {
+    --bg: #F2F2F7;                       /* systemGroupedBackground */
+    --surface: #FFFFFF;                  /* secondarySystemGroupedBackground: cards */
+    --surface-2: #F2F2F7;                /* inset wells inside cards */
+    --sheet-bg: #FFFFFF;
+    --fill: rgba(120, 120, 128, 0.12);   /* tertiarySystemFill */
+    --fill-strong: rgba(120, 120, 128, 0.20);
+    --ink: #000000;                      /* label */
+    --muted: rgba(60, 60, 67, 0.62);     /* secondaryLabel */
+    --tab-inactive: #8E8E93;             /* systemGray */
+    --separator: rgba(60, 60, 67, 0.29);
+    --hairline: rgba(60, 60, 67, 0.16);
+    --grid-line: rgba(60, 60, 67, 0.12);
+    --material: rgba(249, 249, 249, 0.80);
+    --material-solid: #F9F9F9;
+    --seg-thumb: #FFFFFF;
+    --tint: #C93400;                     /* systemOrange, increased contrast */
+    --on-tint: #FFFFFF;
+
+    /* Apple system colors, increased-contrast variants so they read as text too */
+    --cat-about: #3634A3;       /* indigo */
+    --cat-experience: #8944AB;  /* purple */
+    --cat-leadership: #A05A00;  /* yellow */
+    --cat-work: #248A3D;        /* green */
+    --cat-college: #0071A4;     /* cyan */
+    --cat-skills: #7F6545;      /* brown */
+    --cat-personal: #D30F45;    /* pink */
+    --cat-contact: var(--tint); /* orange */
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+    --shadow-float: 0 2px 8px rgba(0, 0, 0, 0.08), 0 18px 48px rgba(0, 0, 0, 0.18);
+    --spring: cubic-bezier(0.32, 0.72, 0, 1);   /* UIKit sheet curve */
+    --pop: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+    --nav-h: 52px;
+    --nav-total: calc(var(--nav-h) + env(safe-area-inset-top));
+    --gutter-l: max(1rem, env(safe-area-inset-left));
+    --gutter-r: max(1rem, env(safe-area-inset-right));
+    --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) { color-scheme: dark; }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
     --bg: #000000;
-    --surface: #121214;
-    --surface-2: #1B1B1E;
-    --ink: #F2F2F0;
-    --muted: #9A9A9E;
-    --grid-line: rgba(255, 255, 255, 0.08);
-    --hairline: rgba(255, 255, 255, 0.10);
+    --surface: #1C1C1E;
+    --surface-2: #2C2C2E;
+    --sheet-bg: #1C1C1E;
+    --fill: rgba(118, 118, 128, 0.24);
+    --fill-strong: rgba(118, 118, 128, 0.36);
+    --ink: #FFFFFF;
+    --muted: rgba(235, 235, 245, 0.62);
+    --tab-inactive: #8E8E93;
+    --separator: rgba(84, 84, 88, 0.65);
+    --hairline: rgba(84, 84, 88, 0.45);
+    --grid-line: rgba(84, 84, 88, 0.40);
+    --material: rgba(22, 22, 24, 0.74);
+    --material-solid: #161618;
+    --seg-thumb: #636366;
+    --tint: #FF9F0A;
+    --on-tint: #000000;
 
-    --cat-about: #5F84AC;
-    --cat-experience: #8B6CAE;
-    --cat-leadership: #B08A2E;
-    --cat-work: #479C87;
-    --cat-college: #4AACC7;
-    --cat-skills: #A97640;
-    --cat-contact: #D96B43;
-    --cat-personal: #C4708C;
+    --cat-about: #7D7AFF;
+    --cat-experience: #DA8FFF;
+    --cat-leadership: #FFD426;
+    --cat-work: #30DB5B;
+    --cat-college: #70D7FF;
+    --cat-skills: #B59469;
+    --cat-personal: #FF6482;
+
+    --shadow-card: none;
+    --shadow-float: 0 2px 8px rgba(0, 0, 0, 0.4), 0 24px 60px rgba(0, 0, 0, 0.55);
   }
 
-  html[data-theme="light"] {
-    --bg: #FFFFFF;
-    --surface: #F6F6F5;
-    --surface-2: #ECECEA;
-    --ink: #101012;
-    --muted: #6B6B70;
-    --grid-line: rgba(0, 0, 0, 0.08);
-    --hairline: rgba(0, 0, 0, 0.10);
+  /* ==== BASE + TYPE SCALE ==== root scales 16px (phones) to 18px (large monitors); every size below is rem */
+  html {
+    font-size: clamp(16px, 15.2px + 0.15vw, 18px);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
-
   * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-  html { height: 100%; }
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: 'Hanken Grotesk', ui-sans-serif, sans-serif;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    line-height: 1.5;
     margin: 0;
-    min-height: 100%;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  @media (min-width: 768px) {
-    header, .sidebar { zoom: 1.05; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  /* HIG text styles (iOS points at a 16px root) */
+  .t-hero     { font-size: clamp(2.125rem, 1.6rem + 2.2vw, 3.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; }
+  .t-title1   { font-size: 1.75rem;   font-weight: 700; line-height: 1.15; letter-spacing: -0.022em; }
+  .t-title2   { font-size: clamp(1.25rem, 1.15rem + 0.35vw, 1.375rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
+  .t-title3   { font-size: 1.25rem;   font-weight: 600; line-height: 1.25; letter-spacing: -0.017em; }
+  .t-headline { font-size: 1.0625rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.012em; }
+  .t-body     { font-size: 1.0625rem; line-height: 1.6; letter-spacing: -0.008em; }
+  .t-callout  { font-size: 1rem;      line-height: 1.6; letter-spacing: -0.006em; }
+  .t-subhead  { font-size: 0.9375rem; line-height: 1.55; letter-spacing: -0.004em; }
+  .t-footnote { font-size: 0.8125rem; line-height: 1.45; }
+  .t-caption  { font-size: 0.75rem;   line-height: 1.35; }
+  .muted { color: var(--muted); }
+  .eyebrow { font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 0.25rem; }
+  .field-label { font-size: 0.8125rem; font-weight: 600; color: var(--muted); margin-bottom: 0.25rem; }
+
+  :where(a, button, [tabindex]):focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--tint) 60%, transparent);
+    outline-offset: 2px;
+    border-radius: 10px;
   }
-  @media (min-width: 1600px) {
-    header, .sidebar { zoom: 1.13; }
+  ::selection { background: color-mix(in srgb, var(--tint) 30%, transparent); }
+
+  /* ==== CONTROLS ==== */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
+    min-height: 44px; padding: 0 1.25rem; border-radius: 999px;
+    font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap;
+    cursor: pointer; user-select: none; -webkit-user-select: none;
+    transition: transform 0.45s var(--pop), opacity 0.2s ease;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn:active { transform: scale(0.96); opacity: 0.7; }
+  .btn svg { width: 0.9em; height: 0.9em; flex: none; }
+  .btn.btn-filled { background: var(--tint); color: var(--on-tint); }
+  .btn.btn-gray { background: var(--fill); color: var(--ink); }
+  .btn.btn-plain { background: transparent; color: var(--tint); padding: 0 0.75rem; }
+
+  .icon-btn {
+    position: relative; width: 44px; height: 44px; flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 999px; color: var(--ink); cursor: pointer;
+    transition: transform 0.4s var(--pop);
+  }
+  .icon-btn::before {
+    content: ""; position: absolute; inset: 6px; border-radius: 999px;
+    background: var(--fill); opacity: 0; transition: opacity 0.2s ease;
+  }
+  .icon-btn:hover::before { opacity: 1; }
+  .icon-btn:active { transform: scale(0.9); }
+  .icon-btn:active::before { opacity: 1; }
+  .icon-btn svg { position: relative; width: 20px; height: 20px; }
+  .icon-btn.is-filled::before { opacity: 1; }
+
+  .icon-sun, .icon-moon { display: none; }
+  :root[data-theme="light"] .icon-moon { display: block; }
+  :root[data-theme="dark"] .icon-sun { display: block; }
+
+  /* Segmented control: sliding thumb animates transform only */
+  .segmented {
+    position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+    padding: 2px; border-radius: 10px; background: var(--fill);
+  }
+  .segmented button {
+    position: relative; z-index: 1; min-height: 32px; padding: 0 0.875rem;
+    font-size: 0.8125rem; font-weight: 500; color: var(--ink); border-radius: 8px; cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  .segmented button:hover { opacity: 0.7; }
+  .segmented button[aria-selected="true"] { font-weight: 600; opacity: 1; }
+  .segmented button:active { opacity: 0.5; }
+  .seg-thumb {
+    position: absolute; z-index: 0; top: 2px; bottom: 2px; left: 2px;
+    width: calc((100% - 4px) / 4); border-radius: 8px;
+    background: var(--seg-thumb);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04);
+    transform: translateX(calc(var(--i, 0) * 100%));
+    transition: transform 0.45s var(--spring);
+  }
+  @media (pointer: coarse) {
+    :root { --nav-h: 56px; }
+    .segmented button { min-height: 44px; }
   }
 
-  a:focus-visible, button:focus-visible, input:focus-visible {
-    outline: 2px solid var(--cat-contact);
-    outline-offset: 3px;
-    border-radius: 4px;
+  /* ==== CHROME: nav bar, sidebar, tab bar (frosted materials) ==== */
+  .material {
+    background: var(--material);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
   }
-  ::selection { background: var(--cat-contact); color: #fff; }
-
-  .app { display: flex; flex-direction: column; height: 100vh; }
-  .app.flow-mode { height: auto; min-height: 100vh; }
-  .shell { flex: 1 1 auto; display: flex; min-height: 0; }
-  .sidebar { border-color: var(--hairline); }
-  .cal-main { flex: 1 1 auto; overflow-y: auto; overflow-x: auto; }
-  @media (max-width: 767px) {
-    .app { height: auto; min-height: 100vh; }
-    .shell { flex-direction: column; }
-    .cal-main { overflow-y: visible; overflow-x: visible; }
+  @media (prefers-reduced-transparency: reduce) {
+    .material { background: var(--material-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
   }
 
-  .icon-sun { display: none; }
-  .icon-moon { display: block; }
-  html[data-theme="light"] .icon-sun { display: block; }
-  html[data-theme="light"] .icon-moon { display: none; }
-
-  .btn-pop { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-  .btn-pop:hover { transform: translateY(-1px); }
-  .btn-pop:active { transform: scale(0.94); }
-
-  .chip { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; text-align: left; }
-  .chip:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.28); }
-  .chip:active { transform: translateY(0) scale(0.98); }
-
-  .pill { transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease; }
-
-  .dot-pulse {
-    box-shadow: 0 0 0 0 rgba(217, 107, 67, 0.55);
-    animation: pulse 2s infinite;
+  .nav {
+    position: sticky; top: 0; z-index: 40;
+    padding-top: env(safe-area-inset-top);
+    border-bottom: 0.5px solid var(--separator);
   }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(217, 107, 67, 0.55); }
-    70% { box-shadow: 0 0 0 8px rgba(217, 107, 67, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(217, 107, 67, 0); }
+  .nav-inner {
+    height: var(--nav-h);
+    display: flex; align-items: center; gap: 0.25rem;
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+    padding-right: max(0.5rem, env(safe-area-inset-right));
   }
-
-  #modal-overlay {
-    transition: opacity 0.25s ease;
+  .brand { display: flex; align-items: center; gap: 0.5rem; padding: 0 0.5rem; font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.015em; white-space: nowrap; }
+  .brand-dot { width: 12px; height: 12px; border-radius: 4px; background: var(--tint); flex: none; }
+  .nav-seg { margin-inline: auto; display: none; }
+  .avatar { width: 32px; height: 32px; border-radius: 999px; display: none; align-items: center; justify-content: center; background: var(--tint); color: var(--on-tint); font-size: 0.75rem; font-weight: 700; margin-left: 0.375rem; flex: none; }
+  #reset-week-btn { display: none; }
+  #date-label { display: none; white-space: nowrap; margin-right: 0.25rem; }
+  .nav-spacer { flex: 1 1 auto; }
+  .nav-link-icon { display: none; }
+  @media (min-width: 600px) {
+    .nav-seg { display: inline-grid; }
+    .nav-spacer { display: none; }
   }
-  #modal-card {
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-    max-height: 90vh;
-    overflow-y: auto;
+  @media (min-width: 768px) { .nav-link-icon { display: inline-flex; } }
+  @media (min-width: 1024px) {
+    .avatar { display: inline-flex; }
+    body:not([data-view="today"]) #reset-week-btn { display: inline-flex; }
+    #sidebar-btn { display: none; }
   }
+  @media (min-width: 1280px) { #date-label { display: block; } }
 
-  .mini-cal-cell { aspect-ratio: 1 / 1; }
-
-  @media (min-width: 768px) {
-    .hour-ruled-bg {
-      background-image: repeating-linear-gradient(to bottom, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 75px);
+  .shell { display: flex; align-items: flex-start; }
+  .sidebar {
+    display: flex; flex-direction: column; gap: 1.75rem;
+    width: min(20rem, 86vw); flex: none;
+    padding: 1.25rem 1rem 1.5rem max(1rem, env(safe-area-inset-left));
+    overflow-y: auto; overscroll-behavior: contain;
+  }
+  .sidebar-head { display: flex; align-items: center; justify-content: space-between; margin: -0.5rem -0.5rem 0 0; }
+  @media (min-width: 1024px) {
+    .sidebar {
+      position: sticky; top: var(--nav-total);
+      width: 16.5rem; height: calc(100dvh - var(--nav-total));
+      border-right: 0.5px solid var(--separator);
+      background: transparent;
     }
+    .sidebar-head { display: none; }
+    #sidebar-scrim { display: none; }
+  }
+  @media (max-width: 1023.98px) {
+    .sidebar {
+      position: fixed; z-index: 60; top: 0; bottom: 0; left: 0;
+      padding-top: calc(1rem + env(safe-area-inset-top));
+      padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+      transform: translateX(-104%);
+      transition: transform 0.5s var(--spring);
+      box-shadow: var(--shadow-float);
+      visibility: hidden;
+    }
+    body.sidebar-open .sidebar { transform: none; visibility: visible; }
+    #sidebar-scrim {
+      position: fixed; inset: 0; z-index: 55; background: rgba(0, 0, 0, 0.35);
+      opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+    }
+    body.sidebar-open #sidebar-scrim { opacity: 1; pointer-events: auto; }
   }
 
-  .today-rail { position: relative; }
-  .today-rail::before {
-    content: "";
-    position: absolute;
-    left: 96px;
-    top: 8px;
-    bottom: 8px;
-    width: 1px;
-    background: var(--grid-line);
+  .list-row {
+    display: flex; align-items: center; gap: 0.75rem; width: 100%;
+    min-height: 36px; padding: 0 0.625rem; border-radius: 10px;
+    font-size: 0.9375rem; text-align: left; color: var(--ink); cursor: pointer;
+    transition: transform 0.35s var(--pop);
   }
-  .today-block {
-    display: grid;
-    grid-template-columns: 96px 1fr;
-    gap: 20px;
-    margin-bottom: 32px;
-    position: relative;
-    scroll-margin-top: 96px;
+  .list-row:hover { background: var(--fill); }
+  .list-row:active { transform: scale(0.98); background: var(--fill-strong); }
+  .list-row svg { width: 18px; height: 18px; flex: none; color: var(--tint); }
+  .cal-swatch { width: 12px; height: 12px; border-radius: 999px; flex: none; }
+  @media (pointer: coarse) { .list-row { min-height: 44px; } }
+  .group-title { font-size: 0.8125rem; font-weight: 600; color: var(--muted); padding: 0 0.625rem; margin-bottom: 0.375rem; }
+
+  .mini-cal-cell { aspect-ratio: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 999px; font-size: 0.8125rem; font-variant-numeric: tabular-nums; position: relative; }
+  .mini-cal-cell.is-today { background: var(--tint); color: var(--on-tint); font-weight: 600; }
+  .mini-cal-cell .ev-dot { position: absolute; bottom: 8%; width: 4px; height: 4px; border-radius: 999px; background: var(--muted); }
+
+  .tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    border-top: 0.5px solid var(--separator);
   }
+  .tabbar button {
+    min-height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    font-size: 0.75rem; font-weight: 500; color: var(--tab-inactive); cursor: pointer;
+    transition: transform 0.35s var(--pop);
+  }
+  .tabbar button svg { width: 26px; height: 26px; }
+  .tabbar button[aria-selected="true"] { color: var(--tint); }
+  .tabbar button:hover { color: var(--ink); }
+  .tabbar button[aria-selected="true"]:hover { color: var(--tint); }
+  .tabbar button:active { transform: scale(0.92); }
+  @media (min-width: 600px) { .tabbar { display: none; } }
+  @media (max-width: 599.98px) { body { padding-bottom: calc(54px + env(safe-area-inset-bottom)); } }
+
+  /* ==== MAIN + VIEWS ==== */
+  .cal-main {
+    flex: 1 1 auto; min-width: 0;
+    padding: 1.25rem var(--gutter-r) 3rem var(--gutter-l);
+  }
+  @media (min-width: 600px) { .cal-main { --gutter-l: max(1.5rem, env(safe-area-inset-left)); --gutter-r: max(1.5rem, env(safe-area-inset-right)); padding-top: 1.75rem; } }
+  @media (min-width: 1024px) { .cal-main { --gutter-l: 2rem; padding-top: 2rem; } }
+  .main-inner { max-width: 75rem; margin: 0 auto; }
+
+  .card { background: var(--surface); border-radius: 20px; padding: 1.25rem; box-shadow: var(--shadow-card); }
+  @media (min-width: 600px) { .card { padding: 2rem; } }
+  @media (min-width: 768px) { .card.card-hero { padding: 2.5rem; } }
+
+  .view-intro { font-size: 0.9375rem; color: var(--muted); margin-bottom: 1.25rem; max-width: 40rem; }
+
+  /* Today: time rail */
+  .today-rail { position: relative; max-width: 54rem; margin: 0 auto; }
+  .today-block { position: relative; display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-bottom: 1.5rem; scroll-margin-top: calc(var(--nav-total) + 1rem); }
   .today-block:last-child { margin-bottom: 0; }
-  .today-time { text-align: right; padding-top: 6px; padding-right: 18px; }
-  .today-dot {
-    position: absolute;
-    left: 91px;
-    top: 10px;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--bg);
-  }
-  @media (max-width: 640px) {
-    .today-rail::before { left: 52px; }
-    .today-block { grid-template-columns: 52px 1fr; gap: 12px; }
-    .today-dot { left: 47px; }
-    .today-time { padding-right: 10px; }
+  .today-time { display: flex; align-items: baseline; gap: 0.375rem; padding-left: 1.25rem; font-variant-numeric: tabular-nums; }
+  .today-time p + p::before { content: "– "; }
+  .today-dot { position: absolute; left: 0; top: 0.3rem; width: 10px; height: 10px; border-radius: 999px; }
+  @media (min-width: 600px) {
+    .today-rail::before { content: ""; position: absolute; left: 5.5rem; top: 8px; bottom: 8px; width: 1px; background: var(--grid-line); }
+    .today-block { grid-template-columns: 5.5rem 1fr; gap: 1.25rem; margin-bottom: 2rem; }
+    .today-time { display: block; text-align: right; padding: 0.3rem 1.125rem 0 0; }
+    .today-time p + p::before { content: none; }
+    .today-dot { left: calc(5.5rem - 5px); top: 0.55rem; box-shadow: 0 0 0 3px var(--bg); }
   }
 
-  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 84px; }
-  .chart-bars > span { flex: 1; height: 0; border-radius: 4px 4px 0 0; transition: height 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
-  .chart-bars.is-in > span { height: var(--h); }
-  .hbar-track { background: var(--surface-2); border-radius: 999px; height: 8px; overflow: hidden; }
-  .hbar-fill { height: 100%; width: 0; border-radius: 999px; transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
-  .reveal-chart.is-in .hbar-fill { width: var(--w); }
-  .case-img { width: 100%; max-width: 360px; height: auto; display: block; margin: 0 auto; border-radius: 12px; cursor: zoom-in; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; }
-  .case-img:hover { transform: scale(1.03); }
-  .postit img { cursor: zoom-in; }
+  .callout { display: inline-block; border-radius: 12px; padding: 0.625rem 0.875rem; font-weight: 600; color: var(--tint); background: color-mix(in srgb, var(--tint) 12%, transparent); }
 
+  .now-dot { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--tint); flex: none; display: inline-block; }
+  .now-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--tint); animation: ping 2s var(--spring) infinite; }
+  @keyframes ping { 0% { transform: scale(1); opacity: 0.55; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
+
+  .principle { padding-left: 1rem; border-left: 2px solid var(--cat-skills); }
+
+  /* Event cards (Week, Year): Apple Calendar event = tinted fill + leading color bar */
+  .event-card {
+    position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem;
+    width: 100%; text-align: left; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.25rem; border-radius: 14px;
+    background: color-mix(in srgb, var(--c) 14%, var(--surface));
+    transition: transform 0.45s var(--pop);
+  }
+  .event-card::before { content: ""; position: absolute; left: 7px; top: 10px; bottom: 10px; width: 4px; border-radius: 4px; background: var(--c); }
+  .event-card:hover { transform: translateY(-2px); }
+  .event-card:active { transform: scale(0.98); }
+  .ec-meta { display: flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; font-weight: 600; color: var(--c); }
+
+  .filter-row { display: flex; gap: 0.5rem; margin: 0 calc(-1 * var(--gutter-r)) 1.5rem calc(-1 * var(--gutter-l)); padding: 0 var(--gutter-r) 0.25rem var(--gutter-l); overflow-x: auto; scrollbar-width: none; }
+  .filter-row::-webkit-scrollbar { display: none; }
+  @media (min-width: 768px) { .filter-row { flex-wrap: wrap; overflow: visible; margin-left: 0; margin-right: 0; padding: 0; } }
+  .filter-chip {
+    flex: none; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 36px; padding: 0 0.875rem;
+    border-radius: 999px; font-size: 0.875rem; font-weight: 500; background: var(--fill); color: var(--ink); cursor: pointer;
+    transition: transform 0.35s var(--pop);
+  }
+  .filter-chip:hover { background: var(--fill-strong); }
+  .filter-chip:active { transform: scale(0.95); }
+  .filter-chip[aria-pressed="true"] { background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--c); }
+  @media (pointer: coarse) { .filter-chip { min-height: 44px; } }
+  .week-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); transition: opacity 0.28s ease, transform 0.28s var(--spring); }
+
+  /* Month (Gantt) */
+  .scroll-x { overflow-x: auto; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(-1 * var(--gutter-l)); padding: 0 var(--gutter-r) 0.5rem var(--gutter-l); }
+  .gantt { min-width: 40rem; }
+  @media (min-width: 1024px) { .scroll-x { margin: 0; padding: 0 0 0.5rem; } }
+  .gantt-track { position: relative; height: 44px; border-radius: 10px; background-color: var(--surface); background-image: repeating-linear-gradient(to right, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent calc(100% / 12)); }
+  .gantt-bar {
+    position: absolute; top: 0; bottom: 0; display: flex; align-items: center; padding: 0 0.75rem 0 1rem;
+    border-radius: 10px; font-size: 0.8125rem; font-weight: 600; color: var(--ink); overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    background: color-mix(in srgb, var(--c) 28%, var(--surface)); cursor: pointer;
+    transition: transform 0.45s var(--pop);
+  }
+  .gantt-bar::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 4px; border-radius: 4px; background: var(--c); }
+  .gantt-bar:hover { transform: translateY(-1px); }
+  .gantt-bar:active { transform: scale(0.98); }
+  .month-head { flex: 1; text-align: center; font-size: 0.8125rem; font-weight: 600; padding: 0.375rem 0; border-radius: 8px; color: var(--muted); }
+  .month-head.is-current { color: var(--on-tint); background: var(--tint); }
+
+  /* Year */
+  .years-row { display: grid; gap: 1.5rem; }
+  .year-col h3 { font-size: 1.375rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.625rem; display: flex; align-items: center; gap: 0.5rem; }
+  .year-col .year-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  @media (min-width: 600px) and (max-width: 1023.98px) {
+    .years-row { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(-1 * var(--gutter-l)); padding: 0 var(--gutter-r) 0.75rem var(--gutter-l); scroll-padding-left: var(--gutter-l); }
+    .year-col { flex: 0 0 16rem; scroll-snap-align: start; }
+  }
+  @media (min-width: 1024px) {
+    .years-row { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; }
+    .year-col { padding: 0 0.625rem; border-left: 0.5px solid var(--separator); }
+    .year-col:first-child { border-left: 0; padding-left: 0; }
+  }
+
+  /* Charts */
+  .hbar-track { background: var(--fill); border-radius: 999px; height: 8px; overflow: hidden; }
+  .hbar-fill { height: 100%; width: 100%; border-radius: 999px; transform: scaleX(0); transform-origin: left; transition: transform 0.9s var(--spring); }
+  .reveal-chart.is-in .hbar-fill { transform: scaleX(var(--s)); }
+
+  /* ==== SHEET (modal) ==== bottom sheet on phones, centered form sheet on larger screens */
+  .sheet-overlay { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end; justify-content: center; }
+  .sheet-overlay.hidden { display: none; }
+  .sheet-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); opacity: 0; transition: opacity 0.35s ease; }
+  .sheet {
+    position: relative; width: 100%;
+    max-height: calc(100dvh - env(safe-area-inset-top) - 0.75rem);
+    overflow-y: auto; overscroll-behavior: contain;
+    background: var(--sheet-bg); border-radius: 14px 14px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: var(--shadow-float);
+    transform: translateY(100%);
+    transition: transform 0.5s var(--spring);
+  }
+  .sheet-overlay.is-open .sheet-scrim { opacity: 1; }
+  .sheet-overlay.is-open .sheet { transform: none; opacity: 1; }
+  .sheet-bar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.5rem 0.25rem 1.25rem; }
+  .sheet-grabber { position: absolute; top: 6px; left: 50%; width: 36px; height: 5px; margin-left: -18px; border-radius: 999px; background: var(--fill-strong); }
+  .sheet-body { padding: 0 1.25rem 1.75rem; }
+  .sheet:focus { outline: none; }
+  .close-btn::before { opacity: 1; inset: 7px; }
+  .close-btn svg { width: 15px; height: 15px; color: var(--muted); }
+  @media (min-width: 600px) {
+    .sheet-overlay { align-items: center; padding: max(1.5rem, env(safe-area-inset-top)) 1.5rem max(1.5rem, env(safe-area-inset-bottom)); }
+    .sheet { max-width: 38rem; max-height: min(88dvh, 56rem); border-radius: 16px; padding-bottom: 0; opacity: 0; transform: translateY(1.5rem) scale(0.97); transition: transform 0.45s var(--spring), opacity 0.25s ease; }
+    .sheet-grabber { display: none; }
+    .sheet-bar { padding: 0.75rem 0.75rem 0.25rem 1.75rem; }
+    .sheet-body { padding: 0 1.75rem 2rem; }
+  }
+  .tag { display: inline-flex; align-items: center; min-height: 28px; padding: 0 0.625rem; border-radius: 999px; font-size: 0.8125rem; background: var(--fill); color: var(--ink); }
+
+  .case-img { width: 100%; max-width: 360px; height: auto; display: block; margin: 0 auto; border-radius: 12px; cursor: zoom-in; transition: transform 0.4s var(--spring), opacity 0.6s ease; }
+  .case-img:hover { transform: scale(1.02); }
   .case-carousel { position: relative; max-width: 360px; margin: 0 auto; }
   .carousel-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.55);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.25);
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: absolute; top: 50%; width: 44px; height: 44px; margin-top: -22px;
+    display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer;
+    transition: transform 0.3s var(--pop);
   }
-  .carousel-arrow:hover { background: rgba(0,0,0,0.75); transform: translateY(-50%) scale(1.08); }
-  .carousel-arrow:active { transform: translateY(-50%) scale(0.92); }
-  .carousel-arrow svg { width: 16px; height: 16px; }
-  .carousel-prev { left: 8px; }
-  .carousel-next { right: 8px; }
-  .carousel-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; }
-  .carousel-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.45); transition: background-color 0.2s ease, transform 0.2s ease; }
+  .carousel-arrow::before { content: ""; position: absolute; inset: 6px; border-radius: 999px; background: rgba(0, 0, 0, 0.5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: opacity 0.2s ease; }
+  .carousel-arrow:hover::before { opacity: 0.8; }
+  .carousel-arrow:active { transform: scale(0.88); }
+  .carousel-arrow svg { position: relative; width: 16px; height: 16px; }
+  .carousel-prev { left: 2px; }
+  .carousel-next { right: 2px; }
+  .carousel-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; pointer-events: none; }
+  .carousel-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); transition: transform 0.2s ease, opacity 0.2s ease; }
   .carousel-dot.active { background: #fff; transform: scale(1.25); }
 
-  #lightbox-overlay {
-    transition: opacity 0.25s ease;
-  }
-  #lightbox-overlay img {
-    max-width: 78vw;
-    max-height: 78vh;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    border-radius: 8px;
-    cursor: zoom-out;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  @media (max-width: 640px) {
-    #lightbox-overlay img { max-width: 90vw; max-height: 80vh; }
-  }
+  #lightbox-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(0, 0, 0, 0.88); transition: opacity 0.25s ease; }
+  #lightbox-overlay.hidden { display: none; }
+  #lightbox-overlay img { max-width: 78vw; max-height: 78dvh; width: auto; height: auto; object-fit: contain; border-radius: 10px; cursor: zoom-out; }
+  @media (max-width: 599.98px) { #lightbox-overlay img { max-width: 94vw; max-height: 80dvh; } }
   .reveal-img { opacity: 0; transform: translateY(14px); }
   .reveal-img.is-in { opacity: 1; transform: translateY(0); }
 
-  .week-cat-grid { transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
-
+  /* ==== GALLERY ==== the one textured surface: a steel cupboard door with polaroids */
   .steel-door {
     background-color: #4c4f53;
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, no-repeat;
     background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 2px 100%, 6px 6px, 100% 100%;
-    background-position:
-      28px 28px,
-      calc(100% - 28px) 28px,
-      28px calc(100% - 28px),
-      calc(100% - 28px) calc(100% - 28px),
-      center,
-      0 0,
-      0 0;
+    background-position: 28px 28px, calc(100% - 28px) 28px, 28px calc(100% - 28px), calc(100% - 28px) calc(100% - 28px), center, 0 0, 0 0;
     background-image:
       radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.5) 45%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.2) 60%, transparent 60%),
       radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.5) 45%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.2) 60%, transparent 60%),
@@ -255,436 +513,401 @@
       linear-gradient(to bottom, transparent, rgba(0,0,0,0.22) 50%, transparent),
       repeating-linear-gradient(100deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 5px),
       linear-gradient(160deg, #85898d 0%, #66696d 30%, #4c4f53 55%, #5c5f63 78%, #3c3e41 100%);
+    padding: 4.5rem max(1.25rem, env(safe-area-inset-right)) 5rem max(1.25rem, env(safe-area-inset-left));
+    scroll-margin-top: var(--nav-total);
   }
-
   .postit {
-    position: relative;
-    width: 190px;
+    position: relative; width: 100%; max-width: 190px;
     background: var(--postit-color);
-    padding: 12px 12px 14px 12px;
+    padding: 10px 10px 12px;
     box-shadow: 0 12px 26px rgba(0,0,0,0.38), 0 3px 8px rgba(0,0,0,0.28);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+    transition: transform 0.35s var(--spring);
   }
-  .postit:hover {
-    transform: translateY(-5px) rotate(0deg) scale(1.03) !important;
-    box-shadow: 0 20px 36px rgba(0,0,0,0.42), 0 4px 10px rgba(0,0,0,0.3);
-  }
-  .postit img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
-  }
-  .postit-tape {
-    position: absolute;
-    top: -13px;
-    left: 50%;
-    width: 64px;
-    height: 24px;
-    transform: translateX(-50%) rotate(-4deg);
-    background: rgba(240, 232, 214, 0.55);
-    border: 1px solid rgba(255,255,255,0.25);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
-  }
-  .postit-pin {
-    position: absolute;
-    top: -9px;
-    left: 50%;
-    width: 14px;
-    height: 14px;
-    transform: translateX(-50%);
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #e8574a, #9c2b20 70%);
-    box-shadow: 0 3px 5px rgba(0,0,0,0.4);
-  }
-  .postit-caption {
-    font-family: 'Caveat', cursive;
-    font-weight: 700;
-    font-size: 1.5rem;
-    line-height: 1.1;
-    text-align: center;
-    color: #2a2a2a;
-    margin-top: 6px;
-    transform: rotate(-1deg);
-  }
+  .postit:hover { transform: translateY(-5px) rotate(0deg) scale(1.03) !important; }
+  .postit img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); cursor: zoom-in; }
+  .postit-tape { position: absolute; top: -13px; left: 50%; width: 64px; height: 24px; transform: translateX(-50%) rotate(-4deg); background: rgba(240, 232, 214, 0.55); border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 2px 5px rgba(0,0,0,0.25); }
+  .postit-pin { position: absolute; top: -9px; left: 50%; width: 14px; height: 14px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle at 35% 30%, #e8574a, #9c2b20 70%); box-shadow: 0 3px 5px rgba(0,0,0,0.4); }
+  .postit-caption { font-family: 'Caveat', cursive; font-weight: 700; font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem); line-height: 1.1; text-align: center; color: #2a2a2a; margin-top: 6px; transform: rotate(-1deg); }
 
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.001ms !important;
-      transition-duration: 0.001ms !important;
-    }
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
   }
 </style>
 </head>
 
-<body class="antialiased">
+<body data-view="today">
 
   <div class="app" id="app-shell">
-    <!-- ============ TOP CHROME ============ -->
-    <header class="sticky top-0 z-40 h-16 flex items-center gap-3 px-4 md:px-5 border-b flex-none" style="border-color: var(--hairline); background: var(--bg);">
-      <div class="flex items-center gap-2 font-extrabold text-[15px] tracking-[-0.01em]">
-        <span class="w-3 h-3 rounded-sm flex-none" style="background: var(--cat-contact);"></span>
-        Shivli Agrawal
+    <!-- ==== TOP CHROME ==== -->
+    <header class="nav material">
+      <div class="nav-inner">
+        <button id="sidebar-btn" class="icon-btn" aria-label="Show calendars" aria-controls="sidebar" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M9.5 4.5v15M5.5 8h1.5M5.5 11h1.5"/></svg>
+        </button>
+        <div class="brand"><span class="brand-dot"></span>Shivli Agrawal</div>
+
+        <div class="segmented nav-seg" role="tablist" aria-label="Calendar view" id="view-pills">
+          <span class="seg-thumb" aria-hidden="true"></span>
+          <button class="view-pill" role="tab" data-view="today">Today</button>
+          <button class="view-pill" role="tab" data-view="week">Week</button>
+          <button class="view-pill" role="tab" data-view="month">Month</button>
+          <button class="view-pill" role="tab" data-view="year">Year</button>
+        </div>
+        <div class="nav-spacer"></div>
+
+        <button id="reset-week-btn" class="btn btn-plain">Today</button>
+        <p id="date-label" class="t-footnote muted"></p>
+
+        <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" aria-label="LinkedIn" class="icon-btn nav-link-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002ZM7 8.48H3V21h4V8.48Zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-3.96 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48Z"/></svg>
+        </a>
+        <a href="mailto:shivliagrawal14@gmail.com" aria-label="Email" class="icon-btn nav-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7.5 8 5.5 8-5.5"/></svg>
+        </a>
+        <button id="snapshots-btn" aria-label="Jump to snapshots" title="Snapshots" class="icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.3"/></svg>
+        </button>
+        <button id="theme-toggle" aria-label="Toggle color theme" class="icon-btn">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
+        </button>
+        <div class="avatar" aria-hidden="true">SA</div>
       </div>
-
-      <div class="hidden md:flex items-center gap-0.5 ml-3 rounded-full p-1" style="background: var(--surface);" id="view-pills">
-        <button class="pill view-pill px-3.5 py-1.5 rounded-full text-xs font-semibold" data-view="today">Today</button>
-        <button class="pill view-pill px-3.5 py-1.5 rounded-full text-xs font-semibold" data-view="week">Week</button>
-        <button class="pill view-pill px-3.5 py-1.5 rounded-full text-xs font-semibold" data-view="month">Month</button>
-        <button class="pill view-pill px-3.5 py-1.5 rounded-full text-xs font-semibold" data-view="year">Year</button>
-      </div>
-
-      <button id="reset-week-btn" class="btn-pop hidden items-center gap-1.5 ml-2 rounded-full px-3 py-1.5 text-xs font-semibold border" style="border-color: var(--hairline); color: var(--ink);">
-        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7M3 12v5h5"/></svg>
-        Today
-      </button>
-
-      <div class="flex-1"></div>
-
-      <div class="hidden sm:block text-xs mr-1" id="date-label" style="color: var(--muted);">Week of Aug 10 – 16, 2026</div>
-
-      <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" aria-label="LinkedIn" class="btn-pop hidden sm:flex w-8 h-8 rounded-full items-center justify-center border" style="border-color: var(--hairline);">
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002ZM7 8.48H3V21h4V8.48Zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-3.96 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48Z"/></svg>
-      </a>
-      <a href="mailto:shivliagrawal14@gmail.com" aria-label="Email" class="btn-pop hidden sm:flex w-8 h-8 rounded-full items-center justify-center border" style="border-color: var(--hairline);">
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
-      </a>
-      <button id="snapshots-btn" aria-label="Jump to snapshots" title="Snapshots" class="btn-pop hidden sm:flex w-8 h-8 rounded-full items-center justify-center border" style="border-color: var(--hairline);">
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.3"/></svg>
-      </button>
-
-      <button id="theme-toggle" aria-label="Toggle color theme" class="btn-pop w-8 h-8 rounded-full flex items-center justify-center border" style="border-color: var(--hairline);">
-        <svg class="icon-sun w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
-        <svg class="icon-moon w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
-      </button>
-
-      <div class="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-extrabold flex-none" style="background: var(--cat-contact); color:#fff;">SA</div>
     </header>
 
     <div class="shell">
-      <!-- ============ SIDEBAR ============ -->
-      <aside class="sidebar hidden md:flex md:flex-col md:sticky md:top-16 w-60 flex-none border-r p-4 gap-6 overflow-y-auto" style="max-height: calc(100vh - 64px);">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-bold tracking-[0.06em]" id="mini-cal-heading">August 2026</p>
-          </div>
-          <div class="grid grid-cols-7 gap-1 text-center">
-            <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">Mo</span>
-            <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">Tu</span>
-            <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">We</span>
-            <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">Th</span>
-            <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">Fr</span>
-            <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">Sa</span>
-            <span class="text-[10px] font-semibold py-1" style="color: var(--muted);">Su</span>
-          </div>
-          <div class="grid grid-cols-7 gap-1 mt-1" id="mini-cal"></div>
+      <!-- ==== SIDEBAR ==== persistent at >=1024px, slide-over drawer below -->
+      <div id="sidebar-scrim"></div>
+      <aside id="sidebar" class="sidebar material" aria-label="Calendars">
+        <div class="sidebar-head">
+          <p class="t-headline">Calendars</p>
+          <button id="sidebar-close" class="icon-btn close-btn" aria-label="Close calendars">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg>
+          </button>
         </div>
 
         <div>
-          <p class="text-xs font-bold tracking-[0.06em] mb-3">Calendars</p>
-          <div class="flex flex-col gap-2.5" id="legend"></div>
+          <p class="t-headline px-1 mb-2" id="mini-cal-heading"></p>
+          <div class="grid grid-cols-7 text-center" aria-hidden="true">
+            <span class="t-caption muted py-1">M</span>
+            <span class="t-caption muted py-1">T</span>
+            <span class="t-caption muted py-1">W</span>
+            <span class="t-caption muted py-1">T</span>
+            <span class="t-caption muted py-1">F</span>
+            <span class="t-caption muted py-1">S</span>
+            <span class="t-caption muted py-1">S</span>
+          </div>
+          <div class="grid grid-cols-7 gap-y-0.5" id="mini-cal"></div>
+        </div>
+
+        <div>
+          <p class="group-title">My calendars</p>
+          <div class="flex flex-col" id="legend"></div>
         </div>
 
         <div class="mt-auto">
-          <p class="text-xs font-bold tracking-[0.06em] mb-3">Reach me</p>
-          <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="btn-pop flex items-center gap-2.5 rounded-lg px-3 py-2.5 mb-2 border text-xs font-semibold" style="border-color: var(--hairline);">
-            <svg class="w-3.5 h-3.5 flex-none" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002ZM7 8.48H3V21h4V8.48Zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-3.96 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48Z"/></svg>
+          <p class="group-title">Reach me</p>
+          <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="list-row">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002ZM7 8.48H3V21h4V8.48Zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-3.96 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48Z"/></svg>
             LinkedIn
           </a>
-          <a href="mailto:shivliagrawal14@gmail.com" class="btn-pop flex items-center gap-2.5 rounded-lg px-3 py-2.5 border text-xs font-semibold" style="border-color: var(--hairline);">
-            <svg class="w-3.5 h-3.5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+          <a href="mailto:shivliagrawal14@gmail.com" class="list-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7.5 8 5.5 8-5.5"/></svg>
             Email
           </a>
         </div>
       </aside>
 
-      <!-- ============ CALENDAR ============ -->
-      <main class="cal-main px-3 md:px-5 py-4">
-        <div class="flex md:hidden items-center gap-1 mb-3 p-1 sticky top-16 z-30 rounded-full" style="background: var(--surface); box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-          <button class="pill view-pill flex-1 py-2 rounded-full text-xs font-semibold" data-view="today">Today</button>
-          <button class="pill view-pill flex-1 py-2 rounded-full text-xs font-semibold" data-view="week">Week</button>
-          <button class="pill view-pill flex-1 py-2 rounded-full text-xs font-semibold" data-view="month">Month</button>
-          <button class="pill view-pill flex-1 py-2 rounded-full text-xs font-semibold" data-view="year">Year</button>
-        </div>
-        <div class="flex md:hidden gap-2 overflow-x-auto pb-3 mb-1" id="legend-mobile"></div>
+      <!-- ==== CALENDAR ==== -->
+      <main class="cal-main" id="main">
+        <div class="main-inner">
 
+        <!-- ==== VIEW: TODAY ==== -->
         <div id="view-today" class="hidden">
-          <div class="max-w-3xl mx-auto md:mx-0 py-2">
-            <div class="today-rail">
+          <div class="today-rail">
 
-              <!-- 9:00 – NOW / HERO -->
-              <div class="today-block">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--cat-contact);">9:00 AM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">10:30 AM</p>
-                </div>
-                <span class="today-dot" style="background: var(--cat-contact);"></span>
-                <div class="rounded-2xl p-6 md:p-10 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:items-center">
-                    <div>
-                      <div class="flex items-center gap-2 mb-4">
-                        <span class="w-2 h-2 rounded-full dot-pulse flex-none" style="background: var(--cat-contact);"></span>
-                        <span class="text-[11px] font-extrabold uppercase tracking-[0.12em]" style="color: var(--cat-contact);">Now · Dec 2025 – Present</span>
-                      </div>
-                      <h1 class="text-3xl md:text-5xl font-extrabold tracking-[-0.02em] leading-[1.05] mb-3" style="color: var(--ink);">Shivli Agrawal</h1>
-                      <p class="text-base md:text-lg font-semibold mb-5" style="color: var(--ink);">AI Solutions Engineer, Cummins Inc. I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
-                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-4" style="color: var(--muted);">I like asking "why" until the real problem surfaces, and I genuinely enjoy debating the right way to solve it. Then I build it, usually an AI or LLM pipeline, and I stay close to the business side long enough to find out whether it actually works.</p>
-                      <p class="text-sm md:text-base leading-[1.7] max-w-2xl mb-7 font-semibold rounded-lg px-3 py-2 inline-block" style="color: var(--cat-contact); background: rgba(217, 107, 67, 0.12);">Currently looking at Forward Deployed Engineer, Technical PM, and Technical Solutions roles, where that combination is the job.</p>
-                      <div class="flex flex-wrap gap-3">
-                        <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold" data-target="today-impact" style="background: var(--cat-contact); color: #fff;">View Selected Work</button>
-                        <a href="assets/Shivli_Agrawal_Resume.pdf" download="Shivli_Agrawal_Resume.pdf" id="resume-btn" class="btn-pop rounded-full px-6 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Resume</a>
-                        <button class="btn-pop today-goto rounded-full px-6 py-3 text-sm font-bold border" data-target="today-contact" style="border-color: var(--hairline); color: var(--ink);">Let's Connect</button>
-                      </div>
+            <!-- 9:00 NOW / HERO -->
+            <section class="today-block">
+              <div class="today-time">
+                <p class="t-caption font-semibold" style="color: var(--tint);">9:00 AM</p>
+                <p class="t-caption muted">10:30 AM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-contact);"></span>
+              <div class="card card-hero">
+                <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:items-center">
+                  <div>
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="now-dot"></span>
+                      <span class="t-subhead font-semibold" style="color: var(--tint);">Now · Dec 2025 – Present</span>
                     </div>
-                    <div class="relative w-36 h-36 md:w-48 md:h-48 mx-auto md:mx-0 flex-none">
-                      <img src="assets/mainpic2.jpg" alt="Shivli at her Purdue graduation" class="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-float" style="border: 3px solid var(--surface);" />
-                      <img src="assets/mainpic1.jpg" alt="Shivli" class="absolute -bottom-5 -left-5 w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl shadow-float" style="border: 3px solid var(--surface);" />
+                    <h1 class="t-hero mb-3">Shivli Agrawal</h1>
+                    <p class="t-title3 mb-4">AI Solutions Engineer, Cummins Inc. I build AI and LLM pipelines that live inside real business workflows, not just in a notebook.</p>
+                    <p class="t-callout muted max-w-2xl mb-4">I like asking "why" until the real problem surfaces, and I genuinely enjoy debating the right way to solve it. Then I build it, usually an AI or LLM pipeline, and I stay close to the business side long enough to find out whether it actually works.</p>
+                    <p class="t-callout callout max-w-2xl mb-6">Currently looking at Forward Deployed Engineer, Technical PM, and Technical Solutions roles, where that combination is the job.</p>
+                    <div class="flex flex-wrap gap-3">
+                      <button class="btn btn-filled today-goto" data-target="today-impact">View Selected Work</button>
+                      <a href="assets/Shivli_Agrawal_Resume.pdf" download="Shivli_Agrawal_Resume.pdf" id="resume-btn" class="btn btn-gray">Resume</a>
+                      <button class="btn btn-gray today-goto" data-target="today-contact">Let's Connect</button>
                     </div>
+                  </div>
+                  <div class="relative w-36 h-36 md:w-48 md:h-48 mx-auto md:mx-0 flex-none">
+                    <img src="assets/mainpic2.jpg" alt="Shivli at her Purdue graduation" class="absolute inset-0 w-full h-full object-cover rounded-[22px]" style="border: 3px solid var(--surface); box-shadow: var(--shadow-float);" />
+                    <img src="assets/mainpic1.jpg" alt="Shivli" class="absolute -bottom-5 -left-5 w-16 h-16 md:w-20 md:h-20 object-cover rounded-2xl" style="border: 3px solid var(--surface); box-shadow: var(--shadow-float);" />
                   </div>
                 </div>
               </div>
+            </section>
 
-              <!-- 10:45 – WHAT I BRING -->
-              <div class="today-block">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">10:45 AM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">12:00 PM</p>
-                </div>
-                <span class="today-dot" style="background: var(--cat-experience);"></span>
-                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-experience);">What I Bring</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">Four ways I move a product forward</h2>
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
-                    <div>
-                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Discover</p>
-                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">Understanding users, workflows, constraints, and unmet needs.</p>
-                    </div>
-                    <div>
-                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Decide</p>
-                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">Turning ambiguous business problems into clear technical requirements and priorities.</p>
-                    </div>
-                    <div>
-                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Deliver</p>
-                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">Partnering with engineering, data, and design to ship AI-powered tools end to end.</p>
-                    </div>
-                    <div>
-                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Measure</p>
-                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">Validating model outputs and defining success before scaling a solution.</p>
-                    </div>
+            <!-- 10:45 WHAT I BRING -->
+            <section class="today-block">
+              <div class="today-time">
+                <p class="t-caption font-semibold">10:45 AM</p>
+                <p class="t-caption muted">12:00 PM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-experience);"></span>
+              <div class="card">
+                <p class="eyebrow" style="color: var(--cat-experience);">What I Bring</p>
+                <h2 class="t-title2 mb-6">Four ways I move a product forward</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+                  <div>
+                    <p class="t-headline mb-1">Discover</p>
+                    <p class="t-subhead muted">Understanding users, workflows, constraints, and unmet needs.</p>
+                  </div>
+                  <div>
+                    <p class="t-headline mb-1">Decide</p>
+                    <p class="t-subhead muted">Turning ambiguous business problems into clear technical requirements and priorities.</p>
+                  </div>
+                  <div>
+                    <p class="t-headline mb-1">Deliver</p>
+                    <p class="t-subhead muted">Partnering with engineering, data, and design to ship AI-powered tools end to end.</p>
+                  </div>
+                  <div>
+                    <p class="t-headline mb-1">Measure</p>
+                    <p class="t-subhead muted">Validating model outputs and defining success before scaling a solution.</p>
                   </div>
                 </div>
               </div>
+            </section>
 
-              <!-- 12:15 – COLLEGE HIGHLIGHTS -->
-              <div class="today-block">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">12:15 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">12:45 PM</p>
+            <!-- 12:15 COLLEGE HIGHLIGHTS -->
+            <section class="today-block">
+              <div class="today-time">
+                <p class="t-caption font-semibold">12:15 PM</p>
+                <p class="t-caption muted">12:45 PM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-about);"></span>
+              <div class="card">
+                <p class="eyebrow" style="color: var(--cat-about);">College Highlights</p>
+                <h2 class="t-title2 mb-6">Purdue University, B.S. Computer Science</h2>
+                <div class="grid sm:grid-cols-3 gap-5">
+                  <div>
+                    <p class="t-headline mb-1">Dean's List</p>
+                    <p class="t-subhead muted">2022 – 2023, for academic performance.</p>
+                  </div>
+                  <div>
+                    <p class="t-headline mb-1">Teaching Assistant</p>
+                    <p class="t-subhead muted">7 terms supervising OOP labs for 80+ students each term.</p>
+                  </div>
+                  <div>
+                    <p class="t-headline mb-1">President, UR Global</p>
+                    <p class="t-subhead muted">Led cross-cultural events fostering global awareness on campus.</p>
+                  </div>
                 </div>
-                <span class="today-dot" style="background: var(--cat-about);"></span>
-                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-about);">College Highlights</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">Purdue University, B.S. Computer Science</h2>
-                  <div class="grid sm:grid-cols-3 gap-5">
+                <button class="btn btn-gray event-chip mt-6" data-id="education">View College Coursework
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- 1:00 CAREER HIGHLIGHTS -->
+            <section class="today-block">
+              <div class="today-time">
+                <p class="t-caption font-semibold">1:00 PM</p>
+                <p class="t-caption muted">1:30 PM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-experience);"></span>
+              <div class="card">
+                <p class="eyebrow" style="color: var(--cat-experience);">Career Highlights</p>
+                <h2 class="t-title2 mb-5">A few moments across my roles</h2>
+                <ul class="space-y-3">
+                  <li class="flex gap-3 t-callout"><span class="mt-[0.6em] w-1.5 h-1.5 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Fine-tuned a domain-specific LLM that cut QA prep time by 90% for smoke-test generation, as a Tech Applications Intern at Cummins Inc.</span></li>
+                  <li class="flex gap-3 t-callout"><span class="mt-[0.6em] w-1.5 h-1.5 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Rebuilt a company website, cutting page load time by 30%, as a Software Development Intern at No Limit Living LLC.</span></li>
+                  <li class="flex gap-3 t-callout"><span class="mt-[0.6em] w-1.5 h-1.5 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Modernized a site's design system, lifting click-through rates by 17%, as a Front-end Development Intern at Qnucleon.</span></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- 1:45 SELECTED WORK: MARKET INTELLIGENCE -->
+            <section class="today-block" id="today-impact">
+              <div class="today-time">
+                <p class="t-caption font-semibold">1:45 PM</p>
+                <p class="t-caption muted">2:30 PM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-work);"></span>
+              <div class="card">
+                <p class="eyebrow" style="color: var(--cat-work);">Selected Work</p>
+                <h2 class="t-title2 mb-5">Market Intelligence Tool</h2>
+                <div class="grid sm:grid-cols-2 gap-5 mb-6">
+                  <div>
+                    <p class="field-label">Problem</p>
+                    <p class="t-subhead">Sales and product teams needed structured competitor intelligence, but comparing products meant hours of manual research scattered across public sources.</p>
+                  </div>
+                  <div>
+                    <p class="field-label">My Role</p>
+                    <p class="t-subhead">Partnered with Sales, Product, Engineering, and IT to design the end-to-end pipeline, from data collection through AI extraction to a side-by-side comparison view.</p>
+                  </div>
+                  <div>
+                    <p class="field-label">Key Decision</p>
+                    <p class="t-subhead">Built confidence scoring and source traceability into every extracted data point, so sales teams could trust the numbers before using them.</p>
+                  </div>
+                  <div>
+                    <p class="field-label" style="color: var(--cat-work);">Outcome</p>
+                    <p class="t-subhead">Phase 1 shipped for Caterpillar, cutting manual competitor research from days to minutes, with Kohler, MTU, Generac, and FG Wilson planned next.</p>
+                  </div>
+                </div>
+                <button class="btn btn-gray event-chip" data-id="market-intelligence">Open case study
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- 2:45 SELECTED WORK: WIN/LOSS -->
+            <section class="today-block">
+              <div class="today-time">
+                <p class="t-caption font-semibold">2:45 PM</p>
+                <p class="t-caption muted">3:30 PM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-work);"></span>
+              <div class="card">
+                <p class="eyebrow" style="color: var(--cat-work);">Selected Work</p>
+                <h2 class="t-title2 mb-5">Win/Loss Intelligence</h2>
+                <div class="mb-6">
+                  <p class="field-label mb-3">Top Loss Reasons (actual numbers are different)</p>
+                  <div class="space-y-3 reveal-chart max-w-md">
                     <div>
-                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Dean's List</p>
-                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">2022 – 2023, for academic performance.</p>
+                      <div class="flex justify-between t-footnote mb-1"><span>Price / Budget</span><span class="font-semibold">31%</span></div>
+                      <div class="hbar-track"><div class="hbar-fill" style="--s:0.31; background: var(--cat-work);"></div></div>
                     </div>
                     <div>
-                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">Teaching Assistant</p>
-                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">7 terms supervising OOP labs for 80+ students each term.</p>
+                      <div class="flex justify-between t-footnote mb-1"><span>Competitor</span><span class="font-semibold">19%</span></div>
+                      <div class="hbar-track"><div class="hbar-fill" style="--s:0.19; background: var(--cat-work);"></div></div>
                     </div>
                     <div>
-                      <p class="text-sm font-extrabold mb-1.5" style="color: var(--ink);">President, UR Global</p>
-                      <p class="text-xs leading-[1.6]" style="color: var(--muted);">Led cross-cultural events fostering global awareness on campus.</p>
+                      <div class="flex justify-between t-footnote mb-1"><span>Lead Time</span><span class="font-semibold">14%</span></div>
+                      <div class="hbar-track"><div class="hbar-fill" style="--s:0.14; background: var(--cat-work);"></div></div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between t-footnote mb-1"><span>Specification</span><span class="font-semibold">9%</span></div>
+                      <div class="hbar-track"><div class="hbar-fill" style="--s:0.09; background: var(--cat-work);"></div></div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between t-footnote mb-1"><span>Other</span><span class="font-semibold">6%</span></div>
+                      <div class="hbar-track"><div class="hbar-fill" style="--s:0.06; background: var(--cat-work);"></div></div>
                     </div>
                   </div>
-                  <button class="btn-pop event-chip mt-6 rounded-full px-5 py-2.5 text-sm font-bold border" data-id="education" style="border-color: var(--hairline); color: var(--ink);">View College Coursework →</button>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-5 mb-6">
+                  <div>
+                    <p class="field-label">Problem</p>
+                    <p class="t-subhead">Salesforce held thousands of unstructured win/loss comments with no reliable way to see why deals were actually being lost.</p>
+                  </div>
+                  <div>
+                    <p class="field-label">My Role</p>
+                    <p class="t-subhead">Designed and built the full pipeline solo, from Databricks/Spark extraction through embedding, clustering, and LLM-based reason extraction.</p>
+                  </div>
+                  <div>
+                    <p class="field-label">Key Decision</p>
+                    <p class="t-subhead">Clustered similar comments before calling the LLM, cutting request volume from tens of thousands of calls to roughly 200.</p>
+                  </div>
+                  <div>
+                    <p class="field-label" style="color: var(--cat-work);">Outcome</p>
+                    <p class="t-subhead">55,044 closed-lost deals analyzed in ~8 minutes at under $3 in model cost, down from an early version that took 18+ hours.</p>
+                  </div>
+                </div>
+                <button class="btn btn-gray event-chip" data-id="win-loss-intelligence">Open case study
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- 3:45 HOW I THINK -->
+            <section class="today-block">
+              <div class="today-time">
+                <p class="t-caption font-semibold">3:45 PM</p>
+                <p class="t-caption muted">4:15 PM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-skills);"></span>
+              <div class="card">
+                <p class="eyebrow" style="color: var(--cat-skills);">How I Think</p>
+                <h2 class="t-title2 mb-6">Three principles I keep coming back to</h2>
+                <div class="grid md:grid-cols-3 gap-5 md:gap-6">
+                  <p class="t-callout principle">Explainability matters as much as accuracy.</p>
+                  <p class="t-callout principle">Own the problem end-to-end, not just your slice of it.</p>
+                  <p class="t-callout principle">Automate the busywork. Keep the judgment human.</p>
                 </div>
               </div>
+            </section>
 
-              <!-- 1:00 – CAREER HIGHLIGHTS -->
-              <div class="today-block">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">1:00 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">1:30 PM</p>
+            <!-- 4:30 CONTACT INVITE -->
+            <section class="today-block" id="today-contact">
+              <div class="today-time">
+                <p class="t-caption font-semibold">4:30 PM</p>
+                <p class="t-caption muted">5:00 PM</p>
+              </div>
+              <span class="today-dot" style="background: var(--cat-contact);"></span>
+              <div class="card">
+                <p class="eyebrow" style="color: var(--cat-contact);">Let's Build Something Useful</p>
+                <h2 class="t-title2 mb-4">Product conversation</h2>
+                <div class="flex flex-wrap gap-x-8 gap-y-2 mb-4 t-subhead">
+                  <p><span class="muted">With</span> <span class="font-semibold">Shivli Agrawal</span></p>
+                  <p><span class="muted">Duration</span> <span class="font-semibold">15 – 30 min</span></p>
                 </div>
-                <span class="today-dot" style="background: var(--cat-experience);"></span>
-                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-experience);">Career Highlights</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">A few moments across my roles</h2>
-                  <ul class="space-y-3">
-                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Fine-tuned a domain-specific LLM that cut QA prep time by 90% for smoke-test generation, as a Tech Applications Intern at Cummins Inc.</span></li>
-                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Rebuilt a company website, cutting page load time by 30%, as a Software Development Intern at No Limit Living LLC.</span></li>
-                    <li class="flex gap-2.5 text-sm leading-[1.6]" style="color: var(--ink);"><span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background: var(--cat-experience);"></span><span>Modernized a site's design system, lifting click-through rates by 17%, as a Front-end Development Intern at Qnucleon.</span></li>
-                  </ul>
+                <p class="t-callout muted mb-6">Open to Senior PM and AI PM roles. Send a note about what you're building and I'll usually reply within a day.</p>
+                <div class="flex flex-wrap gap-3">
+                  <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="btn btn-filled">Connect on LinkedIn</a>
+                  <a href="mailto:shivliagrawal14@gmail.com" class="btn btn-gray">Send Email</a>
                 </div>
               </div>
+            </section>
 
-              <!-- 1:45 – SELECTED WORK: MARKET INTELLIGENCE -->
-              <div class="today-block" id="today-impact">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">1:45 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">2:30 PM</p>
-                </div>
-                <span class="today-dot" style="background: var(--cat-work);"></span>
-                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Work</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Market Intelligence Tool</h2>
-                  <div class="grid sm:grid-cols-2 gap-5 mb-6">
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Problem</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Sales and product teams needed structured competitor intelligence, but comparing products meant hours of manual research scattered across public sources.</p>
-                    </div>
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">My Role</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Partnered with Sales, Product, Engineering, and IT to design the end-to-end pipeline, from data collection through AI extraction to a side-by-side comparison view.</p>
-                    </div>
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Key Decision</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Built confidence scoring and source traceability into every extracted data point, so sales teams could trust the numbers before using them.</p>
-                    </div>
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--ink);">Outcome</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Phase 1 shipped for Caterpillar, cutting manual competitor research from days to minutes, with Kohler, MTU, Generac, and FG Wilson planned next.</p>
-                    </div>
-                  </div>
-                  <button class="btn-pop event-chip rounded-full px-5 py-2.5 text-sm font-bold border" data-id="market-intelligence" style="border-color: var(--hairline); color: var(--ink);">Open case study →</button>
-                </div>
-              </div>
-
-              <!-- 2:45 – SELECTED WORK: WIN/LOSS -->
-              <div class="today-block">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">2:45 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">3:30 PM</p>
-                </div>
-                <span class="today-dot" style="background: var(--cat-work);"></span>
-                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-work);">Selected Work</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Win/Loss Intelligence</h2>
-                  <div class="mb-6">
-                    <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-3" style="color: var(--muted);">Top Loss Reasons (actual numbers are different)</p>
-                    <div class="space-y-3 reveal-chart max-w-md">
-                      <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Price / Budget</span><span class="font-bold">31%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:31%; background: var(--cat-work);"></div></div>
-                      </div>
-                      <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Competitor</span><span class="font-bold">19%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:19%; background: var(--cat-work);"></div></div>
-                      </div>
-                      <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Lead Time</span><span class="font-bold">14%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:14%; background: var(--cat-work);"></div></div>
-                      </div>
-                      <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Specification</span><span class="font-bold">9%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:9%; background: var(--cat-work);"></div></div>
-                      </div>
-                      <div>
-                        <div class="flex justify-between text-xs mb-1" style="color: var(--ink);"><span>Other</span><span class="font-bold">6%</span></div>
-                        <div class="hbar-track"><div class="hbar-fill" style="--w:6%; background: var(--cat-work);"></div></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="grid sm:grid-cols-2 gap-5 mb-6">
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Problem</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Salesforce held thousands of unstructured win/loss comments with no reliable way to see why deals were actually being lost.</p>
-                    </div>
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">My Role</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Designed and built the full pipeline solo, from Databricks/Spark extraction through embedding, clustering, and LLM-based reason extraction.</p>
-                    </div>
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--muted);">Key Decision</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">Clustered similar comments before calling the LLM, cutting request volume from tens of thousands of calls to roughly 200.</p>
-                    </div>
-                    <div>
-                      <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-1.5" style="color: var(--ink); font-weight:600;">Outcome</p>
-                      <p class="text-sm leading-[1.65]" style="color: var(--ink);">55,044 closed-lost deals analyzed in ~8 minutes at under $3 in model cost, down from an early version that took 18+ hours.</p>
-                    </div>
-                  </div>
-                  <button class="btn-pop event-chip rounded-full px-5 py-2.5 text-sm font-bold border" data-id="win-loss-intelligence" style="border-color: var(--hairline); color: var(--ink);">Open case study →</button>
-                </div>
-              </div>
-
-              <!-- 3:00 – HOW I THINK -->
-              <div class="today-block">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">3:45 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">4:15 PM</p>
-                </div>
-                <span class="today-dot" style="background: var(--cat-skills);"></span>
-                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-skills);">How I Think</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-6" style="color: var(--ink);">Three principles I keep coming back to</h2>
-                  <div class="grid md:grid-cols-3 gap-5 md:gap-6">
-                    <p class="text-sm leading-[1.65] pl-4 border-l-2" style="color: var(--ink); border-color: var(--cat-skills);">Explainability matters as much as accuracy.</p>
-                    <p class="text-sm leading-[1.65] pl-4 border-l-2" style="color: var(--ink); border-color: var(--cat-skills);">Own the problem end-to-end, not just your slice of it.</p>
-                    <p class="text-sm leading-[1.65] pl-4 border-l-2" style="color: var(--ink); border-color: var(--cat-skills);">Automate the busywork. Keep the judgment human.</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 4:00 – CONTACT INVITE -->
-              <div class="today-block" id="today-contact">
-                <div class="today-time">
-                  <p class="text-[11px] font-bold" style="color: var(--ink);">4:30 PM</p>
-                  <p class="text-[10px]" style="color: var(--muted);">5:00 PM</p>
-                </div>
-                <span class="today-dot" style="background: var(--cat-contact);"></span>
-                <div class="rounded-2xl p-6 md:p-8 border" style="background: var(--surface); border-color: var(--hairline);">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.12em] mb-1" style="color: var(--cat-contact);">Let's Build Something Useful</p>
-                  <h2 class="text-lg md:text-xl font-extrabold tracking-[-0.01em] mb-5" style="color: var(--ink);">Product conversation</h2>
-                  <div class="flex flex-wrap gap-x-8 gap-y-3 mb-5 text-sm">
-                    <p><span style="color: var(--muted);">With</span> <span class="font-semibold" style="color: var(--ink);">Shivli Agrawal</span></p>
-                    <p><span style="color: var(--muted);">Duration</span> <span class="font-semibold" style="color: var(--ink);">15 – 30 min</span></p>
-                  </div>
-                  <p class="text-sm leading-[1.65] mb-6" style="color: var(--muted);">Open to Senior PM and AI PM roles. Send a note about what you're building and I'll usually reply within a day.</p>
-                  <div class="flex flex-wrap gap-3">
-                    <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="btn-pop inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold" style="background: var(--cat-contact); color: #fff;">Connect on LinkedIn</a>
-                    <a href="mailto:shivliagrawal14@gmail.com" class="btn-pop inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">Send Email</a>
-                  </div>
-                </div>
-              </div>
-
-            </div>
           </div>
         </div>
 
+        <!-- ==== VIEW: WEEK ==== -->
         <div id="view-week" class="hidden">
-          <p class="text-xs mb-4" style="color: var(--muted);">My operating rhythm, grouped by category instead of by day. Tap a card for details.</p>
-          <div class="flex flex-wrap gap-2 mb-6" id="week-cat-tabs"></div>
-          <div class="week-cat-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-4" id="week-cat-grid"></div>
+          <p class="view-intro">My operating rhythm, grouped by category instead of by day. Tap a card for details.</p>
+          <div class="filter-row" id="week-cat-tabs" role="toolbar" aria-label="Filter by calendar"></div>
+          <div class="week-grid" id="week-cat-grid"></div>
         </div>
 
+        <!-- ==== VIEW: MONTH ==== -->
         <div id="view-month" class="hidden">
-          <p class="text-xs mb-4" style="color: var(--muted);">Each bar marks how long a 2026 initiative has been active. Tap a bar for details.</p>
-          <div class="overflow-x-auto">
-            <div class="min-w-[640px] md:min-w-0">
-              <div class="flex mb-3" id="month-header"></div>
+          <p class="view-intro">Each bar marks how long a 2026 initiative has been active. Tap a bar for details.</p>
+          <div class="scroll-x">
+            <div class="gantt">
+              <div class="flex gap-1 mb-3" id="month-header"></div>
               <div class="flex flex-col gap-4" id="month-lanes"></div>
             </div>
           </div>
         </div>
 
+        <!-- ==== VIEW: YEAR ==== -->
         <div id="view-year" class="hidden">
-          <div class="flex md:flex-row flex-col gap-3 md:gap-0" id="years-row"></div>
+          <div class="years-row" id="years-row"></div>
+        </div>
+
         </div>
       </main>
     </div>
   </div>
 
-  <!-- ============ GALLERY ============ -->
-  <section id="gallery-section" class="steel-door relative py-20 px-6 md:px-12">
+  <!-- ==== GALLERY ==== -->
+  <section id="gallery-section" class="steel-door relative">
     <div class="relative max-w-6xl mx-auto">
-      <p class="text-xs tracking-[0.18em] uppercase mb-2" style="color: rgba(255,255,255,0.6);">Off the Clock</p>
-      <h2 class="text-2xl md:text-3xl font-extrabold tracking-[-0.01em] mb-12" style="color: #F5F4F1;">Snapshots</h2>
+      <p class="t-subhead font-semibold mb-1" style="color: rgba(255,255,255,0.7);">Off the Clock</p>
+      <h2 class="t-title1 mb-12" style="color: #F5F4F1;">Snapshots</h2>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 md:gap-x-10 gap-y-14 justify-items-center">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-x-5 md:gap-x-10 gap-y-12 md:gap-y-14 justify-items-center">
         <div class="postit" style="--postit-color:#E8C468; transform: rotate(-4deg);">
           <span class="postit-tape"></span>
           <img src="assets/snaps1.jpg" alt="Snapshot" loading="lazy" />
@@ -729,43 +952,60 @@
     </div>
   </section>
 
-  <!-- ============ EVENT MODAL ============ -->
-  <div id="modal-overlay" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
-    <div id="modal-card" class="w-full max-w-lg rounded-2xl shadow-float" style="background: var(--surface); border: 1px solid var(--hairline);">
-      <div id="modal-strip" class="h-2"></div>
-      <div class="p-6 md:p-7">
-        <div class="flex items-start justify-between gap-4 mb-1">
-          <p id="modal-cat" class="text-[11px] font-bold uppercase tracking-[0.14em]"></p>
-          <button id="modal-close" aria-label="Close" class="btn-pop w-7 h-7 rounded-full flex items-center justify-center border flex-none" style="border-color: var(--hairline);">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
-          </button>
-        </div>
-        <h3 id="modal-title" class="text-xl font-extrabold leading-snug tracking-[-0.01em] mb-1.5"></h3>
-        <p id="modal-subtitle" class="text-sm mb-5" style="color: var(--muted);"></p>
+  <!-- ==== TAB BAR (phones) ==== -->
+  <nav class="tabbar material" role="tablist" aria-label="Calendar view">
+    <button class="view-pill" role="tab" data-view="today">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><circle cx="12" cy="15" r="1.7" fill="currentColor" stroke="none"/></svg>
+      Today
+    </button>
+    <button class="view-pill" role="tab" data-view="week">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 9.5h17M9.2 9.5v11M14.8 9.5v11"/></svg>
+      Week
+    </button>
+    <button class="view-pill" role="tab" data-view="month">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 9.5h17M3.5 15h17M9.2 9.5v11M14.8 9.5v11"/></svg>
+      Month
+    </button>
+    <button class="view-pill" role="tab" data-view="year">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="4.5" rx="1.5"/><rect x="3.5" y="10" width="17" height="4.5" rx="1.5"/><rect x="3.5" y="16" width="17" height="4.5" rx="1.5"/></svg>
+      Year
+    </button>
+  </nav>
+
+  <!-- ==== EVENT SHEET (modal) ==== -->
+  <div id="modal-overlay" class="sheet-overlay hidden">
+    <div class="sheet-scrim" id="modal-scrim"></div>
+    <div id="modal-card" class="sheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="sheet-bar" style="background: var(--sheet-bg);">
+        <span class="sheet-grabber" aria-hidden="true"></span>
+        <p id="modal-cat" class="flex items-center gap-2 t-subhead font-semibold"></p>
+        <button id="modal-close" aria-label="Close" class="icon-btn close-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg>
+        </button>
+      </div>
+      <div class="sheet-body">
+        <h3 id="modal-title" class="t-title2 mb-1"></h3>
+        <p id="modal-subtitle" class="t-subhead muted mb-5"></p>
         <div id="modal-body"></div>
       </div>
     </div>
   </div>
 
-  <!-- ============ IMAGE LIGHTBOX ============ -->
-  <div id="lightbox-overlay" class="fixed inset-0 z-[200] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.86);">
+  <!-- ==== IMAGE LIGHTBOX ==== -->
+  <div id="lightbox-overlay" class="hidden" role="dialog" aria-label="Image preview">
     <img id="lightbox-img" src="" alt="" />
   </div>
 
+  <script src="content.js"></script>
   <script>
-    const CATEGORIES = {
-      about:          { label: 'About',          color: 'var(--cat-about)',      hex: '#5F84AC' },
-      experience:     { label: 'Experience',     color: 'var(--cat-experience)', hex: '#8B6CAE' },
-      leadership:     { label: 'Leadership',     color: 'var(--cat-leadership)', hex: '#B08A2E' },
-      'work-project': { label: 'Work Projects',  color: 'var(--cat-work)',       hex: '#479C87' },
-      'college-project': { label: 'College Projects', color: 'var(--cat-college)', hex: '#4AACC7' },
-      skills:         { label: 'Skills',         color: 'var(--cat-skills)',     hex: '#A97640' },
-      personal:       { label: 'Personal',       color: 'var(--cat-personal)',   hex: '#C4708C' },
-      contact:        { label: 'Contact',        color: 'var(--cat-contact)',    hex: '#D96B43' },
-    };
-
+    // CATEGORIES and EVENTS come from content.js
     const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const DAY_NAMES = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    const MONTH_NAMES_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+
+    // Category colors are CSS variables, so tints are mixed in CSS and follow the theme.
+    const tint = (color, pct) => `color-mix(in srgb, ${color} ${pct}%, transparent)`;
 
     // ---- Dynamic "today": everything below is computed from the real current date ----
     const NOW = new Date();
@@ -778,221 +1018,15 @@
     }
     const WEEK_START = startOfWeek(NOW);
     const WEEK_DATES_FULL = Array.from({ length: 7 }, (_, i) => { const d = new Date(WEEK_START); d.setDate(d.getDate() + i); return d; });
-    const DAY_DATES = WEEK_DATES_FULL.map(d => d.getDate());
     const WEEK_END = WEEK_DATES_FULL[6];
     const TODAY_INDEX = mondayIndex(NOW.getDay());
     const CURRENT_MONTH = NOW.getMonth() + 1;
     const CURRENT_YEAR = NOW.getFullYear();
     function fmtDate(d) { return `${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`; }
 
-    const EVENTS = [
-      { id: 'now-cummins', day: 0, time: '9:00 AM – 5:00 PM', title: 'Now: AI Solutions Engineer', subtitle: 'Cummins Inc., Power Systems Business Unit · Dec 2025 – Present · Minneapolis, MN',
-        category: 'experience', year: 2025, current: true, type: 'bullets',
-        bullets: [
-          'Collaborate with cross-functional teams to translate business requirements into scalable analytics tools and dashboards.',
-          'Implement AI/NLP workflows to analyze unstructured sales data and surface recurring problems.',
-          'Produce technical documentation and user stories for enterprise data tools.',
-        ], tags: ['AI/NLP', 'Analytics', 'Cross-functional'] },
-      { id: 'about', day: 0, time: '5:30 – 6:00 PM', title: 'About Me', subtitle: 'Shivli Agrawal · Minneapolis, MN',
-        category: 'about', type: 'bullets',
-        bullets: [
-          'AI Solutions Engineer at Cummins Inc. in Minneapolis, building AI/LLM pipelines and analytics tools for the Power Systems Business Unit. My current role, and my biggest highlight so far.',
-          'Computer Science graduate of Purdue University (B.S., Dec 2025).',
-          'Looking for my next move as a Forward Deployed Engineer, Technical PM, or Technical Solutions Engineer: roles where building the AI pipeline and understanding the business problem are the same job.',
-        ] },
-
-      { id: 'cummins-intern', day: 1, time: '9:00 – 11:00 AM', title: 'Tech Applications Intern', subtitle: 'Cummins Inc., Power Systems Business Unit · June 2025 – Aug 2025 · Minneapolis, MN',
-        category: 'experience', year: 2025, type: 'bullets',
-        bullets: [
-          'Developed automated test frameworks in Databricks (PySpark, MLflow) to validate ETL pipelines on Salesforce CPQ data across 5,000+ opportunities.',
-          'Built and fine-tuned a domain-specific LLM with Hugging Face Transformers to generate smoke-test suites, cutting QA prep time by 90%.',
-          'Engineered an Outlook phishing-detection add-in (Office.js, Microsoft Graph API, Node.js) with 99% classification accuracy in pilots.',
-          'Integrated automated tests into CI/CD pipelines on AWS-hosted environments.',
-        ], tags: ['Databricks', 'PySpark', 'Hugging Face', 'AWS'] },
-      { id: 'education', day: 1, time: '1:00 – 1:45 PM', title: 'College Coursework', subtitle: 'Purdue University, B.S. Computer Science · Jan 2022 – Dec 2025 · West Lafayette, IN',
-        category: 'about', year: 2022, type: 'bullets',
-        bullets: [
-          "Dean's List: 2022 – 2023.",
-          'Teaching Assistant for Object-Oriented Programming with Java across 7 terms, supervising lab sessions for 80+ students each term.',
-        ], tags: [
-          'CS 18000 · Problem Solving & OOP', 'CS 18200 · Foundations of CS', 'CS 24000 · Programming in C',
-          'CS 25000 · Computer Architecture', 'CS 25100 · Data Structures & Algorithms', 'CS 25200 · Systems Programming',
-          'CS 30700 · Software Engineering', 'CS 35400 · Operating Systems', 'CS 38100 · Algorithms',
-          'CS 40800 · Software Testing', 'CS 34800 · Information Systems',
-        ], links: [{ label: 'Coursework on GitHub', url: 'https://github.com/shivliagrawal/CourseWork' }] },
-      { id: 'win-loss-intelligence', day: 1, time: '3:00 – 5:00 PM', title: 'Win/Loss Intelligence', subtitle: 'Cummins Inc. · IT Sales & Aftermarket · Jun – Aug 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 6, endMonth: 8, image: 'assets/winloss_infograph.jpg',
-        bullets: [
-          'Turned unstructured Salesforce Win/Loss comments into a reusable analytics pipeline that surfaced why opportunities were lost, competitive themes, and repeat-loss account patterns.',
-          'Designed an end-to-end Databricks/Spark pipeline to filter and deduplicate Salesforce opportunity comments, generate SBERT embeddings, cluster semantic themes, and use Claude Sonnet to extract structured loss reasons.',
-          'Reduced AI request volume by clustering similar comments first, using roughly 200 cluster-level calls instead of sending every note individually.',
-          'Built analysis around loss reasons, competitor signals, comment quality, and repeat-loss accounts. Caterpillar was the top competitor showing up in loss data.',
-          'Prototyped a serial-loss account module to surface customers with high quote volume and low conversion.',
-          '55,044 closed-lost deals analyzed in the final documented run, at roughly 8 minutes of runtime and under $3 in model-token cost, down from an earlier version that took 18+ hours to run.',
-        ], tags: ['Databricks', 'Spark', 'SBERT', 'Claude Sonnet', 'SQL', 'Salesforce', 'NLP', 'LLM'] },
-
-      { id: 'ta', day: 2, time: '9:00 – 10:30 AM', title: 'Teaching Experience', subtitle: 'Undergraduate TA, Object-Oriented Programming with Java, Purdue University · Fall 2022 – Fall 2025',
-        category: 'experience', year: 2022, type: 'bullets', image: 'assets/teaching_experience.jpg',
-        bullets: [
-          'Supervised lab sessions for 80+ students per term across 7 terms, improving proficiency in Java and object-oriented programming concepts.',
-          'Debugged student assignments, gave detailed feedback, and maintained accurate performance records over 3+ years.',
-          'Onboarded and active for CS 18000 across Fall 2022, Spring 2023, Fall 2023, Spring 2024, Summer 2024, Fall 2024, Spring 2025, and Fall 2025.',
-          'Helped students build confidence with classes, inheritance, polymorphism, and core data structures, often the first real programming class they had taken.',
-        ] },
-      { id: 'urglobal', day: 2, time: '4:00 – 5:00 PM', title: 'President, UR Global', subtitle: 'UR Global, Purdue University · Aug 2023 – Dec 2025',
-        category: 'leadership', year: 2023, type: 'bullets',
-        bullets: [
-          'Led cross-cultural events and fostered a welcoming environment for international students.',
-          'Enhanced global awareness and cultural exchange across campus.',
-        ] },
-      { id: 'smoke-testing-suite', day: 2, time: '5:30 – 7:00 PM', title: 'AI-Driven Smoke Testing Suite', subtitle: 'Cummins Inc. · QA strategy + prompt engineering · Jun – Aug 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 6, endMonth: 8, image: 'assets/smoke_testing_infograph.jpg',
-        bullets: [
-          'Created a reusable QA playbook for generating high-value Salesforce CPQ smoke tests from JIRA stories and acceptance criteria, with human review before execution in staging.',
-          'Designed a repeatable JIRA → AI generation → human review → qTest → staging workflow for release-specific smoke testing.',
-          'Developed prompt patterns using role framing, explicit schemas, few-shot examples, edge-case instructions, and strict output formatting.',
-          'Applied the approach to documented CPQ scenarios covering Conga quote templates, COR document generation, and multi-currency pricing.',
-          'Added risk-based selection criteria around P1 stories, recent changes, component tags, past incidents, core functionality, and integrations.',
-          'Produced a reusable training playbook that future testers can use to create and curate release-specific smoke suites, structuring AI as an accelerator, not a replacement, for QA judgment.',
-        ], tags: ['Salesforce CPQ', 'JIRA', 'qTest', 'ChatGPT', 'Conga', 'Prompt Engineering', 'QA'] },
-
-      { id: 'nll-swe', day: 3, time: '10:00 AM – 12:00 PM', title: 'Software Development Intern', subtitle: 'No Limit Living LLC · June 2024 – Aug 2024 · Gary, IN',
-        category: 'experience', year: 2024, type: 'bullets',
-        bullets: [
-          'Rebuilt the company website with Node.js and React.js, cutting page load time by 30%.',
-          'Shipped a mobile-friendly web app and Android app with React Native and Express.js.',
-          'Integrated Python (Beautiful Soup) scrapers for content updates; owned unit and QA testing.',
-        ], tags: ['React', 'Node.js', 'React Native'] },
-      { id: 'nll-webdev', day: 3, time: '2:00 – 3:30 PM', title: 'Web Development Researcher', subtitle: 'No Limit Living LLC · Aug 2023 – Dec 2023 · West Lafayette, IN',
-        category: 'experience', year: 2023, type: 'bullets',
-        bullets: [
-          'Designed a website supporting daily operations and integrated internal MLS tools via The Data Mine Corporate Partnership at Purdue.',
-          'Built live-update analytics dashboards that improved operational efficiency.',
-        ] },
-      { id: 'market-intelligence', day: 3, time: '4:00 – 6:00 PM', title: 'Market Intelligence Tool', subtitle: 'Cummins Power Systems · Market Intelligence · Jun – Aug 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 6, endMonth: 8, image: 'assets/market_int.jpg',
-        bullets: [
-          'Built and evolved an AI-powered competitor intelligence capability that automates the path from public competitor product data to structured, searchable, and comparable product intelligence inside Cummins Power Suite.',
-          'Partnered with Sales, Product, Engineering, and IT to translate competitive-intelligence needs into technical requirements, acceptance criteria, JIRA stories, and solution designs.',
-          'Designed the end-to-end flow: competitor-source discovery → automated collection → document ingestion → AI extraction → standardization/validation → centralized storage → Power Suite comparison.',
-          'Worked across Python web scraping, Power Automate Desktop / RPA, FastAPI, Azure Blob Storage, Azure OpenAI / Azure AI Foundry, PostgreSQL, Data Lake, and Power Suite / Angular.',
-          'Built schema mapping, unit normalization, deduplication, required-field validation, confidence scoring, and source traceability into the pipeline.',
-          'Supported Product Finder workflows including search, filters, product cards, detail pages, side-by-side comparison, and community notes.',
-          'Phase 1 focused on Caterpillar, with expansion planned toward Kohler, MTU, Generac, and FG Wilson.',
-        ], tags: ['Python', 'FastAPI', 'Azure OpenAI', 'AI Foundry', 'RPA', 'PostgreSQL', 'RAG/Vector Search', 'Prompt Engineering', 'System Architecture'] },
-
-      { id: 'qnucleon', day: 4, time: '9:30 – 11:00 AM', title: 'Front-end Development Intern', subtitle: 'Qnucleon PTY LTD · May 2023 – Aug 2023 · Remote',
-        category: 'experience', year: 2023, type: 'bullets',
-        bullets: [
-          "Modernized the site's visual design with HTML and JavaScript, lifting click-through rates by 17%.",
-          'Ran usability tests and shipped iterative UX improvements.',
-        ] },
-      { id: 'battelle', day: 4, time: '1:00 – 3:00 PM', title: 'Data Science Researcher', subtitle: 'Battelle Inc. · Aug 2022 – May 2023 · West Lafayette, IN',
-        category: 'experience', year: 2022, type: 'bullets',
-        bullets: [
-          'Improved knowledge-graph generation for drug-related health records using ML techniques.',
-          'Used BERT to extract structured data from a Harvard Medical School Adverse Drug Events dataset.',
-          'Fine-tuned BioBERT with Hyperband and population-based training, lifting NER performance by 5%.',
-        ], tags: ['BERT', 'BioBERT', 'NLP'] },
-      { id: 'sales-enablement', day: 4, time: '3:30 – 5:30 PM', title: 'Sales Enablement PowerCell Support', subtitle: 'Cummins Inc. · Sales Enablement PowerCell · Jan – Dec 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 1, endMonth: 12, image: 'assets/sales_enablement_infographic.jpg',
-        bullets: [
-          'Work as the business-analysis bridge between Sales Enablement stakeholders and the development organization: understanding what the business needs and translating it into clear, actionable Jira stories for the GDC team.',
-          'Built a repeatable business requirement → technical requirement → Jira story → development feedback → sprint execution workflow.',
-          'Created and refined Jira stories across 5 named PowerCell initiatives: GenSize, SSR 2.0 / Webdata, GenCalc, Tiled / Seismic Transition, and Market Intelligence.',
-          'Took on project-management responsibilities within the Tiled / Seismic Transition, tracking open items, progress, and blockers to keep work moving.',
-          'Explored process improvements such as TOSCA testing and the potential for a PowerSuite → Data Lake → Databricks analytics path.',
-          'Began identifying opportunities for AI-assisted PowerCell workflows, including simplifying competitor-data collection and updates.',
-          '4 annual goal areas, 5 named PowerCell initiatives, and 6 core responsibilities: requirements discovery, requirements translation, cross-functional alignment, project execution, project management, and process improvement.',
-        ], tags: ['Business Analysis', 'Requirements Engineering', 'JIRA', 'Agile/Scrum', 'Stakeholder Management', 'PowerCell', 'PowerSuite', 'Databricks', 'TOSCA'] },
-      { id: 'spec-data-automation', day: 4, time: '5:45 – 7:00 PM', title: 'Spec / Data Sheet Automation Platform', subtitle: 'Cummins Inc. · Document automation + data engineering · Jan – Jul 2026',
-        category: 'work-project', year: 2026, type: 'bullets', wide: true, startMonth: 1, endMonth: 7, image: 'assets/specsheet_infographic.jpg',
-        bullets: [
-          'Designed a reusable automation architecture for converting product and configuration data from WebDATA, CRD files, and Excel workbooks into standardized Excel, TXT, CSV, spec sheet, data sheet, and brochure outputs.',
-          'Led discovery across the existing WebDATA → Excel → CSV → Adobe InDesign → PDF process, identifying manual handoffs, duplicated mapping logic, and document-generation bottlenecks.',
-          'Defined a reusable Excel-to-Excel mapping engine that stores mappings and transformation rules in a centralized configuration layer rather than embedding the same logic in every output workbook.',
-          'Designed an AI-assisted CRD → structured JSON → TXT workflow using document parsing, prompt-based extraction, schema validation, deterministic formatting, confidence checks, and human review.',
-          'Mapped product attributes and Parameter IDs from WebDATA to downstream document fields.',
-          'Evaluated integration points across WebDATA, Databricks, CPQ, Logik BP blueprint logic, Excel templates, and Adobe InDesign.',
-          'Coordinated with product management, engineering, WebDATA specialists, sales, and document-design stakeholders.',
-        ], tags: ['Python', 'pandas', 'openpyxl', 'Databricks', 'SQL', 'WebDATA', 'Excel Automation', 'ETL', 'Prompt Engineering', 'LLM', 'JSON Schema', 'Adobe InDesign', 'Solution Architecture'] },
-      { id: 'skills', day: 4, time: '7:15 – 7:45 PM', title: 'Skills Review', subtitle: 'A running inventory',
-        category: 'skills', type: 'skills',
-        skillGroups: [
-          { label: 'Languages', items: ['Java', 'C', 'C++', 'Python', 'R', 'JavaScript', 'TypeScript', 'SQL'] },
-          { label: 'Frameworks & Tools', items: ['React.js', 'Node.js', 'Express.js', 'PyTorch', 'Hugging Face', 'Databricks', 'MongoDB', 'MySQL', 'PostgreSQL', 'MLflow', 'Figma', 'Pandas', 'React Native'] },
-          { label: 'Platforms & Practices', items: ['Machine Learning', 'NLP', 'LLMs', 'Test Automation', 'DevOps', 'Cloudflare Workers', 'AWS', 'Azure', 'REST', 'GraphQL', 'HPC'] },
-          { label: 'Forward Deployed Engineering', items: ['Client-Facing Solution Delivery', 'RAG & Vector Search', 'LLM Agent Frameworks (LangChain)', 'Prompt Engineering', 'API Integration', 'Solution Architecture', 'Rapid Prototyping', 'FastAPI', 'Docker', 'System Design'] },
-          { label: 'Technical Product Management', items: ['Product Discovery', 'Requirements Engineering', 'Roadmapping', 'Stakeholder Management', 'JIRA', 'Agile/Scrum', 'A/B Testing', 'Business Analysis', 'AI Product Strategy', 'Technical Specification Writing'] },
-        ] },
-
-      { id: 'nocturne', day: 5, time: '10:00 AM – 12:00 PM', title: 'Build: Nocturnè Marketplace', subtitle: 'MERN · JWT · Cloudflare Workers · Jan 2025',
-        category: 'college-project', type: 'bullets', images: ['assets/nocturne1.jpg', 'assets/nocturne2.jpg', 'assets/nocturne3.jpg'],
-        bullets: [
-          'A next-generation e-commerce aggregator inspired by platforms like Amazon and Apple, offering real-time search, category-based navigation, and a seamless shopping experience.',
-          'Instead of direct purchases, users are redirected to official brand websites, ensuring authentic transactions.',
-          'Built the frontend with React.js and Tailwind CSS, backend with Node.js and Express.js, and MongoDB for data.',
-          'Implemented WebSockets for live search suggestions and external API integrations for brand-store redirection.',
-          'Integrated PostgreSQL queries into reporting modules to validate data integrity.',
-        ], tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Tailwind CSS', 'WebSockets', 'Cloudflare'],
-        links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/Nocturne' }] },
-      { id: 'sysmonitor', day: 5, time: '1:00 – 3:00 PM', title: 'Build: System Monitor', subtitle: 'C · GTK · Linux /proc · Nov 2024',
-        category: 'college-project', type: 'bullets', image: 'assets/sysmonitor1.jpg',
-        bullets: [
-          'Built a GTK desktop app in C to monitor CPU, memory, and processes via the /proc filesystem.',
-          'Implemented process-management controls, automated performance checks, and real-time visualization.',
-        ], tags: ['C', 'GTK', 'Linux'] },
-      { id: 'boilertutors', day: 5, time: '4:00 – 6:00 PM', title: 'Build: BoilerTutors', subtitle: 'React · Node.js · PostgreSQL · REST · Sept 2024',
-        category: 'college-project', type: 'bullets', images: ['assets/boilertutors1.jpg', 'assets/boilertutors2.jpg', 'assets/boilertutors3.jpg', 'assets/boilertutors4.jpg'],
-        bullets: [
-          'Built a full-stack resource-sharing platform with React.js and Node.js.',
-          'Designed REST APIs and a PostgreSQL schema with indexing and query optimization for scale.',
-          'Wrote backend unit tests validating scheduling and resource-matching algorithms.',
-        ], tags: ['React', 'Node.js', 'PostgreSQL'],
-        links: [{ label: 'GitHub', url: 'https://github.com/shivliagrawal/BoilerTutorsShivli' }] },
-      { id: 'lms', day: 6, time: '3:30 – 5:00 PM', title: 'Build: Database LMS', subtitle: 'GUI · Concurrency · Apr 2022',
-        category: 'college-project', type: 'bullets', images: ['assets/databaselms1.jpg', 'assets/databaselms2.jpg', 'assets/databaselms3.jpg'],
-        bullets: [
-          'Designed a GUI-based Learning Management System with concurrency support for quizzes and auto-grading.',
-          'Built real-time student–teacher interaction features.',
-        ], tags: ['Database Systems', 'Concurrency'] },
-      { id: 'contact', day: 6, time: '5:30 – 6:30 PM', title: "Office Hours: Let's Connect", subtitle: 'Open invite',
-        category: 'contact', type: 'contact',
-        bullets: ['Best way to reach me: a LinkedIn DM or an email. I read both.'] },
-
-      { id: 'seventy-five-hard', day: 5, time: '6:00 – 6:45 AM', title: '75 Hard Challenge', subtitle: 'Apr 20 – Jul 4, 2026',
-        category: 'personal', year: 2026, type: 'bullets', startMonth: 4, endMonth: 7,
-        bullets: [
-          'Two 45-minute workouts a day (one outdoors), a strict diet, a gallon of water, and 10 pages of reading, every day for 75 days straight, no exceptions.',
-          'Built the kind of daily discipline that carries over into how I show up at work.',
-        ] },
-      { id: 'running-journey', day: 6, time: '7:00 AM', title: '5K Running Journey', subtitle: 'Mid-July 2026 – Present',
-        category: 'personal', year: 2026, type: 'bullets', startMonth: 7, endMonth: 9, image: 'assets/5k.jpg',
-        bullets: [
-          "Started running as a habit in mid-July and haven't stopped since, training toward my first 5K, one run at a time.",
-        ] },
-      { id: 'matcha-corner', day: 5, time: 'All year round', title: 'Matcha Corner', subtitle: '2026, ongoing',
-        category: 'personal', year: 2026, type: 'bullets', startMonth: 1, endMonth: 12, image: 'assets/matchacorner.jpg',
-        bullets: [
-          'Building out a little matcha corner at home, testing new matcha blends, jams, and toppings, and slowly making it feel like mine.',
-        ] },
-      { id: 'hp-trip', day: 6, time: 'Jul 24 – 28, 2026', title: 'Wizarding World of Harry Potter, LA', subtitle: 'A long-time dream trip',
-        category: 'personal', year: 2026, type: 'bullets', startMonth: 7, endMonth: 7, image: 'assets/wizardingworld.jpg',
-        bullets: [
-          "Five days at the Wizarding World of Harry Potter in LA. I've been a Potterhead for as long as I can remember, so this was the trip.",
-        ] },
-    ];
-
-    function hexToRgba(hex, alpha) {
-      const n = parseInt(hex.slice(1), 16);
-      const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    }
-
     // ---- Mini calendar (current real month) ----
-    const miniCal = document.getElementById('mini-cal');
     const miniMonthIndex0 = NOW.getMonth();
-    document.getElementById('mini-cal-heading').textContent = `${MONTH_NAMES[miniMonthIndex0]} ${CURRENT_YEAR}`;
+    document.getElementById('mini-cal-heading').textContent = `${MONTH_NAMES_LONG[miniMonthIndex0]} ${CURRENT_YEAR}`;
     const blanksBefore = mondayIndex(new Date(CURRENT_YEAR, miniMonthIndex0, 1).getDay());
     const daysInCurrentMonth = new Date(CURRENT_YEAR, miniMonthIndex0 + 1, 0).getDate();
     const eventDays = new Set(WEEK_DATES_FULL.filter(d => d.getMonth() === miniMonthIndex0 && d.getFullYear() === CURRENT_YEAR).map(d => d.getDate()));
@@ -1000,30 +1034,37 @@
     for (let i = 0; i < blanksBefore; i++) miniHtml += `<div class="mini-cal-cell"></div>`;
     for (let d = 1; d <= daysInCurrentMonth; d++) {
       const isToday = d === NOW.getDate();
-      const hasEvent = eventDays.has(d);
-      miniHtml += `<div class="mini-cal-cell flex flex-col items-center justify-center rounded-md text-[10px] font-semibold" style="${isToday ? `background: var(--cat-contact); color:#fff;` : 'color: var(--ink);'}">
-        <span>${d}</span>
-        ${hasEvent && !isToday ? `<span class="w-1 h-1 rounded-full mt-0.5" style="background: var(--cat-contact);"></span>` : ''}
-      </div>`;
+      miniHtml += `<div class="mini-cal-cell${isToday ? ' is-today' : ''}">${d}${eventDays.has(d) && !isToday ? '<span class="ev-dot"></span>' : ''}</div>`;
     }
-    miniCal.innerHTML = miniHtml;
+    document.getElementById('mini-cal').innerHTML = miniHtml;
+
+    // ---- Sidebar drawer (below 1024px) ----
+    const sidebarBtn = document.getElementById('sidebar-btn');
+    const sidebarMQ = window.matchMedia('(min-width: 1024px)');
+    function setSidebar(open) {
+      if (sidebarMQ.matches) open = false;
+      document.body.classList.toggle('sidebar-open', open);
+      sidebarBtn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+      if (open) document.getElementById('sidebar-close').focus();
+    }
+    sidebarBtn.addEventListener('click', () => setSidebar(true));
+    document.getElementById('sidebar-close').addEventListener('click', () => { setSidebar(false); sidebarBtn.focus(); });
+    document.getElementById('sidebar-scrim').addEventListener('click', () => setSidebar(false));
+    sidebarMQ.addEventListener('change', () => setSidebar(false));
+    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && document.body.classList.contains('sidebar-open')) setSidebar(false); });
 
     // ---- Legend (clickable: jumps to Week view, filtered to that category) ----
-    const legendHtml = Object.entries(CATEGORIES).map(([key, c]) => `
-      <button class="legend-jump btn-pop flex items-center gap-2.5 text-xs w-full text-left rounded-md px-1 py-0.5" data-cat="${key}">
-        <span class="w-2.5 h-2.5 rounded-[3px] flex-none" style="background:${c.color};"></span>
-        <span style="color: var(--ink);">${c.label}</span>
-      </button>`).join('');
-    document.getElementById('legend').innerHTML = legendHtml;
-    document.getElementById('legend-mobile').innerHTML = Object.entries(CATEGORIES).map(([key, c]) => `
-      <button class="legend-jump btn-pop flex items-center gap-1.5 text-[11px] flex-none rounded-full px-2.5 py-1 border" data-cat="${key}" style="border-color: var(--hairline);">
-        <span class="w-2 h-2 rounded-full flex-none" style="background:${c.color};"></span>
-        <span style="color: var(--ink);">${c.label}</span>
+    document.getElementById('legend').innerHTML = Object.entries(CATEGORIES).map(([key, c]) => `
+      <button class="legend-jump list-row" data-cat="${key}">
+        <span class="cal-swatch" style="background:${c.color};"></span>
+        <span>${c.label}</span>
       </button>`).join('');
     document.addEventListener('click', (ev) => {
       const btn = ev.target.closest('.legend-jump');
       if (!btn) return;
       activeWeekCat = btn.dataset.cat;
+      setSidebar(false);
       switchView('week');
       renderWeekTabs();
       renderWeekGrid();
@@ -1038,9 +1079,8 @@
         .filter(key => EVENTS.some(e => e.category === key))
         .map(key => {
           const cat = CATEGORIES[key];
-          const active = key === activeWeekCat;
-          return `<button class="week-cat-tab pill px-4 py-2 rounded-full text-xs font-semibold border" data-cat="${key}"
-            style="border-color:${cat.color}; ${active ? `background:${cat.color}; color:#fff;` : `background:transparent; color:var(--ink);`}">${cat.label}</button>`;
+          return `<button class="week-cat-tab filter-chip" data-cat="${key}" aria-pressed="${key === activeWeekCat}" style="--c:${cat.color};">
+            <span class="cal-swatch" style="background:${cat.color}; width:8px; height:8px;"></span>${cat.label}</button>`;
         }).join('');
     }
 
@@ -1048,15 +1088,10 @@
       const cat = CATEGORIES[e.category];
       const isToday = e.day === TODAY_INDEX;
       return `
-      <button class="chip event-chip text-left rounded-2xl p-5 border" data-id="${e.id}"
-        style="background:${hexToRgba(cat.hex, 0.12)}; border-color:${hexToRgba(cat.hex, 0.35)};">
-        <div class="flex items-center gap-1.5 mb-2">
-          <span class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color:${cat.color};">${DAY_NAMES[e.day]}</span>
-          ${isToday ? `<span class="text-[10px] font-bold" style="color: var(--cat-contact);">· TODAY</span>` : ''}
-          ${e.current ? `<span class="w-1.5 h-1.5 rounded-full dot-pulse flex-none ml-1" style="background: var(--cat-contact);"></span>` : ''}
-        </div>
-        <p class="text-base font-extrabold leading-snug mb-1" style="color: var(--ink);">${e.title}</p>
-        <p class="text-xs leading-[1.5]" style="color: var(--muted);">${e.subtitle}</p>
+      <button class="event-card event-chip" data-id="${e.id}" style="--c:${cat.color};">
+        <span class="ec-meta">${DAY_NAMES[e.day]}${isToday ? '<span style="color: var(--tint);">· Today</span>' : ''}${e.current ? '<span class="now-dot ml-1"></span>' : ''}</span>
+        <span class="t-headline">${e.title}</span>
+        <span class="t-footnote muted">${e.subtitle}</span>
       </button>`;
     }
 
@@ -1079,35 +1114,26 @@
     renderWeekTabs();
     renderWeekGrid();
 
-    function renderChip(e) {
-      const cat = CATEGORIES[e.category];
-      return `
-      <button class="chip event-chip rounded-xl px-3 py-2.5 border-l-[3px] mt-1" data-id="${e.id}"
-        style="background:${hexToRgba(cat.hex, 0.14)}; border-left-color:${cat.color};">
-        <div class="flex items-center gap-1.5 mb-0.5">
-          ${e.current ? `<span class="w-1.5 h-1.5 rounded-full dot-pulse flex-none" style="background: var(--cat-contact);"></span><span class="text-[10px] font-extrabold" style="color: var(--cat-contact);">NOW</span>` : ''}
-        </div>
-        <p class="text-[13px] font-bold leading-snug" style="color: var(--ink);">${e.title}</p>
-        <p class="text-[11px] mt-0.5" style="color: var(--muted);">${e.time}</p>
-      </button>`;
-    }
-
     // ---- Year view ----
     const YEARS = [2022, 2023, 2024, 2025, 2026];
     let yearViewBuilt = false;
+    function renderChip(e) {
+      const cat = CATEGORIES[e.category];
+      return `
+      <button class="event-card event-chip" data-id="${e.id}" style="--c:${cat.color};">
+        ${e.current ? `<span class="ec-meta" style="color: var(--tint);"><span class="now-dot"></span>Now</span>` : ''}
+        <span class="t-subhead font-semibold">${e.title}</span>
+        <span class="t-caption muted">${e.time}</span>
+      </button>`;
+    }
     function renderYearView() {
       if (yearViewBuilt) return;
-      const yearsRow = document.getElementById('years-row');
-      yearsRow.innerHTML = YEARS.map(y => {
+      document.getElementById('years-row').innerHTML = YEARS.map(y => {
         const yearEvents = EVENTS.filter(e => e.year === y);
         return `
-        <div class="flex-1 min-w-0 md:min-w-[152px] md:border-r flex flex-col" style="border-color: var(--grid-line);">
-          <div class="flex items-center gap-2 px-2 py-2 sticky top-0 z-10" style="background: var(--bg);">
-            <span class="text-sm font-extrabold" style="color: var(--ink);">${y}</span>
-          </div>
-          <div class="flex flex-col gap-2 px-2 pb-6">
-            ${yearEvents.map(e => renderChip(e)).join('')}
-          </div>
+        <div class="year-col">
+          <h3>${y}${y === CURRENT_YEAR ? '<span class="t-caption font-semibold" style="color: var(--tint);">This year</span>' : ''}</h3>
+          <div class="year-list">${yearEvents.map(e => renderChip(e)).join('')}</div>
         </div>`;
       }).join('');
       yearViewBuilt = true;
@@ -1117,139 +1143,120 @@
     let monthViewBuilt = false;
     function renderMonthView() {
       if (monthViewBuilt) return;
-      const header = document.getElementById('month-header');
-      header.innerHTML = MONTH_NAMES.map((m, i) => {
+      document.getElementById('month-header').innerHTML = MONTH_NAMES.map((m, i) => {
         const isCurrent = CURRENT_YEAR === 2026 && (i + 1) === CURRENT_MONTH;
-        return `<div class="flex-1 text-center text-[11px] font-bold py-2 rounded-md" style="${isCurrent ? `background:${hexToRgba(CATEGORIES.contact.hex, 0.16)}; color:var(--cat-contact);` : 'color:var(--muted);'}">${m}</div>`;
+        return `<div class="month-head${isCurrent ? ' is-current' : ''}">${m}</div>`;
       }).join('');
 
       const projectEvents = EVENTS.filter(e => e.startMonth && e.endMonth);
-      const lanes = document.getElementById('month-lanes');
-      lanes.innerHTML = projectEvents.map(e => {
+      document.getElementById('month-lanes').innerHTML = projectEvents.map(e => {
         const cat = CATEGORIES[e.category];
         const startPct = ((e.startMonth - 1) / 12) * 100;
         const widthPct = ((e.endMonth - e.startMonth + 1) / 12) * 100;
         const rangeLabel = `${MONTH_NAMES[e.startMonth - 1]} – ${e.endMonth === 12 ? 'Dec (ongoing)' : MONTH_NAMES[e.endMonth - 1]}`;
         return `
         <div>
-          <p class="text-xs font-bold mb-1.5" style="color: var(--ink);">${e.title} <span class="ml-1 font-normal" style="color: var(--muted);">${rangeLabel}</span></p>
-          <div class="relative h-11 rounded-lg overflow-hidden" style="background: var(--surface); background-image: repeating-linear-gradient(to right, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent calc(100%/12));">
-            <button class="event-chip chip absolute inset-y-0 rounded-lg px-3 flex items-center text-[11px] font-bold truncate" data-id="${e.id}"
-              style="left:${startPct}%; width:${widthPct}%; background:${hexToRgba(cat.hex, 0.30)}; border-left: 3px solid ${cat.color}; color: var(--ink);">
-              ${e.title}
-            </button>
+          <p class="t-footnote font-semibold mb-1.5">${e.title} <span class="ml-1 font-normal muted">${rangeLabel}</span></p>
+          <div class="gantt-track">
+            <button class="event-chip gantt-bar" data-id="${e.id}" aria-label="${e.title}, ${rangeLabel}"
+              style="--c:${cat.color}; left:${startPct}%; width:${widthPct}%;">${e.title}</button>
           </div>
         </div>`;
       }).join('');
       monthViewBuilt = true;
     }
 
-    // ---- Modal ----
+    // ---- Sheet (event details) ----
     const overlay = document.getElementById('modal-overlay');
-    const modalCard = document.getElementById('modal-card');
-    const modalStrip = document.getElementById('modal-strip');
     const modalCat = document.getElementById('modal-cat');
     const modalTitle = document.getElementById('modal-title');
     const modalSubtitle = document.getElementById('modal-subtitle');
     const modalBody = document.getElementById('modal-body');
+    let lastFocus = null;
 
     function openModal(id) {
       const e = EVENTS.find(ev => ev.id === id);
       if (!e) return;
       const cat = CATEGORIES[e.category];
-      modalStrip.style.background = cat.color;
-      modalCat.textContent = cat.label;
-      modalCat.style.color = cat.color;
+      modalCat.innerHTML = `<span class="cal-swatch" style="background:${cat.color};"></span><span style="color:${cat.color};">${cat.label}</span>`;
       modalTitle.textContent = e.title;
       modalSubtitle.textContent = e.subtitle;
 
       if (e.type === 'skills') {
         modalBody.innerHTML = e.skillGroups.map(g => `
-          <div class="mb-4 last:mb-0">
-            <p class="text-[11px] font-bold uppercase tracking-[0.08em] mb-2" style="color: var(--muted);">${g.label}</p>
-            <div class="flex flex-wrap gap-1.5">
-              ${g.items.map(i => `<span class="text-xs px-2.5 py-1 rounded-full border" style="border-color: var(--hairline); color: var(--ink);">${i}</span>`).join('')}
-            </div>
+          <div class="mb-5 last:mb-0">
+            <p class="field-label mb-2">${g.label}</p>
+            <div class="flex flex-wrap gap-1.5">${g.items.map(i => `<span class="tag">${i}</span>`).join('')}</div>
           </div>`).join('');
       } else if (e.type === 'contact') {
         modalBody.innerHTML = `
-          <p class="text-sm leading-relaxed mb-5" style="color: var(--ink);">${e.bullets[0]}</p>
+          <p class="t-callout mb-5">${e.bullets[0]}</p>
           <div class="flex flex-col sm:flex-row gap-3">
-            <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="btn-pop flex-1 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold" style="background: var(--cat-contact); color: #fff;">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002ZM7 8.48H3V21h4V8.48Zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-3.96 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48Z"/></svg>
-              Message on LinkedIn
-            </a>
-            <a href="mailto:shivliagrawal14@gmail.com" class="btn-pop flex-1 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold border" style="border-color: var(--hairline); color: var(--ink);">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
-              Email Me
-            </a>
+            <a href="https://www.linkedin.com/in/shivli-agrawal1407/" target="_blank" rel="noopener" class="btn btn-filled flex-1">Message on LinkedIn</a>
+            <a href="mailto:shivliagrawal14@gmail.com" class="btn btn-gray flex-1">Email Me</a>
           </div>`;
       } else {
         const imgList = e.images || (e.image ? [e.image] : []);
         const imageHtml = imgList.length ? `
-          <div class="case-carousel mb-5" data-images='${JSON.stringify(imgList)}' data-idx="0">
-            <img class="case-img reveal-img" src="${imgList[0]}" alt="" loading="lazy" />
+          <div class="case-carousel mb-6" data-images='${JSON.stringify(imgList)}' data-idx="0">
+            <img class="case-img reveal-img" src="${imgList[0]}" alt="${e.title}" loading="lazy" />
             ${imgList.length > 1 ? `
-              <button class="carousel-arrow carousel-prev" aria-label="Previous image" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+              <button class="carousel-arrow carousel-prev" aria-label="Previous image">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
               </button>
-              <button class="carousel-arrow carousel-next" aria-label="Next image" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+              <button class="carousel-arrow carousel-next" aria-label="Next image">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
               </button>
               <div class="carousel-dots">${imgList.map((_, i) => `<span class="carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
             ` : ''}
           </div>` : '';
         const bulletsHtml = e.bullets.map(b => `
-          <li class="flex gap-2.5 text-sm leading-relaxed" style="color: var(--ink);">
-            <span class="mt-[7px] w-1 h-1 rounded-full flex-none" style="background:${cat.color};"></span>
+          <li class="flex gap-3 t-subhead">
+            <span class="mt-[0.6em] w-1.5 h-1.5 rounded-full flex-none" style="background:${cat.color};"></span>
             <span>${b}</span>
           </li>`).join('');
-        const tagsHtml = e.tags ? `<div class="flex flex-wrap gap-1.5 mt-5">${e.tags.map(t => `<span class="text-xs px-2.5 py-1 rounded-full border" style="border-color: var(--hairline); color: var(--muted);">${t}</span>`).join('')}</div>` : '';
+        const tagsHtml = e.tags ? `<div class="flex flex-wrap gap-1.5 mt-6">${e.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
         const linksHtml = e.links ? `<div class="flex flex-wrap gap-2.5 mt-5">${e.links.map(l => `
-          <a href="${l.url}" target="_blank" rel="noopener" class="btn-pop inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold border" style="border-color: var(--hairline); color: var(--ink);">
-            ${l.label} <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          <a href="${l.url}" target="_blank" rel="noopener" class="btn btn-gray">${l.label}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
           </a>`).join('')}</div>` : '';
-        modalBody.innerHTML = `${imageHtml}<ul class="space-y-2.5">${bulletsHtml}</ul>${tagsHtml}${linksHtml}`;
+        modalBody.innerHTML = `${imageHtml}<ul class="space-y-3">${bulletsHtml}</ul>${tagsHtml}${linksHtml}`;
       }
 
+      lastFocus = document.activeElement;
       overlay.classList.remove('hidden');
-      overlay.classList.add('flex');
-      requestAnimationFrame(() => {
-        overlay.style.opacity = '1';
-        modalCard.style.opacity = '1';
-        modalCard.style.transform = 'scale(1)';
-      });
+      document.getElementById('modal-card').scrollTop = 0;
+      overlay.offsetHeight; // commit the closed state so the open transition runs
+      overlay.classList.add('is-open');
       setTimeout(() => {
         modalBody.querySelectorAll('.reveal-img').forEach(img => img.classList.add('is-in'));
       }, 80);
       document.body.style.overflow = 'hidden';
+      document.getElementById('modal-card').focus({ preventScroll: true });
     }
 
     function closeModal() {
-      overlay.style.opacity = '0';
-      modalCard.style.opacity = '0';
-      modalCard.style.transform = 'scale(0.96)';
+      overlay.classList.remove('is-open');
       setTimeout(() => {
         overlay.classList.add('hidden');
-        overlay.classList.remove('flex');
         document.body.style.overflow = '';
-      }, 200);
+        if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      }, 320);
     }
-
-    modalCard.style.opacity = '0';
-    modalCard.style.transform = 'scale(0.96)';
-    overlay.style.opacity = '0';
 
     document.addEventListener('click', (ev) => {
       const chip = ev.target.closest('.event-chip');
       if (chip) openModal(chip.dataset.id);
     });
     document.getElementById('modal-close').addEventListener('click', closeModal);
-    overlay.addEventListener('click', (ev) => { if (ev.target === overlay) closeModal(); });
-    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !overlay.classList.contains('hidden')) closeModal(); });
+    document.getElementById('modal-scrim').addEventListener('click', closeModal);
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && !overlay.classList.contains('hidden') && lightbox.classList.contains('hidden')) closeModal();
+    });
 
     // ---- View switching ----
     const DEFAULT_VIEW = 'today';
+    const VIEWS = ['today', 'week', 'month', 'year'];
     const VIEW_CONTAINERS = { today: 'view-today', week: 'view-week', month: 'view-month', year: 'view-year' };
     const DATE_LABELS = {
       today: `Today · ${fmtDate(NOW)}, ${CURRENT_YEAR}`,
@@ -1258,29 +1265,24 @@
       year: '2022 – 2026 · Career Journey',
     };
     const resetBtn = document.getElementById('reset-week-btn');
-    const appShell = document.getElementById('app-shell');
     let currentView = DEFAULT_VIEW;
 
     function switchView(view, updateHash = true) {
       if (!VIEW_CONTAINERS[view]) view = DEFAULT_VIEW;
       currentView = view;
-
-      appShell.classList.toggle('flow-mode', view === 'today');
-      window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+      document.body.dataset.view = view;
+      window.scrollTo({ top: 0, behavior: 'instant' });
 
       Object.entries(VIEW_CONTAINERS).forEach(([key, id]) => {
         document.getElementById(id).classList.toggle('hidden', key !== view);
       });
 
       document.querySelectorAll('.view-pill').forEach(b => {
-        const active = b.dataset.view === view;
-        b.style.background = active ? 'var(--cat-contact)' : '';
-        b.style.color = active ? '#fff' : '';
+        b.setAttribute('aria-selected', String(b.dataset.view === view));
       });
+      document.querySelectorAll('.segmented').forEach(s => s.style.setProperty('--i', VIEWS.indexOf(view)));
 
       document.getElementById('date-label').textContent = DATE_LABELS[view];
-      resetBtn.classList.toggle('hidden', view === DEFAULT_VIEW);
-      resetBtn.classList.toggle('flex', view !== DEFAULT_VIEW);
 
       if (view === 'month') renderMonthView();
       if (view === 'year') renderYearView();
@@ -1329,8 +1331,7 @@
       let idx = parseInt(container.dataset.idx, 10);
       idx = (idx + dir + images.length) % images.length;
       container.dataset.idx = idx;
-      const img = container.querySelector('.case-img');
-      img.src = images[idx];
+      container.querySelector('.case-img').src = images[idx];
       container.querySelectorAll('.carousel-dot').forEach((dot, i) => dot.classList.toggle('active', i === idx));
     }
     document.addEventListener('click', (ev) => {
@@ -1357,7 +1358,6 @@
       lightboxImg.src = img.src;
       lightboxImg.alt = img.alt || '';
       lightbox.classList.remove('hidden');
-      lightbox.classList.add('flex');
       requestAnimationFrame(() => { lightbox.style.opacity = '1'; });
       document.body.style.overflow = 'hidden';
     });
@@ -1365,7 +1365,6 @@
       lightbox.style.opacity = '0';
       setTimeout(() => {
         lightbox.classList.add('hidden');
-        lightbox.classList.remove('flex');
         lightboxImg.src = '';
         if (overlay.classList.contains('hidden')) document.body.style.overflow = '';
       }, 200);
@@ -1385,17 +1384,25 @@
     }, { threshold: 0.3 });
     document.querySelectorAll('.reveal-chart, .reveal-img').forEach((el) => revealObserver.observe(el));
 
-    // ---- Theme toggle ----
-    const root = document.documentElement;
-    if (localStorage.getItem('theme') === 'light') root.setAttribute('data-theme', 'light');
     document.getElementById('snapshots-btn').addEventListener('click', () => {
       document.getElementById('gallery-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
+    // ---- Theme toggle (initial theme is set in <head> before paint) ----
+    const root = document.documentElement;
+    function applyTheme(t) {
+      root.setAttribute('data-theme', t);
+      document.getElementById('meta-theme').setAttribute('content', t === 'dark' ? '#000000' : '#F2F2F7');
+    }
     document.getElementById('theme-toggle').addEventListener('click', () => {
-      const isLight = root.getAttribute('data-theme') === 'light';
-      if (isLight) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'dark'); }
-      else { root.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); }
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (ev) => {
+      let saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      if (!saved) applyTheme(ev.matches ? 'dark' : 'light');
     });
   </script>
 

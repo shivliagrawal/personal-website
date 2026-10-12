@@ -1,47 +1,41 @@
+// node screenshot.mjs <url> [label] [--devices=quick|all|iphone-se,...] [--theme=light|dark] [--full]
+// Saves ./temporary screenshots/screenshot-N[-label]-<device>.png (N auto-increments, never overwrites).
+// Default: viewport-sized shots on the quick set (iphone-15-pro, ipad-mini, macbook-air).
+// Use --full for a full-page capture (large images cost more to review).
 import puppeteer from 'puppeteer';
 import { mkdir, readdir } from 'node:fs/promises';
+import { DEVICES, pickDevices } from './scripts/devices.mjs';
 
-const url = process.argv[2];
-const label = process.argv[3];
+const positional = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+const flags = Object.fromEntries(process.argv.slice(2).filter((a) => a.startsWith('--')).map((a) => {
+  const [k, v] = a.slice(2).split('=');
+  return [k, v ?? true];
+}));
+const [url, label] = positional;
 
 if (!url) {
-  console.error('Usage: node screenshot.mjs <url> [label]');
+  console.error('Usage: node screenshot.mjs <url> [label] [--devices=quick|all|name,...] [--theme=light|dark] [--full]');
   process.exit(1);
 }
 
 const outDir = './temporary screenshots';
 await mkdir(outDir, { recursive: true });
-
-const existing = await readdir(outDir);
-const nums = existing
-  .map((f) => f.match(/^screenshot-(\d+)/))
-  .filter(Boolean)
-  .map((m) => Number(m[1]));
+const nums = (await readdir(outDir)).map((f) => f.match(/^screenshot-(\d+)/)).filter(Boolean).map((m) => Number(m[1]));
 const nextN = nums.length ? Math.max(...nums) + 1 : 1;
 
-const viewports = [
-  { name: 'mobile', width: 390, height: 844 },
-  { name: 'tablet', width: 834, height: 1194 },
-  { name: 'desktop', width: 1440, height: 900 },
-];
-
 const browser = await puppeteer.launch();
-const page = await browser.newPage();
-await page.goto(url, { waitUntil: 'networkidle0' });
-
-// Force-reveal any scroll-triggered animation state so full-page screenshots
-// show the settled page rather than depending on IntersectionObserver timing
-// in headless Chrome.
-await page.evaluate(() => {
-  document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-in'));
-});
-
-for (const vp of viewports) {
-  await page.setViewport({ width: vp.width, height: vp.height });
-  const suffix = label ? `${label}-${vp.name}` : vp.name;
+for (const name of pickDevices(flags.devices)) {
+  const page = await browser.newPage();
+  if (flags.theme) await page.evaluateOnNewDocument((t) => { try { localStorage.setItem('theme', t); } catch (e) {} }, flags.theme);
+  await page.setViewport(DEVICES[name]);
+  await page.goto(url, { waitUntil: 'networkidle0' });
+  // Settle scroll-triggered reveals so captures show the final state.
+  await page.evaluate(() => document.querySelectorAll('.reveal-chart, .reveal-img').forEach((el) => el.classList.add('is-in')));
+  await new Promise((r) => setTimeout(r, 400));
+  const suffix = [label, flags.theme, name].filter(Boolean).join('-');
   const filePath = `${outDir}/screenshot-${nextN}-${suffix}.png`;
-  await page.screenshot({ path: filePath, fullPage: true });
+  await page.screenshot({ path: filePath, fullPage: !!flags.full });
   console.log(`Saved ${filePath}`);
+  await page.close();
 }
-
 await browser.close();

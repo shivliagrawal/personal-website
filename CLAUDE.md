@@ -1,54 +1,66 @@
-# CLAUDE.md — Frontend Website Rules
+# CLAUDE.md: Frontend Website Rules
 
 ## Always Do First
-- **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
+- **Read `memory.md`** for history, decisions, the architecture map, and the user's standing preferences. Do not read `index.html` top to bottom; grep for the `==== X ====` / `// ---- X ----` markers and read only those ranges.
+- **Invoke the `frontend-design` skill** before writing frontend code. Skills live in `.claude/skills/`: `frontend-design`, `webapp-testing`, `site-qa`.
+- Check `brand_assets/` before designing (currently empty).
 
-## Reference Images
-- If a reference image is provided: match layout, spacing, typography, and color exactly. Swap in placeholder content (images via `https://placehold.co/`, generic copy). Do not improve or add to the design.
-- If no reference image: design from scratch with high craft (see guardrails below).
-- Screenshot your output, compare against reference, fix mismatches, re-screenshot. Do at least 2 comparison rounds. Stop only when no visible differences remain or user says so.
+## Where Things Live
+- `content.js`: all content (`CATEGORIES`, `EVENTS`). Text, dates, images, and links change here only.
+- `index.html`: layout, styles, and behavior. Tailwind CDN plus one inline `<style>` with the design tokens.
+- `assets/`: optimized images and the resume PDF.
+- `scripts/qa-check.mjs`, `scripts/devices.mjs`, `screenshot.mjs`, `serve.mjs`: tooling.
+
+## Design System: Apple Human Interface Guidelines
+- **Font:** the system stack (`-apple-system, BlinkMacSystemFont, "SF Pro Text", …`). Caveat is used only for the polaroid captions.
+- **Type:** use the HIG text-style classes (`.t-hero`, `.t-title1/2/3`, `.t-headline`, `.t-body`, `.t-callout`, `.t-subhead`, `.t-footnote`, `.t-caption`). All sizes are rem. The root scales fluidly from 16px to 18px with viewport width. No fixed `text-[Npx]` sizes, nothing under 12px, no CSS `zoom`.
+- **Color:** only the semantic tokens on `:root` / `[data-theme="dark"]`:
+  - surfaces: `--bg`, `--surface`, `--fill`
+  - text: `--ink`, `--muted`, `--separator`
+  - accents: `--tint` (systemOrange), `--cat-*` (Apple system colors, increased contrast)
+  - Never hard-code a hex in markup. Tints use `color-mix(in srgb, var(--x) N%, transparent)`.
+- **Materials:** frosted chrome via the `.material` class, with a solid fallback under `prefers-reduced-transparency`.
+- **Components:**
+  - `.btn` with `.btn-filled`, `.btn-gray`, or `.btn-plain`
+  - `.icon-btn` (44×44)
+  - `.segmented`
+  - `.list-row`
+  - `.event-card` (tinted fill plus leading color bar)
+  - `.filter-chip`
+  - sheet (`.sheet-overlay` / `.sheet`)
+- **Touch targets:** ≥44×44 on touch devices. ≥28 is fine on desktop pointers.
+- **Motion:** animate only `transform` and `opacity`. Never `transition-all`. Use the `--spring` / `--pop` curves. `prefers-reduced-motion` is respected globally.
+- **Interactive states:** every clickable element has hover, `:focus-visible`, and active states.
+- **Copy:** sentence-case labels (no all-caps eyebrows), chevron icons instead of `→`, and **no em dashes**. En dashes in date ranges are fine.
+- The steel-door gallery is the one deliberate textured surface. Keep it.
+- Keep the dark/light toggle. With no saved choice, the theme follows the system.
+
+## Responsive Layout
+| Width | Layout |
+|---|---|
+| <600 | Phone: bottom tab bar, time labels stacked above cards, bottom sheets |
+| 600–1023 | iPad portrait, phone landscape: segmented control in the nav bar, sidebar is a slide-over drawer |
+| ≥1024 | Persistent sidebar |
+| ≥1440 | Content max-width 75rem, centered |
+
+Use `100dvh`, `env(safe-area-inset-*)`, and `viewport-fit=cover`. Custom Tailwind screens: `sm` 600, `md` 768, `lg` 1024, `xl` 1280, `2xl` 1440.
 
 ## Local Server
-- **Always serve on localhost** — never screenshot a `file:///` URL.
-- Start the dev server: `node serve.mjs` (serves the project root at `http://localhost:3000`)
-- `serve.mjs` lives in the project root. Start it in the background before taking any screenshots.
-- If the server is already running, do not start a second instance.
+- Serve on localhost only, never `file:///`. Run `node serve.mjs` (http://localhost:3000) in the background. If port 3000 is already listening, do not start a second instance.
 
-## Screenshot Workflow
-- Install Puppeteer for me
-- **Always screenshot from localhost:** `node screenshot.mjs http://localhost:3000`
-- Screenshots are saved automatically to `./temporary screenshots/screenshot-N.png` (auto-incremented, never overwritten).
-- Optional label suffix: `node screenshot.mjs http://localhost:3000 label` → saves as `screenshot-N-label.png`
-- `screenshot.mjs` lives in the project root. Use it as-is.
-- After screenshotting, read the PNG from `temporary screenshots/` with the Read tool — Claude can see and analyze the image directly.
-- When comparing, be specific: "heading is 32px but reference shows ~24px", "card gap is 16px but should be 24px"
-- Check: spacing/padding, font size/weight/line-height, colors (exact hex), alignment, border-radius, shadows, image sizing
+## Verification (see the `site-qa` skill)
+1. `node scripts/qa-check.mjs`. It covers 9 devices × light/dark × 4 views plus functional checks. It must exit 0.
+2. Take targeted screenshots of what changed:
+   - `node screenshot.mjs http://localhost:3000 label [--devices=quick|all|name] [--theme=dark] [--full]`
+   - Images save to `./temporary screenshots/screenshot-N-…png`. Read them with the Read tool and be specific about mismatches.
+3. Do at least 2 fix-and-recheck rounds for visual work.
+4. **The user reviews on localhost first.** Deploy only after approval or an explicit "deploy": `git push` and `npx vercel --prod --yes`, then verify with `curl -sI https://shivliagrawal.com`.
+5. Add a changelog line to `memory.md`.
 
-## Output Defaults
-- Single `index.html` file, all styles inline, unless user says otherwise
-- Tailwind CSS via CDN: `<script src="https://cdn.tailwindcss.com"></script>`
-- Placeholder images: `https://placehold.co/WIDTHxHEIGHT`
-- Mobile-first responsive
-
-## Brand Assets
-- Always check the `brand_assets/` folder before designing. It may contain logos, color guides, style guides, or images.
-- If assets exist there, use them. Do not use placeholders where real assets are available.
-- If a logo is present, use it. If a color palette is defined, use those exact values — do not invent brand colors.
-
-## Anti-Generic Guardrails
-- **Colors:** Never use default Tailwind palette (indigo-500, blue-600, etc.). Pick a custom brand color and derive from it.
-- **Shadows:** Never use flat `shadow-md`. Use layered, color-tinted shadows with low opacity.
-- **Typography:** Never use the same font for headings and body. Pair a display/serif with a clean sans. Apply tight tracking (`-0.03em`) on large headings, generous line-height (`1.7`) on body.
-- **Gradients:** Layer multiple radial gradients. Add grain/texture via SVG noise filter for depth.
-- **Animations:** Only animate `transform` and `opacity`. Never `transition-all`. Use spring-style easing.
-- **Interactive states:** Every clickable element needs hover, focus-visible, and active states. No exceptions.
-- **Images:** Add a gradient overlay (`bg-gradient-to-t from-black/60`) and a color treatment layer with `mix-blend-multiply`.
-- **Spacing:** Use intentional, consistent spacing tokens — not random Tailwind steps.
-- **Depth:** Surfaces should have a layering system (base → elevated → floating), not all sit at the same z-plane.
+## Reference Images
+- If a reference image is provided, match its layout, spacing, typography, and color exactly. Do not improve or add to it.
 
 ## Hard Rules
-- Do not add sections, features, or content not in the reference
-- Do not "improve" a reference design — match it
-- Do not stop after one screenshot pass
-- Do not use `transition-all`
-- Do not use default Tailwind blue/indigo as primary color
+- Do not add sections, features, or content the user didn't ask for.
+- Never fabricate metrics. The Win/Loss chart numbers are illustrative and captioned as such.
+- Do not use `transition-all`. Do not stop after one screenshot pass.

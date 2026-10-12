@@ -9,3 +9,5 @@ projects.md
 project-images/
 personal-images/
 other-images/
+.venv/
+__pycache__/
