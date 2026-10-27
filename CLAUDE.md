@@ -13,7 +13,7 @@
 
 ## Design System: Apple Human Interface Guidelines
 - **Font:** the system stack (`-apple-system, BlinkMacSystemFont, "SF Pro Text", …`). Caveat is used only for the polaroid captions.
-- **Type:** use the HIG text-style classes (`.t-hero`, `.t-title1/2/3`, `.t-headline`, `.t-body`, `.t-callout`, `.t-subhead`, `.t-footnote`, `.t-caption`). All sizes are rem. The root scales fluidly from 16px to 18px with viewport width. No fixed `text-[Npx]` sizes, nothing under 12px, no CSS `zoom`.
+- **Type:** use the HIG text-style classes (`.t-hero`, `.t-title1/2/3`, `.t-headline`, `.t-body`, `.t-callout`, `.t-subhead`, `.t-footnote`, `.t-caption`). All sizes are rem on a **fixed 16px root** (the user rejected the fluid 16–18px root as "too zoomed in" on 2026-10-26). Token sizes match the pre-overhaul site: body 14px, small labels 11–12px, nothing under 11px. The header and sidebar use `zoom: var(--chrome-zoom)` (1.05 at ≥768px, 1.13 at ≥1600px) as before; the main content stays at 1.0×. No fixed `text-[Npx]` sizes.
 - **Color:** only the semantic tokens on `:root` / `[data-theme="dark"]`:
   - surfaces: `--bg`, `--surface`, `--fill`
   - text: `--ink`, `--muted`, `--separator`

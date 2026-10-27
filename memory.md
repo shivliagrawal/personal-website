@@ -180,6 +180,7 @@ Last updated: 2026-10-12 (Apple HIG overhaul).
 8. Append a changelog line below after each shipped change.
 
 ## 7. Open items / backlog
+- **Full critique and improvement roadmap: `grillme.md`** (2026-10-12). It covers look, content, and animation ideas, ending with 9 open questions for the user. Start there before redesign work.
 - The Today contact block still says "Open to Senior PM and AI PM roles". That doesn't match the hero (FDE / Technical PM / Technical Solutions). Confirm the wording with the user before changing it.
 - `snaps9`–`snaps11` are unused, and `Resume-college.pdf` is stale. Ask before deleting.
 - The Month bar for one-month events (e.g., Harry Potter trip) truncates its label inside the bar. The full title shows above it.
@@ -194,7 +195,9 @@ Last updated: 2026-10-12 (Apple HIG overhaul).
 | 2026-09-29 | ad447ed, e10e6c1, b24d8e1 | Teaching experience, real chart, zoomable images, nav, em-dash cleanup; polish; vercel.json fix |
 | 2026-10-07 | 4a2f63a | Real project photos, chart caveat, polaroid labels, sizing |
 | 2026-10-08 | 0e000ea, 43bc197 | Resume download, carousels, AI Solutions Engineer title/date; resume reliability, zoom scoped |
-| 2026-10-12 | Apple overhaul commit | Apple HIG overhaul, fluid type, content.js split, QA tooling and skills, memory.md |
+| 2026-10-12 | 02243fc, f7bba20 | Apple HIG overhaul, fluid type, content.js split, QA tooling and skills, memory.md |
+
+| 2026-10-26 | rescale commit | User said the Apple version was "too zoomed in". Restored pre-overhaul scaling: fixed 16px root, type tokens remapped to the old pixel sizes (body 14, labels 11–12, hero 30–48), header/sidebar zoom 1.05/1.13 via `--chrome-zoom`, Today column left-aligned at 48rem. QA font floor lowered to 11px. Apple styling otherwise kept. |
 
 ## 9. FLAG: raise with the user at the start of the next chat
 - **Contact copy mismatch:** the Today contact block (`VIEW: TODAY` › `4:30 CONTACT INVITE` in `index.html`) still says "Open to Senior PM and AI PM roles". The hero says "Forward Deployed Engineer, Technical PM, and Technical Solutions roles". Ask Shivli for the wording she wants, then update it. Flagged 2026-10-12; she asked to be reminded in the next chat.

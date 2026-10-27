@@ -20,7 +20,7 @@ const BASE = args.url || 'http://localhost:3000';
 const deviceNames = pickDevices(args.devices === true ? 'all' : (args.devices || 'all'));
 const themes = (args.themes || 'light,dark').split(',');
 const views = (args.views || 'today,week,month,year').split(',');
-const MIN_FONT = 12;      // px, HIG caption floor
+const MIN_FONT = 11;      // px floor (pre-overhaul sizing used 11px labels)
 const MIN_TAP_TOUCH = 44; // pt, HIG minimum hit target on touch devices
 const MIN_TAP_POINTER = 28; // macOS minimum control size
 
@@ -67,7 +67,7 @@ function audit(minTap) {
     const hasText = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
     if (hasText) {
       const fs = parseFloat(getComputedStyle(el).fontSize);
-      if (fs < 12 - 0.01) out.smallText.push(`${label(el)} ${fs.toFixed(1)}px`);
+      if (fs < 11 - 0.01) out.smallText.push(`${label(el)} ${fs.toFixed(1)}px`);
     }
   }
   for (const el of document.querySelectorAll('a[href], button, [role="tab"]')) {
