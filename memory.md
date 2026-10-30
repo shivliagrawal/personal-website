@@ -167,6 +167,7 @@ Last updated: 2026-10-12 (Apple HIG overhaul).
 - Any ancestor with `overflow-x: auto` breaks `position: sticky` on its children. That broke the mobile view switcher once.
 - Tailwind CDN preflight (`[type='button'] { background: transparent }`) can override single-class backgrounds. Don't add `type="button"` to styled buttons; use compound selectors such as `.btn.btn-filled`.
 - Headless screenshots need `.reveal-chart` / `.reveal-img` forced to `.is-in`. The scripts already do this.
+- **Resume updates:** the site serves `assets/Shivli_Agrawal_Resume.pdf` and `assets/resume.jpg`, not the root `Shivli_Agrawal_Resume.pdf` / `Resume-work.png` the user edits. After she updates the root files: `cp Shivli_Agrawal_Resume.pdf assets/` and `sips -s format jpeg -s formatOptions 85 Resume-work.png --out assets/resume.jpg`, then deploy.
 - Homebrew Python is "externally managed", so pip installs go in `.venv`.
 
 ## 6. Token-efficient workflow
@@ -198,6 +199,7 @@ Last updated: 2026-10-12 (Apple HIG overhaul).
 | 2026-10-12 | 02243fc, f7bba20 | Apple HIG overhaul, fluid type, content.js split, QA tooling and skills, memory.md |
 
 | 2026-10-26 | rescale commit | User said the Apple version was "too zoomed in". Restored pre-overhaul scaling: fixed 16px root, type tokens remapped to the old pixel sizes (body 14, labels 11–12, hero 30–48), header/sidebar zoom 1.05/1.13 via `--chrome-zoom`, Today column left-aligned at 48rem. QA font floor lowered to 11px. Apple styling otherwise kept. |
+| 2026-10-30 | f1eab48 | New resume PDF and preview image synced into assets/ and deployed |
 
 ## 9. FLAG: raise with the user at the start of the next chat
 - **Contact copy mismatch:** the Today contact block (`VIEW: TODAY` › `4:30 CONTACT INVITE` in `index.html`) still says "Open to Senior PM and AI PM roles". The hero says "Forward Deployed Engineer, Technical PM, and Technical Solutions roles". Ask Shivli for the wording she wants, then update it. Flagged 2026-10-12; she asked to be reminded in the next chat.
